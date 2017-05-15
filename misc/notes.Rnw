@@ -1,0 +1,119 @@
+\documentclass{article}
+\title{Notes on evolution of sexual reproduction}
+\usepackage{amsmath}
+\usepackage{natbib}
+\usepackage{hyperref}
+\bibliographystyle{chicago}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section{Introduction (mostly based on \cite{otto2009evolutionary})}
+
+\cite{hartfield2012current} also provides a good review.
+
+Also see \cite{lehtonen2012many} for review on cost of sex.
+
+We want to understand the evolution of sexual reproduction and model the freshwater snail system studied by \cite{vergara2014infection}. \cite{otto2009evolutionary} provides a fairly recent review in this field.
+
+There are a few disadvantages to sexual reproduction \citep{otto2009evolutionary}:
+
+\begin{itemize}
+    \item partner searching, resource gathering, transmission of STD, and predation while mating.
+    \item Only 50\% of the parent gene is passed down to its offspring (often referred to as the cost of sex \citep{bell1982masterpiece}).
+    \item Recombination may alter favourable gene combination \citep{nei1967modification}.
+\end{itemize}
+
+ 
+Despite such costs, sexual reproduction is a widespread phenomenon among eukaryotic organisms.
+One of the oldest explanation for sex is that it increases variation \citep{weissmann1889significance} but this is a misconception \citep{otto2009evolutionary}. 
+Not only does sexual reproduction can decrease varation but varation generated through sex can also reduce fitnesss (segration load).
+So why does sex exist?
+
+\subsection{Earlier models}
+
+\begin{itemize}
+    \item Focused on modifier genes but found that selections acts againt sex and recombination at equilibrium \citep{feldman1996population}. This idea applies even when sexual reproduction does not have any cost. Maybe it's important to consider nonequilibrium situations!
+    \item In an evolving population, modifiers increasing levels of recombination may be selected if "fitness surfaces were negatively curved on a multiplicative scale" \citep{barton1995general, charlesworth1990mutation}. However, these models are limited because negative fitness surface imposes fitness load. Moderately negative fitness curvature is necessary \citep{otto2003advantages}.
+    \item Evidence is not consistent with this idea and the allowed curvature parameter is too narrow to be likely.
+\end{itemize}
+
+\subsection{Recent models}
+
+\subsubsection*{Varying selection over time (Red Queen)}
+
+\begin{itemize}
+    \item In a rapidly changing environment, segregation and recombination can increase fitness of near descendants by dissociating detrimention genetic association \citep{salathe2008rapid}.
+    \item Under antogonistic interaction, species must evolve fast enough so that remain in pace with the interacting species (Red Queen) \citep{bell1982masterpiece}.
+    \item Limitations: (1) selection must be quite strong in haploid populations; (2) In diploid populations, where form of selection does not cycle, genetic association built up by past selection never becomes detrimental and segregation does not provide any benefit. See \cite{otto2009evolutionary} for more sources.
+    \item Red queen is still beneficial when (1) parasites originate from close relatives and (2) it is "a source of ongoing selection". See \cite{otto2009evolutionary} for more sources.
+\end{itemize}
+
+\subsubsection*{Varying selection over space}
+
+\begin{itemize}
+    \item In a spatially heterogeneous environment, recombination can mitigate detrimental genetric association from migration. See \cite{otto2009evolutionary} for more sources.
+    \item See Salathe et al 2006 and Martin et al 2006
+\end{itemize}
+
+\subsubsection*{Rates of sex vary among individuals}
+
+\begin{itemize}
+    \item Many organisms are more likely to engage in sex when they are in poor condition (e.g. Daphnia). See \cite{otto2009evolutionary} for more sources.
+    \item "Models that have investigated the evolution
+of condition-dependent sex have found it much easier for
+sex to evolve if individuals in worse condition allocate
+more resources to sexual reproduction than do individuals
+in good condition" \citep{otto2009evolutionary}.
+    \item "Ineffective at selecting for recombination in diploid individuals" \citep{agrawal2005evolution}.
+\end{itemize}
+
+\subsection*{Selection in finite population}
+
+\begin{itemize}
+    \item In an infinite population, recombination is not required to combine advantageous mutations. This is not the case in a finite population. See \cite{otto2009evolutionary} for more sources.
+    \item Muller's ratchet \citep{muller1964relation}.
+    \item In asexual populations, genome containing both advantagenous mutants would occur on the order of $1/\sqrt{N\mu^2}$ generations, whereas sexual population takes $1/(RN\mu^2/3)^{1/3}$ order of generations \citep{christiansen1998waiting}.
+    \item Hill-Robertson effect. See \cite{hartfield2012current} for more sources.
+    \item (1) Results are less sensitive to epistasis; (2) population size does not need to be too small; and (3) can explain combination of selecion (e.g. deleterious mutations and the Red Queen \citep{howard1994parasitism}).
+    \item Not very clear whether this explanation is strong enough.
+\end{itemize}
+
+\section{Red Queen}
+
+See \cite{hartfield2012current} for a review of the history of the Red Queen hypothesis.
+
+See Gandon and Otto 2007 and Barton 2010....
+
+Modifiers spread due to delayed short-term benefit
+
+Recent paper by \cite{slowinski2016coevolutionary} provides an experimental work on RQH. Study is based on three treatments: avirulent pathogen treatment, fixed pathogen treatment, and coevolving pathogen treatment. Asexual failed to invade the last group but managed to persist with a low frequency in some population (See \citep{agrawal2001parasites} for the theoretical model).
+
+\cite{agrawal2001parasites} present four allele matching host-parasite models that can be used for our models. They do not include gene-for-gene interaction models (see cited papers for further detail). They assume infinite size so we should consider finite size model.
+
+See \cite{otto2004species} for broader model.
+
+See Vergara et al 2014 for periodicity...
+
+See \cite{ashby2015diversity} for a stochastic model on RQH. They find that sex is more likely to persist when there is more genetic diversity in the population only if transmission rate is high enough. If transmission rate is low, high genetic diversity selects against sex. Their result may seem to contrast that of \cite{lively2010epidemiological} because their model allows for the effects of drift but it is actually consistent. This paper also summarizes all the other model studies, which might be helpful. See supplementary materials for the code.
+
+\section{Snails}
+
+There's a lot going on in the snails population. Here are some things we want to consider for the model:
+
+\begin{itemize}
+    \item Spatial structure within/among lakes (geographic mosaic theory) \citep{king2009geographic}.
+    \item Genetic diversity among different lakes - multiple loci is probably necessary to produce enough genetic diversity 
+    \item Life cycle of the parasite. Do we need to model ducks as well?
+    \item Finite population (stochastic) vs. infinite population (deterministic)
+    \item Continuous time vs. discrete time (See \cite{lively2010epidemiological})
+    \item Cost of sex. A very recent paper by \cite{gibson2017two} show that snail population support two-fold cost of sex (or slightly greater based on MLE). They also found that asexual females produce more offspring than sexual females.
+\end{itemize}
+
+
+
+\bibliography{redqueen}
+\end{document}
+
