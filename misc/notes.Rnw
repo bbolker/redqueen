@@ -99,18 +99,70 @@ See Vergara et al 2014 for periodicity...
 
 See \cite{ashby2015diversity} for a stochastic model on RQH. They find that sex is more likely to persist when there is more genetic diversity in the population only if transmission rate is high enough. If transmission rate is low, high genetic diversity selects against sex. Their result may seem to contrast that of \cite{lively2010epidemiological} because their model allows for the effects of drift but it is actually consistent. This paper also summarizes all the other model studies, which might be helpful. See supplementary materials for the code.
 
+See \cite{ashby2014parasitic} for a deterministic model. Also see \cite{may1983epidemiology} for an old model.
+
 \section{Snails}
 
 There's a lot going on in the snails population. Here are some things we want to consider for the model:
 
 \begin{itemize}
-    \item Spatial structure within/among lakes (geographic mosaic theory) \citep{king2009geographic}.
+    \item Some old papers on snails: \citep{lively1987evidence; lively1989adaptation}
+    \item See \cite{dybdahl1998host} for time-lagged selection.
+    \item Spatial structure within/among lakes (geographic mosaic theory) \citep{king2009geographic}. There's also fine scale spatial heterogeneous prevalence around the lake, more than one-third of which can be explained by variation in mean susceptibility (we certainly need to use a model with more than two loci) \citep{gibson2016fine}. See \cite{mckone2016fine} for red-queen related stuff.
     \item Genetic diversity among different lakes - multiple loci is probably necessary to produce enough genetic diversity 
-    \item Life cycle of the parasite. Do we need to model ducks as well?
+    \item Life cycle of the parasite. Do we need to model ducks as well? We might also have to model the sexual reproduction of the parasites \citep{hechinger2012faunal}
     \item Finite population (stochastic) vs. infinite population (deterministic)
     \item Continuous time vs. discrete time (See \cite{lively2010epidemiological})
     \item Cost of sex. A very recent paper by \cite{gibson2017two} show that snail population support two-fold cost of sex (or slightly greater based on MLE). They also found that asexual females produce more offspring than sexual females.
 \end{itemize}
+
+\section{Model}
+
+\cite{dybdahl1998host} provides a model for asexual snails and sexual parasite but is too simple...
+
+Let's model sexual and asexual individuals in the absence of parasites first. We're going to use two alleles for each of the two loci. Then, there are four types of gametes that can be produced: $AB, Ab, aB, ab$. 
+We will be using indices $1-4$ for simplicity \citep{agrawal2006host}.
+
+The number of sexual individuals with genotype $ij$ is given by $S_{ij}$. Then, we can model $S_{ij}$ in the next generation as follows:
+$$
+\begin{aligned}
+S_{ii}' &= F_0 (M_i F_i) W_U\\
+S_{ij}' &= F_0 (M_i F_j + M_j F_i) W_U,
+\end{aligned}
+$$
+where $F_0$ is the number of females $M_i$ and $F_i$ are proportion of male and female gametes with allele $i$.
+$$
+\begin{aligned}
+X_1 &= (\sum_{k} X_{1k} - r X_{14} + r X_{23})/(\sum_j X_j),\\
+X_2 &= (\sum_{k} X_{2k} - r X_{23} + r X_{14})//(\sum_j X_j),\\
+X_3 &= (\sum_{k} X_{3k} - r X_{23} + r X_{14})//(\sum_j X_j),\\
+X_4 &= (\sum_{k} X_{4k} - r X_{14} + r X_{23})//(\sum_j X_j),\\
+\end{aligned}
+$$
+where $X$ refers to either male or female and $r$ is the recombination rate. Then, number of males and females is given by
+$$
+\begin{aligned}
+M_{ij}' &= s S_{ij}'\\
+F_{ij}' &= (1-s) S_{ij}',
+\end{aligned}
+$$
+
+Asexuals are easy to model:
+$$
+A_{ij}' = A_{ij} W_U
+$$
+We follow \cite{lively2010epidemiological} and define
+$$
+W_U = \frac{b_U}{1 + (a_U N)^x}.
+$$
+
+<<discrete1>>==
+discrete_par <- c(
+    s=0.5,
+    r=0.3
+)
+
+@
 
 
 
