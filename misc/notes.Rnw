@@ -249,7 +249,7 @@ $$
 discrete_par2 <- c(
     s=0.5,
     r=0.2,
-    beta=15,
+    beta=20,
     aI=0.001,
     aU=0.001,
     bU=20,
@@ -342,16 +342,17 @@ simulate_infection <- function(param){
 
 ##TODO: Add a bit of stochasticity to prevent fixation
 
+set.seed(101)
 infection_res <- simulate_infection(discrete_par2)
 tframe <- 950:1200
 ## sex vs asex
-plot(infection_res$S.count[tframe], type="l", ylim=c(0,1e4))
-lines(infection_res$A.count[tframe], col=2)
+plot(tframe, infection_res$S.count[tframe], type="l", ylim=c(0,1e4), main="sex vs. asex size", ylab="size", xlab="generation")
+lines(tframe, infection_res$A.count[tframe], col=2)
 
 ## sex vs asex prevalence
 with(infection_res,{
-    plot(SI.count[tframe]/(S.count[tframe]+SI.count[tframe]), type="l", ylim=c(0,1))
-    lines(AI.count[tframe]/(A.count[tframe]+AI.count[tframe]), col=2)
+    plot(tframe, SI.count[tframe]/(S.count[tframe]+SI.count[tframe]), type="l", ylim=c(0,1), main="sex vs. asex prevalence", ylab="prop")
+    lines(tframe, AI.count[tframe]/(A.count[tframe]+AI.count[tframe]), col=2)
 })
 
 @
