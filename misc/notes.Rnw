@@ -191,7 +191,7 @@ simulate_noinfection <- function(param){
             WU <- bU/(1+aU*N)
             
             recomb.gamete <- outer(c(-1, 1, 1, -1), c(S[1,4,t],-S[2,3,t]), "*")
-            S.gamete <- colSums(S[,,t]) + r * rowSums(recomb.gamete)
+            S.gamete <- colSums(S[,,t]) + diag(S[,,t]) + r * rowSums(recomb.gamete)
             if(sum(S.gamete)!=0) {
                 S.gamete <- S.gamete/sum(S.gamete)
             }
@@ -253,7 +253,7 @@ discrete_par2 <- c(
     aI=0.001,
     aU=0.001,
     bU=20,
-    bI=2,
+    bI=1,
     tmax=2100,
     tburnin=1000,
     N0=100,
@@ -279,7 +279,7 @@ simulate_infection <- function(param){
         I <- sum((AI[,,1]+SI[,,1])[upr])
         rho <- (SI[,,1] + AI[,,1])/I
         rho.recomb <- outer(c(-1, 1, 1, -1), c(rho[1, 4], -rho[2,3]), "*")
-        rho.gamete <- colSums(rho) + r * rowSums(rho.recomb)
+        rho.gamete <- colSums(rho) + diag(rho) + r * rowSums(rho.recomb)
         rho.gamete <- rho.gamete/sum(rho.gamete)
         para.outcross <- outer(rho.gamete, rho.gamete, "*")
         para.outcross <- 2*para.outcross
@@ -302,7 +302,7 @@ simulate_infection <- function(param){
             Sp <- (1-s) * S[,,t] * (WI * P + WU * (1-P))
             S.count[t+1] <- sum(Sp[upr])
             recomb.gamete <- outer(c(-1, 1, 1, -1), c(Sp[1,4],-Sp[2,3]), "*")
-            S.gamete <- colSums(Sp) + r * rowSums(recomb.gamete)
+            S.gamete <- colSums(Sp) + diag(Sp) + r * rowSums(recomb.gamete)
             if(sum(S.gamete)!=0) {
                 S.gamete <- S.gamete/sum(S.gamete)
             }
@@ -324,10 +324,15 @@ simulate_infection <- function(param){
             N.count[t+1] <- S.count[t+1] + A.count[t+1] + SI.count[t+1] + AI.count[t+1]
             
             I <- sum((AI[,,t+1]+SI[,,t+1])[upr])
-            rho <- (SI[,,t+1] + AI[,,t+1])/I
+            rho <- (SI[,,t+1] + AI[,,t+1])
+            if(sum(rho) != 0){
+                rho <- rho/I
+            }
             rho.recomb <- outer(c(-1, 1, 1, -1), c(rho[1, 4], -rho[2,3]), "*")
             rho.gamete <- colSums(rho) + r * rowSums(rho.recomb)
-            rho.gamete <- rho.gamete/sum(rho.gamete)
+            if(sum(rho.gamete) != 0){
+                rho.gamete <- rho.gamete/sum(rho.gamete)
+            }
             para.outcross <- outer(rho.gamete, rho.gamete, "*")
             para.outcross <- 2*para.outcross
             diag(para.outcross) <- diag(para.outcross)/2
@@ -344,7 +349,7 @@ simulate_infection <- function(param){
 
 set.seed(101)
 infection_res <- simulate_infection(discrete_par2)
-tframe <- 950:1200
+tframe <- 950:1300
 ## sex vs asex
 plot(tframe, infection_res$S.count[tframe], type="l", ylim=c(0,1e4), main="sex vs. asex size", ylab="size", xlab="generation")
 lines(tframe, infection_res$A.count[tframe], col=2)
