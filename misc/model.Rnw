@@ -1,0 +1,50 @@
+\documentclass{article}
+\title{Model}
+\usepackage{amsmath}
+\usepackage{natbib}
+\usepackage{hyperref}
+\bibliographystyle{chicago}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+I think it makes sense that we use a model that's similar to vector-borne disease models because trematodes have two hosts: snails and ducks. Ignoring spatial features and sexuality, we're going to use the following model:
+$$
+\begin{aligned}
+X_S' &= b - \beta_X X_S Y_I/N_X - \mu_X X_S - a X_S Y /N_X \\
+X_I' &= \beta_X X_S Y_I/N_X - (\mu_X + \alpha) X_S - a X_I Y /N_X\\
+Y_S' &= \mu_Y N_Y - \beta_Y Y_S X_I/N_Y - \mu_Y Y_S\\
+Y_I' &= \beta_Y Y_S X_I/N_Y - \mu_Y Y_S \\
+\end{aligned}
+$$
+Here, $X$ and $Y$ represent snail and duck population and subscripts represent the infection status. We keep the size of the duck population constant for simplicity. Snail population is hunted by the duck population and suffer from natural mortality.
+
+Now, let's separate asexual and sexual reproduction. Sexual snails are diploids and asexual snails are triploid clones but we assume diploidy for both for simplicity. Following \cite{ashby2014parasitic, ashby2015diversity}, we let birth rates for asexual and sexual population be
+$$
+\begin{aligned}
+b_{ij}^A &= r(X_{ij, S}^A + f \sum_j X_{ij, I}^A) (1- h_b N)\\
+b_{ij}^S &= c_b r \frac{(2-\delta_{ij}) X_i^S X_j^S }{2 \sum_k X_k^S} (1- h_b N),
+\end{aligned}
+$$
+where $X_i$ is the number of gamete $i$ in sexual population following recombination. We write it as $X_i= u +fv$, following \cite{ashby2014parasitic}.
+As \cite{gibson2017two} showed that there the snail system is consistent with the two fold cost of sex, we let $c_b = 1$.
+
+We want to model outcrossing and recombination of parasies. We can define $P_{ij}$ be number of parasite genotypes in ducks after sexual recombination. Simply, we can write
+$$
+P_{ij} = \frac{(2-\delta_{ij}) Y_i^S Y_j^S }{\sum_k Y_k^S}
+$$
+Then, our model becomes:
+$$
+\begin{aligned}
+{X_{ij,S}}' &= b_{ij} - \beta_X {X_{ij,S}} Z_{ij}/N_X - \mu_X {X_{ij,S}} - a {X_{ij,S}} Y/N_X\\
+{X_{ij,I}}' &= \beta_X {X_{ij,S}} Z_{ij}/N_X - (\mu_X + \alpha) {X_{ij,S}} - a {X_{ij,S}} Y/N_X\\
+Y_S' &= \mu_Y N_Y - \beta_Y Y_S \left(\sum_{i,j} X_{ij, I}\right) - \mu_Y Y_S\\
+Y_{ij,I}' &= \beta_Y Y_S X_{ij, I} - \mu_Y Y_{ij, I}
+\end{aligned}
+$$
+
+
+\bibliography{redqueen}
+\end{document}
