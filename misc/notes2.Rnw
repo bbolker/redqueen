@@ -57,6 +57,9 @@ What I should be looking at:
 
 \cite{hakoyama2004coexistence} tried to model Japanese crucian carp and showed that parasitism may explain the evolution of sex. They also show that coexistence of parthnogenetic complex is more likely than that of gynogenetic complex. Read this paper later to see how we want to analyze our model!
 
+\cite{neiman2017sex} emphasizes importance of a pluralist approach and suggests directions. It's worth noting that many of pluralist studies include red queen dynamics. We are being a pluralist because we're adding ecological feedback in the model. I don't think we have to test for power yet as there aren't many appropriate systems but it might still be important and interesting to compare power for pluralist idea vs. red queen alone. See \cite{meirmans2006methodologies} for testing interactive effects.
+
+
 
 \bibliography{redqueen}
 \end{document}
