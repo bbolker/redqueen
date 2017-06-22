@@ -30,8 +30,8 @@ lively_model <- function(p = c(0.1, 0.3, 0.6),
                          tmax=2100, tburnin=1000) {
     if(!is.null(seed)) set.seed(seed)
     
-    S <- SI <- A <- AI <- array(0, dim=c(tmax, 3, 3))
-    N.count <- S.count <- SI.count <- A.count <- AI.count <- rep(0,tmax)
+    S <- SI <- A <- AI <- array(0, dim=c(tmax+1, 3, 3))
+    N.count <- S.count <- SI.count <- A.count <- AI.count <- rep(0,tmax+1)
     
     migratefun <- function(p) {
         matrix(p, 3, 3)
@@ -44,7 +44,7 @@ lively_model <- function(p = c(0.1, 0.3, 0.6),
     
     P <- 0
     
-    for(t in 1:(tmax-1)){
+    for(t in 1:(tmax)){
         if (t==tburnin) {
             A[t,1,1] <- 1
             A.count[t] <- 1
@@ -107,9 +107,9 @@ discrete_model <- function(start=discrete_initialize(),
                            tmax=2100, tburnin=1000) {
     if(!is.null(seed)) set.seed(seed)
 
-    S <- SI <- A <- AI <- array(0, dim=c(tmax, 4, 4))
-    I <- matrix(0, nrow=tmax, ncol=4)
-    N.count <- S.count <- SI.count <- A.count <- AI.count <- rep(0,tmax)
+    S <- SI <- A <- AI <- array(0, dim=c(tmax+1, 4, 4))
+    I <- matrix(0, nrow=tmax+1, ncol=4)
+    N.count <- S.count <- SI.count <- A.count <- AI.count <- rep(0,tmax+1)
     
     migratefun <- function(p) {
         matrix(p, 4, 4)
@@ -121,7 +121,7 @@ discrete_model <- function(start=discrete_initialize(),
     N.count[1] <- scaled_sum(S[1,,])
     P <- 0
 
-    for(t in 1:(tmax-1)){
+    for(t in 1:(tmax)){
         if (t==tburnin) {
             A[t,,] <- introduce()
             A.count[t] <- 1

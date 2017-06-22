@@ -12,7 +12,7 @@ with(res,{
 
 ## prevalence
 with(res,{
-    plot(AI.count/(A.count), type="l", xlim=c(1500, 1600), ylim=c(0,1))
+    plot(AI.count/(A.count), type="l", xlim=c(0, 1600), ylim=c(0,1))
     lines(SI.count/(S.count), col=2)
 })
 
