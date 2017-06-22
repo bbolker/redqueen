@@ -13,17 +13,79 @@ discrete_initialize <- function(p=0.5, q=0.5,
     genotype <- scaled_matrix(genotype)
     
     S <- (N0-I0) * genotype
-    SI <- I0 * genotype
-    
-    list(S=S, SI=SI)
 }
+
+##' Lively2010
+##' @param p allele frequencies at the first loci
+##' @param q allele frequencies at second loci
+lively_model <- function(p = c(0.1, 0.3, 0.6),
+                         q = c(0.3, 0.3, 0.4),
+                         s=0.5, 
+                         r=0.2,
+                         beta=5,
+                         aU=0.001, aI=0.001,
+                         bU=20, bI=3,
+                         migrate.host=0.1, migrate.pathogen=0.02,
+                         seed=NULL,
+                         tmax=2100, tburnin=1000) {
+    if(!is.null(seed)) set.seed(seed)
+    
+    S <- SI <- A <- AI <- array(0, dim=c(tmax, 3, 3))
+    N.count <- S.count <- SI.count <- A.count <- AI.count <- rep(0,tmax)
+    
+    migratefun <- function(p) {
+        matrix(p, 3, 3)
+    }
+    
+    S[1,,] <- 1000 * outer(p, q, "*")
+    
+    S.count[1] <- sum(S[1,,])
+    N.count[1] <- sum(S[1,,])
+    
+    P <- 0
+    
+    for(t in 1:(tmax-1)){
+        if (t==tburnin) {
+            A[t,1,1] <- 1
+            A.count[t] <- 1
+        }
+        
+        S[t,,] <- S[t,,] + migratefun(migrate.host)
+        
+        WU <- bU/(1+aU*N.count[t])
+        WI <- bI/(1+aI*N.count[t])
+        
+        Sp <- (1-s) * S[t,,] * (WI * P + WU * (1-P))
+        p.gam <- colSums(Sp)/sum(Sp)
+        q.gam <- rowSums(Sp)/sum(Sp)
+        
+        S[t+1,,] <- sum(Sp)*((1-r)*Sp/sum(Sp)+ r*outer(p.gam, q.gam, "*"))
+        S.count[t+1] <- sum(S[t+1,,])
+        
+        A[t+1,,] <- A[t,,] * (WI * P + WU * (1-P))
+        A.count[t+1] <- sum(A[t+1,,])
+        AI[t,,] <- A[t,,] * P
+        AI.count[t] <- sum(AI[t,,])
+        
+        SI[t,,] <- S[t,,] * P + migratefun(migrate.host)
+        SI.count[t] <- sum(SI[t,,])
+        
+        N.count[t+1] <- S.count[t+1] + A.count[t+1]
+        P <- 1 - exp(-beta*(SI[t,,]+AI[t,,])/N.count[t+1])
+    }
+    
+    return(list(
+        S=S, SI=SI, S.count=S.count, SI.count=SI.count, A=A, AI=AI, A.count=A.count, AI.count=AI.count
+    ))
+}
+
 
 ##' Discrete model without spatial structure
 ##' 
 ##' @param start list of starting values
 ##' @param s male offspring ratio
-##' @param r.host host recombination probability
-##' @param r.pathogen pathogen recombination probability
+##' @param r host recombination probability
+##' @param epsilon parasite mutation probability
 ##' @param beta realized fecundity of parasite (Lively, 2010)
 ##' @param aU scales the effect of total host density on offpspring production by uninfected hosts
 ##' @param aI scales the effect of total host density on offpspring production by infected hosts
@@ -34,46 +96,30 @@ discrete_initialize <- function(p=0.5, q=0.5,
 ##' @param tmax maximum number of generations
 ##' @param tburnin burn-in period
 ##' @return a list containing simulation results
-discrete_model <- function(start,
+discrete_model <- function(start=discrete_initialize(),
                            s=0.5, 
-                           r.host=0.2, r.pathogen=0.1,
-                           beta=20,
+                           r=0.2, epsilon=0.01,
+                           beta=5,
                            aU=0.001, aI=0.001,
-                           bU=20, bI=1,
-                           migrate=c("none","deterministic","stochastic"),
+                           bU=20, bI=3,
                            migrate.host=0.1, migrate.pathogen=0.02,
                            seed=NULL,
                            tmax=2100, tburnin=1000) {
-    migrate <- match.arg(migrate)
-    
     if(!is.null(seed)) set.seed(seed)
 
-    if(missing(start)) start <- discrete_initialize()
-    
-    S <- SI <- A <- AI <- I <- array(0, dim=c(tmax, 4, 4))
-    N.count <- S.count <- SI.count <- A.count <- AI.count <- I.count <- rep(0,tmax)
-    
-    outcross <- function(genotype, r) {
-        recomb <- outer(c(-1, 1, 1, -1), c(genotype[1, 4], -genotype[2, 3]), "*")
-        gamete <- colSums(genotype) + diag(genotype) + r * rowSums(recomb)
-        new.genotype <- scaled_matrix(outer(gamete, gamete, "*"))
-        if(scaled_sum(genotype) != 0) new.genotype <- new.genotype/scaled_sum(4*genotype)
-        
-        new.genotype
-    }
+    S <- SI <- A <- AI <- array(0, dim=c(tmax, 4, 4))
+    I <- matrix(0, nrow=tmax, ncol=4)
+    N.count <- S.count <- SI.count <- A.count <- AI.count <- rep(0,tmax)
     
     migratefun <- function(p) {
-        switch(migrate,
-               none=matrix(0, 4, 4),
-               deterministic=matrix(p, 4, 4),
-               stochastic=scaled_matrix(matrix(as.numeric(runif(16)<p*.upr), 4, 4)))
+        matrix(p, 4, 4)
     }
     
-    S[1,,] <- start$S
-    SI[1,,] <- start$SI
+    S[1,,] <- start
     
     S.count[1] <- scaled_sum(S[1,,])
-    SI.count[1] <- scaled_sum(SI[1,,])
+    N.count[1] <- scaled_sum(S[1,,])
+    P <- 0
 
     for(t in 1:(tmax-1)){
         if (t==tburnin) {
@@ -81,52 +127,37 @@ discrete_model <- function(start,
             A.count[t] <- 1
         }
         
-        
         S[t,,] <- S[t,,] + migratefun(migrate.host)
-        SI[t,,] <- SI[t,,] + migratefun(migrate.pathogen)
-        
-        I[t,,] <- outcross(SI[t,,] +AI[t,,], r.pathogen)
-        I.count[t] <- scaled_sum(I[t,,])
-        
-        N.count[t] <- S.count[t] + A.count[t] + I.count[t]
-        
-        ## rho <- (SI[t,,] + AI[t,,])
-        ## if(I.count[t] != 0){
-        ##    rho <- rho/I.count[t]
-        ## }
-        ## rho.recomb <- outer(c(-1, 1, 1, -1), c(rho[1, 4], -rho[2,3]), "*")
-        ## rho.gamete <- colSums(rho) + diag(rho) + r * rowSums(rho.recomb)
-        ## rho.gamete <- rho.gamete/2
-        ## scaled_matrix(outer(rho.gamete, rho.gamete, "*"))    
-        
-        P <- 1 - exp(-beta*I[t,,]/N.count[t])
         
         WU <- bU/(1+aU*N.count[t])
         WI <- bI/(1+aI*N.count[t])
         
         Sp <- (1-s) * S[t,,] * (WI * P + WU * (1-P))
-        S.count[t+1] <- scaled_sum(Sp)
-        S[t+1,,] <- outcross(Sp, r.host)
+        S[t+1,,] <- outcross(Sp, r)
+        S.count[t+1] <- scaled_sum(S[t+1,,])
         
-        ## recomb.gamete <- outer(c(-1, 1, 1, -1), c(Sp[1,4],-Sp[2,3]), "*")
-        ## S.gamete <- colSums(Sp) + diag(Sp) + r * rowSums(recomb.gamete)
-        ## if(sum(S.gamete)!=0) {
-        ##     S.gamete <- S.gamete/sum(S.gamete)
-        ## }
-        ## S.outcross <- scaled_matrix(outer(S.gamete, S.gamete, "*"))
-        ## S[t+1,,] <- S.count[t+1] * S.outcross
+        SI[t,,] <- S[t,,] * P
+        SI.count[t] <- scaled_sum(SI[t,,])
         
         A[t+1,,] <- A[t,,] * (WI * P + WU * (1-P))
         A.count[t+1] <- scaled_sum(A[t+1,,])
-        AI[t+1,,] <- A[t,,] * P
-        AI.count[t+1] <- scaled_sum(AI[t+1,,])
         
-        SI[t+1,,] <- S[t,,] * P
-        SI.count[t+1] <- scaled_sum(SI[t+1,,])
+        AI[t,,] <- A[t,,] * P
+        AI.count[t] <- scaled_sum(AI[t,,])
+        
+        N.count[t+1] <- S.count[t+1] + A.count[t+1]
+        
+        I[t,] <- 1/2*(colSums(SI[t,,] +AI[t,,]) + diag(SI[t,,] +AI[t,,]))
+        
+        I[t,] <- ((1-epsilon)*I[t,]+epsilon * (sum(I[t,]) - (I[t,]+rev(I[t,])))/2) + migrate.pathogen
+        
+        inf <- scaled_matrix(outer(I[t,], I[t,], "+"))/2
+        
+        P <- 1 - exp(-beta*inf/N.count[t])
     }
     
     return(list(
-        S=S, SI=SI, S.count=S.count, SI.count=SI.count, A=A, AI=AI, A.count=A.count, AI.count=AI.count, I=I, I.count=I.count
+        S=S, SI=SI, S.count=S.count, SI.count=SI.count, A=A, AI=AI, A.count=A.count, AI.count=AI.count, N.count=N.count, I=I
     ))
 }
 
@@ -149,11 +180,6 @@ spatial_discrete_model <- function(start,
     
     S <- SI <- A <- AI <- I <- array(0, dim=c(tmax, 4, 4, n.site))
     N.count <- S.count <- SI.count <- A.count <- AI.count <- I.count <- matrix(0, nrow=tmax, ncol=n.site)
-    
-    introduce <- function() {
-        new.genotype <- scaled_matrix(matrix(rmultinom(1, size=1, prob=.upr), 4, 4))
-        new.genotype
-    }
     
     migratefun <- function(p) {
         switch(migrate,

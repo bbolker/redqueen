@@ -140,14 +140,7 @@ S_{ij}' &= (1-s) S_0 (2 g_i g_j) W_U.
 $$
 
 
-$$
-\begin{aligned}
-g_1 &= (\sum_{k} S_{1k} - r S_{14} + r S_{23})/(\sum_j X_j),\\
-g_2 &= (\sum_{k} S_{2k} - r S_{23} + r S_{14})//(\sum_j X_j),\\
-g_3 &= (\sum_{k} S_{3k} - r S_{23} + r S_{14})//(\sum_j X_j),\\
-g_4 &= (\sum_{k} S_{4k} - r S_{14} + r S_{23})//(\sum_j X_j).\\
-\end{aligned}
-$$
+
 
 Clonal asexuals are easy to model:
 $$
