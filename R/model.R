@@ -18,8 +18,8 @@ discrete_initialize <- function(p=0.5, q=0.5,
 ##' Lively2010
 ##' @param p allele frequencies at the first loci
 ##' @param q allele frequencies at second loci
-lively_model <- function(p = c(0.1, 0.3, 0.6),
-                         q = c(0.3, 0.3, 0.4),
+lively_model <- function(p = c(0.33, 0.33, 0.34),
+                         q = c(0.33, 0.33, 0.34),
                          s=0.5, 
                          r=0.2,
                          beta=5,
@@ -34,7 +34,7 @@ lively_model <- function(p = c(0.1, 0.3, 0.6),
     N.count <- S.count <- SI.count <- A.count <- AI.count <- rep(0,tmax+1)
     
     migratefun <- function(p) {
-        matrix(p, 3, 3)
+        matrix(as.numeric(runif(9)<p), 3, 3)
     }
     
     S[1,,] <- 1000 * outer(p, q, "*")
@@ -42,15 +42,13 @@ lively_model <- function(p = c(0.1, 0.3, 0.6),
     S.count[1] <- sum(S[1,,])
     N.count[1] <- sum(S[1,,])
     
-    P <- 0
+    P <- 1e-4
     
     for(t in 1:(tmax)){
         if (t==tburnin) {
             A[t,1,1] <- 1
             A.count[t] <- 1
         }
-        
-        S[t,,] <- S[t,,] + migratefun(migrate.host)
         
         WU <- bU/(1+aU*N.count[t])
         WI <- bI/(1+aI*N.count[t])
@@ -59,7 +57,7 @@ lively_model <- function(p = c(0.1, 0.3, 0.6),
         p.gam <- colSums(Sp)/sum(Sp)
         q.gam <- rowSums(Sp)/sum(Sp)
         
-        S[t+1,,] <- sum(Sp)*((1-r)*Sp/sum(Sp)+ r*outer(p.gam, q.gam, "*"))
+        S[t+1,,] <- sum(Sp)*((1-r)*Sp/sum(Sp)+ r*outer(p.gam, q.gam, "*")) + migratefun(migrate.host)
         S.count[t+1] <- sum(S[t+1,,])
         
         A[t+1,,] <- A[t,,] * (WI * P + WU * (1-P))
@@ -78,7 +76,6 @@ lively_model <- function(p = c(0.1, 0.3, 0.6),
         S=S, SI=SI, S.count=S.count, SI.count=SI.count, A=A, AI=AI, A.count=A.count, AI.count=AI.count
     ))
 }
-
 
 ##' Discrete model without spatial structure
 ##' 
@@ -153,7 +150,7 @@ discrete_model <- function(start=discrete_initialize(),
         
         inf <- scaled_matrix(outer(I[t,], I[t,], "+"))/2
         
-        P <- 1 - exp(-beta*inf/N.count[t])
+        P <- 1 - exp(-beta*inf/N.count[t+1])
     }
     
     return(list(
@@ -162,12 +159,13 @@ discrete_model <- function(start=discrete_initialize(),
 }
 
 spatial_discrete_model <- function(start,
-                                   n.site=10, epsilon=0.001,
+                                   n.site=10, epsilon=0.01,
+                                   epsilon.site=0.01,
                                    s=0.5, 
-                                   r.host=0.2, r.pathogen=0.1,
-                                   beta=20,
+                                   r.host=0.2,
+                                   beta=5,
                                    aU=0.001, aI=0.001,
-                                   bU=20, bI=1,
+                                   bU=20, bI=3,
                                    migrate=c("none","deterministic","stochastic"),
                                    migrate.host=0.1, migrate.pathogen=0.02,
                                    seed=NULL,
@@ -178,8 +176,9 @@ spatial_discrete_model <- function(start,
     
     if(missing(start)) start <- discrete_initialize()
     
-    S <- SI <- A <- AI <- I <- array(0, dim=c(tmax, 4, 4, n.site))
-    N.count <- S.count <- SI.count <- A.count <- AI.count <- I.count <- matrix(0, nrow=tmax, ncol=n.site)
+    S <- SI <- A <- AI <- array(0, dim=c(tmax+1, 4, 4, n.site))
+    I <- array(0, dim=c(tmax+1, 4, n.site))
+    N.count <- S.count <- SI.count <- A.count <- AI.count <- matrix(0, nrow=tmax+1, ncol=n.site)
     
     migratefun <- function(p) {
         switch(migrate,
@@ -189,62 +188,62 @@ spatial_discrete_model <- function(start,
     }
     
     for(i in 1:n.site) {
-        S[1,,,i] <- start$S
-        SI[1,,,i] <- start$SI
+        S[1,,,i] <- start
         S.count[1,i] <- scaled_sum(S[1,,,i])
-        SI.count[1,i] <- scaled_sum(SI[1,,,i])
+        N.count[1,i] <- scaled_sum(S[1,,,i])
     }
     
-    for(t in 1:(tmax-1)){
-        ## calculate infection stuff first...
+    inf <- array(0, dim=c(4, 4, n.site))
+    P <- array(0, dim=c(4, 4, n.site))
+    
+    for(t in 1:(tmax)){
         for(i in 1:n.site) {
             if (t==tburnin) {
                 A[t,,,i] <- introduce()
                 A.count[t,i] <- 1
             }
             
-            
             S[t,,,i] <- S[t,,,i] + migratefun(migrate.host)
-            SI[t,,,i] <- SI[t,,,i] + migratefun(migrate.pathogen)
-            
-            I[t,,,i] <- outcross(SI[t,,,i] +AI[t,,,i], r.pathogen)
-            I.count[t,i] <- scaled_sum(I[t,,,i])
-            
-            N.count[t,i] <- S.count[t,i] + A.count[t,i] + I.count[t,i]
-        }
-        
-        
-        
-        for(i in 1:n.site) {
-            I.tot <- matrix(0, 4, 4)
-            
-            for(j in 1:n.site) {
-                I.tot <- I.tot + ifelse(i==j, 1, epsilon) * I[t,,,j]
-            }
-            
-            P <- 1 - exp(-beta*I.tot/N.count[t,i])
             
             WU <- bU/(1+aU*N.count[t,i])
             WI <- bI/(1+aI*N.count[t,i])
             
-            Sp <- (1-s) * S[t,,,i] * (WI * P + WU * (1-P))
-            S.count[t+1,i] <- scaled_sum(Sp)
+            Sp <- (1-s) * S[t,,,i] * (WI * P[,,i] + WU * (1-P[,,i]))
             S[t+1,,,i] <- outcross(Sp, r.host)
+            S.count[t+1,i] <- scaled_sum(S[t+1,,,i])
             
-            A[t+1,,,i] <- A[t,,,i] * (WI * P + WU * (1-P))
+            SI[t,,,i] <- S[t,,,i] * P[,,i]
+            SI.count[t,i] <- scaled_sum(SI[t,,,i])
+            
+            A[t+1,,,i] <- A[t,,,i] * (WI * P[,,i] + WU * (1-P[,,i]))
             A.count[t+1,i] <- scaled_sum(A[t+1,,,i])
-            AI[t+1,,,i] <- A[t,,,i] * P
-            AI.count[t+1,i] <- scaled_sum(AI[t+1,,,i])
             
-            SI[t+1,,,i] <- S[t,,,i] * P
-            SI.count[t+1,i] <- scaled_sum(SI[t+1,,,i])
+            AI[t,,,i] <- A[t,,,i] * P[,,i]
+            AI.count[t,i] <- scaled_sum(AI[t,,,i])
+            
+            N.count[t+1,i] <- S.count[t+1,i] + A.count[t+1,i]
+            
+            I[t,,i] <- 1/2*(colSums(SI[t,,,i] +AI[t,,,i]) + diag(SI[t,,,i] +AI[t,,,i]))
+            
+            I[t,,i] <- ((1-epsilon)*I[t,,i]+epsilon * (sum(I[t,,i]) - (I[t,,i]+rev(I[t,,i])))/2) + migrate.pathogen
+            
+            inf[,,i] <- scaled_matrix(outer(I[t,,i], I[t,,i], "+"))/2
         }
         
+        I.tot <- array(0, dim=c(4, 4, n.site))
+        
+        for(i in 1:n.site) {
+            for(j in 1:n.site) {
+                I.tot[,,i] <- I.tot[,,i] + ifelse(i==j, 1-epsilon.site, epsilon.site/(n.site-1)) * inf[,,j]
+            }
+            
+            P[,,i] <- 1 - exp(-beta[i]*I.tot[,,i]/N.count[t+1,i])
+        }
         
     }
     
     return(list(
-        S=S, SI=SI, S.count=S.count, SI.count=SI.count, A=A, AI=AI, A.count=A.count, AI.count=AI.count, I=I, I.count=I.count
+        S=S, SI=SI, S.count=S.count, SI.count=SI.count, A=A, AI=AI, A.count=A.count, AI.count=AI.count, N.count=N.count, I=I
     ))
 }
 

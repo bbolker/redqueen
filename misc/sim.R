@@ -1,18 +1,18 @@
-res <- discrete_model(beta=4,bU=30,seed=101)
+res <- discrete_model(beta=5,seed=113, tmax=2000)
+
+## proportion of asexual
+with(res,{
+    plot((A.count)/N.count, type="l", xlim=c(1950, 2000))
+})
 
 with(res,{
     plot(A.count, type="l", xlim=c(950, 2100))
     lines(S.count, col=2)
 })
 
-## proportion of asexual
-with(res,{
-    plot((A.count)/N.count, type="l", xlim=c(950, 2100))
-})
-
 ## prevalence
 with(res,{
-    plot(AI.count/(A.count), type="l", xlim=c(0, 1600), ylim=c(0,1))
+    plot(AI.count/(A.count), type="l", xlim=c(0, 1500), ylim=c(0,1))
     lines(SI.count/(S.count), col=2)
 })
 
@@ -24,35 +24,29 @@ with(res,{
     abline(h=1)
 })
 
-## host genotype vs parasite genotype
 with(res, {
-    plot(AI.count, type="l", xlim=c(1500,1600), ylim=c(0, 20000))
+    plot(AI.count, type="l", xlim=c(1500,1600), ylim=c(0, 5000))
     lines(A.count, col=1, lty=2)
 })
 
-plot(res$SI[,2,2], type="l")
-res$S[1100,,]
-res$A[1100,,]
-res$I[2000,,]
-
-res_spatial <- spatial_discrete_model(beta=50, seed=113, migrate="deterministic", tmax=4000)
+res_spatial <- spatial_discrete_model(beta=c(5:15), n.site=10, seed=113, migrate="deterministic", tmax=2000)
 
 ## proportion of asexual
 with(res_spatial,{
-    N <- rowSums(A.count+AI.count + S.count+SI.count)
-    plot(rowSums(AI.count+A.count)/N, type="l", xlim=c(950, 2100))
+    plot(rowSums(A.count)/rowSums(N.count), type="l", xlim=c(1950, 2000))
 })
 
 ## prevalence
 with(res_spatial,{
-    plot(rowSums(AI.count)/rowSums(A.count+AI.count), type="l", xlim=c(950, 4000))
-    lines(rowSums(SI.count)/rowSums(S.count+SI.count), col=2)
+    plot(rowSums(AI.count)/rowSums(A.count), type="l", xlim=c(1900, 2100))
+    lines(rowSums(SI.count)/rowSums(S.count), col=2)
 })
 
 ## relative ratio
 with(res_spatial,{
-    u.sexual <- rowSums(S.count)/rowSums(S.count+SI.count)
-    u.asexual <- rowSums(A.count)/rowSums(A.count+AI.count)
-    plot(u.sexual/u.asexual, type="l", xlim=c(3900,4000))
+    u.sexual <- 1-rowSums(SI.count)/rowSums(S.count)
+    u.asexual <- 1-rowSums(AI.count)/rowSums(A.count)
+    plot(u.sexual/u.asexual, type="l", xlim=c(1900,2000), ylim=c(0, 10))
+    abline(h=1, lty=2)
 })
 

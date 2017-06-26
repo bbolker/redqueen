@@ -69,7 +69,7 @@ What I should be looking at:
 We simulate red queen dynamics based on matching alleles (MA) model using diploid hosts and haploid parasites. Instead of using modifier genes, we model obligate asexual and sexual population explicitly. Assuming there are two biallelic loci, there are four types of gametes that can be produced: $AB, Ab, aB, ab$. 
 We will be using indices $1-4$ for simplicity to refer to these gametes \citep{agrawal2006host}.
 
-Let $A_{ij}$ and $S_{ij}$ represent density of susceptible asexual and sexual population with genotype $ij$.
+Let $A_{ij}$ and $S_{ij}$ represent density of total asexual and sexual population with genotype $ij$.
 Following \cite{lively2010epidemiological}, we can write
 $$
 \begin{aligned}
@@ -78,9 +78,9 @@ S_{ij}' &= (1-s) S_0 (2 g_i g_j) [W_I P_{ij} + W_U(1-P_{ij})],\\
 A_{ij}' &= A_{ij} [W_I P_{ij} + W_U (1-P_{ij})],
 \end{aligned}
 $$
-where $s$ is the proportion of male offspring produced, $S_0$ is the total density of the susceptible sexual population, $g_i$ is the frequency of gamete $i$ before recombination and $P_{ij}$ is the probability of infection. $W_I$ and $W_U$ are modeled in the same way as \cite{lively2010epidemiological}. After recombination, $\mu$ individuals enter all sexual genotypes.
+where $s$ is the proportion of male offspring produced, $S_0$ is the total density of the sexual population, $g_i$ is the frequency of gamete $i$ before recombination and $P_{ij}$ is the probability of infection. $W_I$ and $W_U$ are modeled in the same way as \cite{lively2010epidemiological}. After recombination, $\mu$ individuals enter all sexual genotypes.
 
-Following selection, we assume that parasites can go under mutation before infecting susceptible hosts. Following the approach by \cite{ashby2015diversity}, we can find the density of parasite with genotype $i$:
+Following selection, we assume that parasites can go under mutation before infecting hosts. Following the approach by \cite{ashby2015diversity}, we can find the density of parasite with genotype $i$:
 $$
 I_i = \frac{1}{2} \left((1-\epsilon) \sum_{p} \delta_{ip} (S_{ip,I} + A_{ip,I})  + \frac{\epsilon}{n} \sum_{p, q} \eta_{ip} (S_{pq,I} + A_{pq,I}) \right) + \kappa.
 $$
