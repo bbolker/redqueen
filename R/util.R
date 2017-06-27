@@ -25,17 +25,3 @@ outcross <- function(genotype, r) {
     
     new.genotype
 }
-
-apply_gen <- function(x, name, FUN, 
-                      gen=c(2001,2100)) {
-    y <- x[name]
-    lapply(y, function(z){
-        if(is.vector(z)) {
-            FUN(z[gen])
-        } else if(is.matrix(z)) {
-            FUN(z[gen,])
-        } else if(is.array (z)) {
-            FUN(z[gen,,])
-        }
-    })
-}

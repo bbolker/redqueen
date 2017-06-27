@@ -32,7 +32,7 @@ anova(fit, test="Chisq")
 
 ## It seems like Vergara et al are using population standard deviation
 ## instead of sample standard deviation
-## See figure 2 West Point 2002
+## See figure 2 West point 2002
 sd2 <- function(x) sd(x) * sqrt((length(x)-1)/length(x))
 
 
@@ -48,7 +48,6 @@ vergara_fig1a <- vergara_base %>%
 vergara_fig1b <- vergara_base %>%
     group_by(Year) %>%
     summarize(prop=sum(Ploidy=="asexual")/length(Ploidy),
-              sd=sd(Microphallus),
               se=sd(Microphallus)/sqrt(length(Microphallus)))
 
 fig1a_base <- ggplot(vergara_fig1a, aes(Year, prev, col=Ploidy, group=Ploidy)) +
