@@ -1,9 +1,12 @@
 library(ggplot2); theme_set(theme_bw())
 library(gridExtra)
+library(MASS) ## for contr.sdif
+## load MASS *first*, select() masks dplyr!
 library(dplyr)
 library(tidyr)
 library(car)
 library(readxl)
+
 
 geom_errorbar <- function(...) ggplot2::geom_errorbar(..., width=0.1)
 geom_point <- function(...) ggplot2::geom_point(..., size=3)
@@ -26,8 +29,9 @@ vergara_nomale <- vergara %>%
 
 fit <- glm(Microphallus~(Year+Site+Ploidy)^2, 
            family=binomial("logit"), 
-           data=vergara_nomale)
-Anova(fit, test.statistic = "Wald")
+           data=vergara_nomale,
+           contrasts=list(Year=MASS::contr.sdif))
+Anova(fit, test.statistic = "Wald", type="2")
 
 ## Figures
 
@@ -51,9 +55,9 @@ vergara_fig1b <- vergara_base %>%
     summarize(prop=sum(Ploidy=="asexual")/length(Ploidy),
               se=sd(Microphallus)/sqrt(length(Microphallus)))
 
-fig1a_base <- ggplot(vergara_fig1a, aes(Year, prev, col=Ploidy, group=Ploidy)) +
+fig1a_base <- ggplot(vergara_fig1a, aes(Year, prev, col=Ploidy, group=Ploidy))+
     geom_errorbar(aes(ymin=prev-se, ymax=prev+se), col="black") +
-    geom_point() +
+    geom_point() + 
     geom_line() +
     vergara_theme +
     scale_color_grey()
@@ -81,19 +85,35 @@ fig1a_base %+% vergara_fig2 +
     facet_wrap(~Site, scales="free") +
     scale_y_continuous(limits=c(0, 1.05), breaks=seq(0, 1, by=0.1), expand=c(0,0))
 
+
 ## Figure 3
 vergara_fig3 <- vergara_fig2 %>%
     filter(Site != "West Point") %>%
-    select(-se, -Site.count) %>%
+    select(-c(se,Site.count)) %>%
     spread(Ploidy, prev) %>%
     summarize(ratio=(1-sexual)/(1-asexual))
 
-ggplot(vergara_fig3, aes(Year, ratio, col=Site, group=Site)) +
-    geom_point(size=5) +
+ggplot(vergara_fig3, aes(Year, ratio, col=Site, shape=Site)) +
     geom_line() +
+    geom_point(size=5,fill="white") +
     geom_hline(yintercept=1, lty=2) +
-    scale_y_continuous(limits=c(0, 3.5), breaks=seq(0, 3.5, by=0.5), expand=c(0,0)) +
+    ## current order is Halfway, Swamp, Camp
+    scale_shape_manual(values=c(22,16,21))+
+    scale_y_continuous(limits=c(0, 3.5), breaks=seq(0, 3.5, by=0.5),
+                       expand=c(0,0)) +
     vergara_theme +
-    scale_color_grey()
+    scale_color_manual(values=gray(c(0.6,0.4,0.0)))
+
+
+###########
+
+
+
+
+
+
+
+
+
 
 
