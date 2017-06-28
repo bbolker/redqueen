@@ -2,6 +2,7 @@ library(ggplot2); theme_set(theme_bw())
 library(gridExtra)
 library(dplyr)
 library(tidyr)
+library(car)
 library(readxl)
 
 geom_errorbar <- function(...) ggplot2::geom_errorbar(..., width=0.1)
@@ -26,7 +27,7 @@ vergara_nomale <- vergara %>%
 fit <- glm(Microphallus~(Year+Site+Ploidy)^2, 
            family=binomial("logit"), 
            data=vergara_nomale)
-anova(fit, test="Chisq")
+Anova(fit, test.statistic = "Wald")
 
 ## Figures
 

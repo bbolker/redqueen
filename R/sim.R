@@ -8,7 +8,7 @@ beta_vec <- qlnorm(q, meanlog = 1.5, sdlog=0.1)
 
 tmax <- 3000
 
-res_spatial <- spatial_discrete_model(beta=beta_vec, n.site=n.site, seed=113, migrate="deterministic", tmax=tmax)
+res_spatial <- spatial_discrete_model(beta=beta_vec, n.site=n.site, seed=113, tmax=tmax)
 
 save("res_spatial", file="50sites.rda")
 ## move to ../data directory

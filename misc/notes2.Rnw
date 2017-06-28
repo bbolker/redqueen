@@ -80,14 +80,19 @@ A_{ij}' &= A_{ij} [W_I P_{ij} + W_U (1-P_{ij})],
 $$
 where $s$ is the proportion of male offspring produced, $S_0$ is the total density of the sexual population, $g_i$ is the frequency of gamete $i$ before recombination and $P_{ij}$ is the probability of infection. $W_I$ and $W_U$ are modeled in the same way as \cite{lively2010epidemiological}. After recombination, $\mu$ individuals enter all sexual genotypes.
 
-Following selection, we assume that parasites can go under mutation before infecting hosts. Following the approach by \cite{ashby2015diversity}, we can find the density of parasite with genotype $i$:
+Let $\lambda_i$ be the mean number of poisson mean number of exposures for hosts with genotype $ij$ by parasite with haplotype $i$, we can write
 $$
-I_i = \frac{1}{2} \left((1-\epsilon) \sum_{p} \delta_{ip} (S_{ip,I} + A_{ip,I})  + \frac{\epsilon}{n} \sum_{p, q} \eta_{ip} (S_{pq,I} + A_{pq,I}) \right) + \kappa.
+P_{ij} = 1 -\exp(-(\lambda_i+\lambda_j)/2).
 $$
+By doing so, we are assuming that effects of dominance do not exist. Then, we get
+$$
+\lambda_i = \beta \left(\sum_{p} (S_{ip,i,I} + A_{ip,i,I}) + \kappa\right)/N
+$$
+To avoid fixation, we assume that new parasites enter the population at a constant rate.
 
-$P_{ij}$ cannot be modeled in the same way as \cite{lively2010epidemiological} because we're assuming diploid hosts. Thus, we write
+Here, density of genotype $ip$ infected with haplotype $i$ -- $S_{ij,i,I}$ and $A_{ij,i,I}$ -- is given by 
 $$
-P_{ij} = 1 - \exp(-\beta(I_i + I_j)/N').
+S_{ij,i,I} = \frac{\lambda_i(t-1)}{\lambda_{i}(t-1)+\lambda_j(t-1)} S_{ij,I},...
 $$
 
 \bibliography{redqueen}

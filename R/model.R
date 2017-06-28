@@ -4,7 +4,7 @@
 ##' @param N0 initial population size
 ##' @param I0 initial number of infected
 discrete_initialize <- function(p=0.5, q=0.5, 
-                                N0=1000, I0=1) {
+                                N0=1000) {
     locus1 <- c(p, 1-p)
     locus2 <- c(q, 1-q)
     
@@ -12,7 +12,7 @@ discrete_initialize <- function(p=0.5, q=0.5,
     genotype <- outer(gamete, gamete, "*")
     genotype <- scaled_matrix(genotype)
     
-    S <- (N0-I0) * genotype
+    S <- N0 * genotype
 }
 
 ##' Lively2010
@@ -105,7 +105,7 @@ discrete_model <- function(start=discrete_initialize(),
     if(!is.null(seed)) set.seed(seed)
 
     S <- SI <- A <- AI <- array(0, dim=c(tmax+1, 4, 4))
-    I <- matrix(0, nrow=tmax+1, ncol=4)
+    I <- lambda <- matrix(0, nrow=tmax+1, ncol=4)
     N.count <- S.count <- SI.count <- A.count <- AI.count <- rep(0,tmax+1)
     
     migratefun <- function(p) {
@@ -117,6 +117,7 @@ discrete_model <- function(start=discrete_initialize(),
     S.count[1] <- scaled_sum(S[1,,])
     N.count[1] <- scaled_sum(S[1,,])
     P <- 0
+    ratio <- 0
 
     for(t in 1:(tmax)){
         if (t==tburnin) {
@@ -124,13 +125,13 @@ discrete_model <- function(start=discrete_initialize(),
             A.count[t] <- 1
         }
         
-        S[t,,] <- S[t,,] + migratefun(migrate.host)
+        S[t,,] <- S[t,,]
         
         WU <- bU/(1+aU*N.count[t])
         WI <- bI/(1+aI*N.count[t])
         
-        Sp <- (1-s) * S[t,,] * (WI * P + WU * (1-P))
-        S[t+1,,] <- outcross(Sp, r)
+        Sp <- (1-s) * S[t,,] * (WI * P + WU * (1-P)) 
+        S[t+1,,] <- outcross(Sp, r) + migratefun(migrate.host)
         S.count[t+1] <- scaled_sum(S[t+1,,])
         
         SI[t,,] <- S[t,,] * P
@@ -144,17 +145,25 @@ discrete_model <- function(start=discrete_initialize(),
         
         N.count[t+1] <- S.count[t+1] + A.count[t+1]
         
-        I[t,] <- 1/2*(colSums(SI[t,,] +AI[t,,]) + diag(SI[t,,] +AI[t,,]))
+        ## haplotype density
+        tmp <- SI[t,,] + AI[t,,]
         
-        I[t,] <- ((1-epsilon)*I[t,]+epsilon * (sum(I[t,]) - (I[t,]+rev(I[t,])))/2) + migrate.pathogen
+        I[t,] <- rowSums(tmp * ratio) + migrate.pathogen
         
-        inf <- scaled_matrix(outer(I[t,], I[t,], "+"))/2
+        lambda[t,] <- beta * I[t,]/N.count[t+1]
         
-        P <- 1 - exp(-beta*inf/N.count[t+1])
+        inf <- outer(lambda[t,], lambda[t,], "+")/2
+        
+        P <- 1 - exp(-inf)
+        
+        ratio <- lambda[t,]/inf
+        diag(ratio) <- 1
     }
     
     return(list(
-        S=S, SI=SI, S.count=S.count, SI.count=SI.count, A=A, AI=AI, A.count=A.count, AI.count=AI.count, N.count=N.count, I=I
+        S=S, SI=SI, S.count=S.count, SI.count=SI.count, 
+        A=A, AI=AI, A.count=A.count, AI.count=AI.count, 
+        N.count=N.count, I=I, lambda=lambda
     ))
 }
 
@@ -166,25 +175,19 @@ spatial_discrete_model <- function(start,
                                    beta=5,
                                    aU=0.001, aI=0.001,
                                    bU=20, bI=3,
-                                   migrate=c("none","deterministic","stochastic"),
                                    migrate.host=0.1, migrate.pathogen=0.02,
                                    seed=NULL,
                                    tmax=2100, tburnin=1000) {
-    migrate <- match.arg(migrate)
-    
     if(!is.null(seed)) set.seed(seed)
     
     if(missing(start)) start <- discrete_initialize()
     
     S <- SI <- A <- AI <- array(0, dim=c(tmax+1, 4, 4, n.site))
-    I <- array(0, dim=c(tmax+1, 4, n.site))
+    I <- lambda <- array(0, dim=c(tmax+1, 4, n.site))
     N.count <- S.count <- SI.count <- A.count <- AI.count <- matrix(0, nrow=tmax+1, ncol=n.site)
     
     migratefun <- function(p) {
-        switch(migrate,
-               none=matrix(0, 4, 4),
-               deterministic=matrix(p, 4, 4),
-               stochastic=scaled_matrix(matrix(as.numeric(runif(16)<p*.upr), 4, 4)))
+        matrix(p, 4, 4)
     }
     
     for(i in 1:n.site) {
@@ -196,20 +199,23 @@ spatial_discrete_model <- function(start,
     inf <- array(0, dim=c(4, 4, n.site))
     P <- array(0, dim=c(4, 4, n.site))
     
+    ratio <- array(0, dim=c(4, 4, n.site))
+    
     for(t in 1:(tmax)){
+        
+        tmp <- array(0, dim=c(4, 4, n.site))
+        
         for(i in 1:n.site) {
             if (t==tburnin) {
                 A[t,,,i] <- introduce()
                 A.count[t,i] <- 1
             }
             
-            S[t,,,i] <- S[t,,,i] + migratefun(migrate.host)
-            
             WU <- bU/(1+aU*N.count[t,i])
             WI <- bI/(1+aI*N.count[t,i])
             
             Sp <- (1-s) * S[t,,,i] * (WI * P[,,i] + WU * (1-P[,,i]))
-            S[t+1,,,i] <- outcross(Sp, r.host)
+            S[t+1,,,i] <- outcross(Sp, r.host) + migratefun(migrate.host)
             S.count[t+1,i] <- scaled_sum(S[t+1,,,i])
             
             SI[t,,,i] <- S[t,,,i] * P[,,i]
@@ -223,21 +229,26 @@ spatial_discrete_model <- function(start,
             
             N.count[t+1,i] <- S.count[t+1,i] + A.count[t+1,i]
             
-            I[t,,i] <- 1/2*(colSums(SI[t,,,i] +AI[t,,,i]) + diag(SI[t,,,i] +AI[t,,,i]))
+            tmp[,,i] <- SI[t,,,i] + AI[t,,,i]
             
-            I[t,,i] <- ((1-epsilon)*I[t,,i]+epsilon * (sum(I[t,,i]) - (I[t,,i]+rev(I[t,,i])))/2) + migrate.pathogen
+            I[t,,i] <- rowSums(tmp[,,i] * ratio[,,i]) + migrate.pathogen
             
-            inf[,,i] <- scaled_matrix(outer(I[t,,i], I[t,,i], "+"))/2
         }
         
-        I.tot <- array(0, dim=c(4, 4, n.site))
+        I.tot <- array(0, dim=c(4, n.site))
+        ratio <- array(0, dim=c(4, 4, n.site))
         
         for(i in 1:n.site) {
             for(j in 1:n.site) {
-                I.tot[,,i] <- I.tot[,,i] + ifelse(i==j, 1-epsilon.site, epsilon.site/(n.site-1)) * inf[,,j]
+                I.tot[,i] <- I.tot[,i] + ifelse(i==j, 1-epsilon.site, epsilon.site/(n.site-1)) * I[t,,j]
             }
             
-            P[,,i] <- 1 - exp(-beta[i]*I.tot[,,i]/N.count[t+1,i])
+            lambda[t,,i] <- beta[i] * I.tot[,i]/N.count[t+1,i]
+            inf <- outer(lambda[t,,i], lambda[t,,i], "+")/2
+            
+            P[,,i] <- 1 - exp(-inf)
+            ratio[,,i] <- lambda[t,,i]/inf
+            diag(ratio[,,i]) <- 1
         }
         
     }
@@ -246,4 +257,3 @@ spatial_discrete_model <- function(start,
         S=S, SI=SI, S.count=S.count, SI.count=SI.count, A=A, AI=AI, A.count=A.count, AI.count=AI.count, N.count=N.count, I=I
     ))
 }
-
