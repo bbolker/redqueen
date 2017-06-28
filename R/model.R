@@ -82,7 +82,6 @@ lively_model <- function(p = c(0.33, 0.33, 0.34),
 ##' @param start list of starting values
 ##' @param s male offspring ratio
 ##' @param r host recombination probability
-##' @param epsilon parasite mutation probability
 ##' @param beta realized fecundity of parasite (Lively, 2010)
 ##' @param aU scales the effect of total host density on offpspring production by uninfected hosts
 ##' @param aI scales the effect of total host density on offpspring production by infected hosts
@@ -95,7 +94,7 @@ lively_model <- function(p = c(0.33, 0.33, 0.34),
 ##' @return a list containing simulation results
 discrete_model <- function(start=discrete_initialize(),
                            s=0.5, 
-                           r=0.2, epsilon=0.01,
+                           r=0.2,
                            beta=5,
                            aU=0.001, aI=0.001,
                            bU=20, bI=3,
@@ -168,7 +167,7 @@ discrete_model <- function(start=discrete_initialize(),
 }
 
 spatial_discrete_model <- function(start,
-                                   n.site=10, epsilon=0.01,
+                                   n.site=10,
                                    epsilon.site=0.01,
                                    s=0.5, 
                                    r.host=0.2,
