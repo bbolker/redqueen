@@ -68,5 +68,3 @@ site_vec <- c(10, 20, 30, 40, 50)
 
 (power_list_sample <- lapply(sample_vec, function(x) spatial_power(subres, n.sample=x)))
 (power_list_site <- lapply(site_vec, function(x) spatial_power(subres, n.site=x)))
-
-

@@ -7,7 +7,6 @@ library(tidyr)
 library(car)
 library(readxl)
 
-
 geom_errorbar <- function(...) ggplot2::geom_errorbar(..., width=0.1)
 geom_point <- function(...) ggplot2::geom_point(..., size=3)
 geom_line <- function(...) ggplot2::geom_line(..., size=1.2)

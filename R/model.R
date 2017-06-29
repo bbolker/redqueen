@@ -1,20 +1,3 @@
-##' Initialize discrete model
-##' 
-##' @param p proportion of 
-##' @param N0 initial population size
-##' @param I0 initial number of infected
-discrete_initialize <- function(p=0.5, q=0.5, 
-                                N0=1000) {
-    locus1 <- c(p, 1-p)
-    locus2 <- c(q, 1-q)
-    
-    gamete <- unlist(lapply(locus1, function(x) x*locus2))
-    genotype <- outer(gamete, gamete, "*")
-    genotype <- scaled_matrix(genotype)
-    
-    S <- N0 * genotype
-}
-
 ##' Lively2010
 ##' @param p allele frequencies at the first loci
 ##' @param q allele frequencies at second loci
@@ -232,21 +215,22 @@ spatial_discrete_model <- function(start,
             
             I[t,,i] <- rowSums(tmp[,,i] * ratio[,,i]) + migrate.pathogen
             
+            lambda[t,,i] <- beta[i] * I[t,,i]/N.count[t+1,i]
+            
         }
         
-        I.tot <- array(0, dim=c(4, n.site))
+        lambda.tot <- array(0, dim=c(4, n.site))
         ratio <- array(0, dim=c(4, 4, n.site))
         
         for(i in 1:n.site) {
             for(j in 1:n.site) {
-                I.tot[,i] <- I.tot[,i] + ifelse(i==j, 1-epsilon.site, epsilon.site/(n.site-1)) * I[t,,j]
+                lambda.tot[,i] <- lambda.tot[,i] + ifelse(i==j, 1-epsilon.site, epsilon.site/(n.site-1)) * lambda[t,,j]
             }
             
-            lambda[t,,i] <- beta[i] * I.tot[,i]/N.count[t+1,i]
-            inf <- outer(lambda[t,,i], lambda[t,,i], "+")/2
+            inf <- outer(lambda.tot[,i], lambda.tot[,i], "+")/2
             
             P[,,i] <- 1 - exp(-inf)
-            ratio[,,i] <- lambda[t,,i]/inf
+            ratio[,,i] <- lambda[t,,i]/inf*2
             diag(ratio[,,i]) <- 1
         }
         
