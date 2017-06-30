@@ -139,7 +139,7 @@ fig1a_base %+% vergara_fig2 +
 
 ```
 
-Prevalence of infection in 2002 at the West Point site has a noticeably larger standard error error than the one presented in the paper. We were able to match the figure in the paper when we switched from using the sample standard deviation to population standard deviation.
+Prevalence of infection in 2002 at the West Point site has a noticeably larger standard error error than the one presented in the paper. We were able to match the figure in the paper when we switched from using the sample standard deviation to population standard deviation (not shown here). 
 
 ## Figure 3
 

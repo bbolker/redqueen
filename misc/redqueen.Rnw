@@ -1,0 +1,115 @@
+\documentclass{article}
+\title{Document for USRA}
+
+\usepackage{tabularx}
+
+\usepackage{amsmath}
+\usepackage{natbib}
+\usepackage{hyperref}
+\bibliographystyle{chicago}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section{Methods}
+
+\subsection{Model}
+
+To study the effect of parasite on the evolution of sex and perform a power analysis, we developed a discrete time stochastic model that can be applied to various systems. We model discrete generations to test for robustness of experimental designs to systems that have different generation lengths. Using a continuous time model would require us to adjust parameters to a proper time scale.
+
+Here, we model diploid hosts and haploid parasites where the hosts are divided into obligate sexuals and obligate asexuals. Although natural systems that have been studied under the context of the Red Queen Hypothesis often contains polyploid asexuals \citep{dybdahl1995diverse, michiels2001parthenogenetic, ben2005spatial, bruvo2007synergism, verhoeven2013geographic, vsimkova2013mhc}, we do not consider polyploidy for simplicity.
+Assuming there are two biallelic loci, there are four types of haplotypes: $AB, Ab, aB, ab$. 
+We will be using indices $1-4$ herefafter to refer to these gametes \citep{agrawal2006host}. For example, a genotype $12$ has haplotypes $AB$ and $Ab$.
+
+Let $S_{ij}^k(t)$ and $A_{ij}^k(t)$ be the number of sexual and asexual hosts with genotype $ij$ in site $k$ at generation $t$. 
+For simplicity, we drop the superscript representing sites and all dynamics apply to each site independently unless noted otherwise.
+Following \cite{lively2010epidemiological}, we can write the expected number of sexual individuals in the next generation without recombination or outcrossing as follows:
+\begin{equation}
+S_{ij}' = (1-s) \left(W_U S_{ij,U} (t) + W_I S_{ij,I} (t)\right),
+\end{equation}
+where $s$ is the proportion of males produced. $S_{ij, U}$ and $S_{ij,I}$ represent the number of uninfected and infected sexual hosts in site $k$, respectively and $W_U$ and $W_I$ are their corresponding fitnesses. $S_{ij}'$ can be thought of as genotype contribution to the next generation.
+
+Let $G_i$ be the expected number of haplotype $i$ passed on to the next generation in site $k$. Then, we have
+\begin{equation}
+\begin{aligned}
+G_1 &= \sum_{j=1}^4 \delta_{1j} S_{1j}' - r S_{14}' + r S_{23}, \\
+G_2 &= \sum_{j=1}^4 \delta_{2j} S_{2j}' - r S_{23}' + r S_{14}, \\
+G_3 &= \sum_{j=1}^4 \delta_{3j} S_{3j}' - r S_{23}' + r S_{14}, \\
+G_4 &= \sum_{j=1}^4 \delta_{4j} S_{4j}' - r S_{14}' + r S_{23},
+\end{aligned}
+\end{equation}
+where $r$ is the recombination probability.
+Following outcrossing, the expected the number of genotypes in the next generation is
+\begin{equation}
+S_{ij}'' = \frac{(1- \delta_{ij}) G_i G_j}{2 \sum_k G_k},
+\end{equation}
+where $\delta_{ij}$ is the Kronecker-delta.
+Finally, the number of sexual hosts with genotype $ij$ in the next generation follows a poisson distribution:
+$$
+S_{ij}(t+1) \sim \mathrm{Poisson}(\lambda=S_{ij}'')
+$$
+
+As recombination and outcrossing do not occur in the asexual population, the expected number of asexual individuals in the next generation is given by
+\begin{equation}
+A_{ij}' = W_U A_{ij,U} (t) + W_I A_{ij,I} (t).
+\end{equation}
+Then, the number of asexual hosts with genotype $ij$ in the next generation is given by
+\begin{equation}
+A_{ij}(t+1) \sim \mathrm{Poisson}(\lambda=A_{ij}').
+\end{equation}
+
+To model infection, we combine the approaches by \cite{lively2010epidemiological} and \cite{ashby2015diversity}
+Given the number of infected individuals at a site, we can compute the expected number of individuals infected with haplotype $i$ at generation $t$:
+\begin{equation}
+I_{i}(t) = \sum_{p} 2^{\delta_{ij}} \left( S_{ip,i,I}(t) + A_{ip,i,I}(t)\right),
+\end{equation}
+Here, $S_{ip,i,I}$ and $A_{ip,i,I}$ are the expected number of sexual and asexual individuals infected with haplotype $i$. Following \cite{ashby2015diversity}, we assume that mutation can occur in one locus with probability $\epsilon$. Then, we find the expected number of haplotypes within a population after mutation:
+\begin{equation}
+\begin{aligned}
+I_1' &= (1-\epsilon) I_1 + \frac{\epsilon}{2} \left(I_2 + I_3 \right),\\
+I_2' &= (1-\epsilon) I_2 + \frac{\epsilon}{2} \left(I_1 + I_4 \right),\\
+I_3' &= (1-\epsilon) I_3 + \frac{\epsilon}{2} \left(I_1 + I_4 \right),\\
+I_4' &= (1-\epsilon) I_4 + \frac{\epsilon}{2} \left(I_2 + I_3 \right).
+\end{aligned}
+\end{equation}
+
+Let $\lambda_i^k$ be the poisson mean number of exposures caused by parasite with haplotype $i$ from site $k$ in the next generation \cite{lively2010epidemiological}:
+\begin{equation}
+\lambda_i^k = \frac{\beta^k}{2 N^k(t+1)} I_i'.
+\end{equation}
+Here, we are assuming that effects of dominance do not exist \cite{ashby2015diversity}.
+Then, a host with genotype $ij$ in site $k$ experience the following force of infection caused by haplotype $i$:
+$$
+\mathrm{FOI}_{i}^k = (1-\epsilon_{\textrm{site}}) \lambda_i^k + \frac{\epsilon_{\textrm{site}}}{n-1} \sum_{s \neq k} \lambda_i^s
+$$
+The probability of infection for a host with genotype $ij$ at site $k$ in the next generation is
+\begin{equation}
+P_{ij}^k(t+1) = 1 - \exp\left(\mathrm{FOI}_{i}^k + \mathrm{FOI}_{j}^k\right).
+\end{equation}
+
+Finally, the number of infected individuals in the next generation follows a binomial distribution:
+\begin{equation}
+\begin{aligned}
+S_{ij,I}^k (t+1) &\sim \mathrm{Binom}(S_{ij}^k (t+1), P_{ij}^k)\\
+A_{ij,I}^k (t+1) &\sim \mathrm{Binom}(A_{ij}^k (t+1), P_{ij}^k)
+\end{aligned}
+\end{equation}
+Expected number of individuals infected with haplotype $i$ is given by a ratio based on the orce of infection:
+\begin{equation}
+\begin{aligned}
+S_{ij,i,I}^k(t+1) &= \frac{\mathrm{FOI}_i^k}{\mathrm{FOI}_i^k + \mathrm{FOI}_j^k} S_{ij,I}^k(t+1)\\
+A_{ij,i,I}^k(t+1) &= \frac{\mathrm{FOI}_i^k}{\mathrm{FOI}_i^k + \mathrm{FOI}_j^k} A_{ij,I}^k(t+1)
+\end{aligned}
+\end{equation}
+
+\begin{itemize}
+    \item I might want to add genetic drift using binomial distribution.
+    \item I'm going to add migration as well but I don't know how I should order the dynamics. 'Migration - Drift - Selection' seems reasonable. This way, an aseuxal individual can enter the population and die off from the drift.
+\end{itemize}
+
+\subsection{}
+
+\bibliography{redqueen}
+\end{document}

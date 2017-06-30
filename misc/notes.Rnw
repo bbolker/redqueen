@@ -139,9 +139,6 @@ S_{ij}' &= (1-s) S_0 (2 g_i g_j) W_U.
 \end{aligned}
 $$
 
-
-
-
 Clonal asexuals are easy to model:
 $$
 A_{ij}' = A_{ij} W_U
