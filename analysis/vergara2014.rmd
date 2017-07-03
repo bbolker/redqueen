@@ -121,7 +121,7 @@ fig1b <- ggplot(vergara_fig1b, aes(Year, prop)) +
 grid.arrange(fig1a, fig1b)
 ```
 
-For the prevalence of asexual snails across time, we get noticeably narrower standard errors compared to figure 1A in the paper. In figure 1B, we get a graph that is shifted upward by approximately 0.1. We tried taking the mean across sites first and averaging across those means but still were not able to match the results presented in the paper.
+For the prevalence of asexual snails across time, we get noticeably narrower standard errors compared to figure 1A in the paper. In figure 1B, we get a graph that is shifted upward by approximately 0.1. In this case we computed the mean and standard error of infection status (0/1) across all individuals at all sites, which gives us a closer match to the published figure. We think it would probably be better to calculate prevalence of each site and then compute means and standard errors across sites (this procedure would handle unbalanced sampling); we tried this procedure, but still were not able to match the results presented in the paper.
 
 ## Figure 2
 
