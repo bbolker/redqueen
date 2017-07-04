@@ -7,12 +7,6 @@ output: pdf_document
 knitr::opts_chunk$set(echo = FALSE, message=FALSE, warning =FALSE)
 ```
 
-Dear Dr. Vergara,
-
-We tried replicating your work on the red queen dynamics in Vergara et al. 2014 (Infection dynamics in coexisting sexual and asexual host populations: support for the Red Queen hypothesis) and found some discrepancies between our analysis and the results/figures presented in the paper.
-
-The data was downloaded from Dryad and imported into R. Following the methods section, we excluded males for our analysis. Observations that had "UNKOWN" ploidy were also excluded, and we obtained a data set with 1179 observations.
-
 ```{r load}
 library(ggplot2); theme_set(theme_bw())
 library(gridExtra)
@@ -43,9 +37,15 @@ vergara_nomale <- vergara %>%
     filter(Gender != "male", Ploidy != "UNKNOWN")
 ```
 
+Dear Dr. Vergara,
+
+We tried to replicate your work on the Red Queen dynamics (Vergara *et al.* 2014 *American Naturalist*) and found some discrepancies between our analysis and the results/figures presented in the paper.
+
+The data was downloaded from Dryad and imported into R. Following the methods section, we excluded males for our analysis. Observations that had "UNKOWN" ploidy were also excluded: our filtered data set had `r nrow(vergara_nomale)` observations.
+
 ## ANOVA
 
-We fitted glm with a binomial error and logit link and performed ANOVA:
+We fitted a generalized linear model with a binomial error and logit link and performed ANOVA:
 
 ```{r anova}
 fit <- glm(Microphallus~(Year+Site+Ploidy)^2, 
@@ -55,7 +55,7 @@ fit <- glm(Microphallus~(Year+Site+Ploidy)^2,
 Anova(fit, test.statistic = "Wald", type="2")
 ```
 
-We get chi square values that are almost identical to the ones presented in the paper for all the interaction terms but not for first order terms. We get higher chi square values for all three effects.
+We get chi square values that are almost identical to the ones presented in the paper for all the interaction terms but not for first order terms. We get higher chi square values for all three effects. There are many differences between the defaults for ANOVA (or ANOVA-like) analyses in SAS and R; if you could provide the SAS code for your analyses, we could probably figure out how to replicate it in R ...
 
 ## Geometric fitness
 
@@ -121,7 +121,7 @@ fig1b <- ggplot(vergara_fig1b, aes(Year, prop)) +
 grid.arrange(fig1a, fig1b)
 ```
 
-For the prevalence of asexual snails across time, we get noticeably narrower standard errors compared to figure 1A in the paper. In figure 1B, we get a graph that is shifted upward by approximately 0.1. We tried taking the mean across sites first and averaging across those means but still were not able to match the results presented in the paper.
+For the prevalence of asexual snails across time, we get noticeably narrower standard errors compared to figure 1A in the paper. In figure 1B, we get a graph that is shifted upward by approximately 0.1. In this case we computed the mean and standard error of infection status (0/1) across all individuals at all sites, which gives us a closer match to the published figure. We think it would probably be better to calculate prevalence of each site and then compute means and standard errors across sites (this procedure would handle unbalanced sampling); we tried this procedure, but still were not able to match the results presented in the paper.
 
 ## Figure 2
 
