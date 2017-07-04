@@ -1,4 +1,9 @@
-*/.Rhistory
+.Rhistory
 .Rproj.user
+
+*.log
+*.bbl
+*.gz
+*-concordance.tex
 
 pull_upstream
