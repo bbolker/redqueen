@@ -14,6 +14,7 @@ library(MASS) ## for contr.sdif
 ## load MASS *first*, select() masks dplyr!
 library(dplyr)
 library(tidyr)
+library(magrittr) ## for %<>%
 library(car)
 library(readxl)
 
@@ -33,15 +34,110 @@ vergara <- read_excel("../data/vergara2014.xlsx")
 
 cols <- c("Year", "Site", "Gender", "Ploidy")
 vergara[cols] <- lapply(vergara[cols], factor)
+    
+vergara %<>% filter(Ploidy != "UNKNOWN")
 vergara_nomale <- vergara %>%
-    filter(Gender != "male", Ploidy != "UNKNOWN")
+    filter(Gender != "male")
 ```
 
 Dear Dr. Vergara,
 
 We tried to replicate your work on the Red Queen dynamics (Vergara *et al.* 2014 *American Naturalist*) and found some discrepancies between our analysis and the results/figures presented in the paper.
 
-The data was downloaded from Dryad and imported into R. Following the methods section, we excluded males for our analysis. Observations that had "UNKOWN" ploidy were also excluded: our filtered data set had `r nrow(vergara_nomale)` observations.
+The data was downloaded from Dryad and imported into R. Following the methods section, we excluded males for our analysis. Observations that had "UNKOWN" ploidy were also excluded: our filtered data set had `r nrow(vergara_nomale)` observations. 
+
+We noticed that some males were marked as asexual in your data. However, this would not have affected our analysis because all males were excluded.
+
+```{r}
+vergara %>% 
+    filter(Gender=="male", Ploidy=="asexual") %>%
+    print
+```
+
+Results are presented in the reverse order from the original paper as the biggest discrepancies were found in the last figure.
+
+## Figure 3
+
+```{r}
+sites <- c("West Point", "Halfway", "Swamp", "Camp")
+vergara_base <- vergara_nomale %>%
+    mutate(Site=factor(Site, level=sites), Year=as.numeric(as.character(Year)))
+
+## Figure 2
+vergara_fig2 <- vergara_base %>%
+    group_by(Year, Site, Ploidy) %>%
+    summarize(prev=sum(Microphallus)/length(Microphallus), 
+              se=sd(Microphallus)/sqrt(length(Site)),
+              Site.count=length(Site))
+
+## Figure 3
+vergara_fig3 <- vergara_fig2 %>%
+    filter(Site != "West Point") %>%
+    select(-c(se,Site.count)) %>%
+    spread(Ploidy, prev) %>%
+    summarize(ratio=(1-sexual)/(1-asexual))
+
+ggplot(vergara_fig3, aes(Year, ratio, col=Site, shape=Site)) +
+    geom_line() +
+    geom_point(size=5,fill="white") +
+    geom_hline(yintercept=1, lty=2) +
+    ## current order is Halfway, Swamp, Camp
+    scale_shape_manual(values=c(22,16,21))+
+    scale_y_continuous(limits=c(0, 3.5), breaks=seq(0, 3.5, by=0.5),
+                       expand=c(0,0), name="Ratio") +
+    vergara_theme +
+    scale_color_manual(values=gray(c(0.6,0.4,0.0)))
+```
+
+Two major discrepancies can be found by looking at the ratio of uninfected sexual females at Halfway in 2002 and at Swamp in 2004. In the paper, ratio of uninfected sexual females at Halfway in 2002 stays below the 1:1 ratio line. However, if we look at figure 2 (see below or the paper), asexual snails have higher prevalence compared to sexual snails at Halfway in 2002. This implies that the ratio of uninfected sexual females at Halfway in 2002 should be greater than 1. Similar argument applies to 2004 Swamp: we don't see a three-fold difference in figure 2.
+
+## Figure 2
+
+```{r figure 2}
+fig2_base <- ggplot(vergara_fig2, aes(Year, prev, col=Ploidy, group=Ploidy))+
+    geom_errorbar(aes(ymin=prev-se, ymax=prev+se), col="black") +
+    geom_point() + 
+    geom_line() +
+    vergara_theme +
+    scale_color_grey()
+
+fig2_base +
+    facet_wrap(~Site, scales="free") +
+    scale_y_continuous(limits=c(0, 1.05), breaks=seq(0, 1, by=0.1), expand=c(0,0))
+```
+
+Prevalence of infection in 2002 at the West Point site has a noticeably larger standard error error than the one presented in the paper. We were able to match the figure in the paper when we switched from using the sample standard deviation to population standard deviation (not shown here). 
+
+## Figure 1
+
+```{r figure 1}
+## Figures
+vergara_fig1a <- vergara_base %>% 
+    group_by(Year, Ploidy) %>%
+    summarize(prev=sum(Microphallus)/length(Microphallus),
+              se=sd(Microphallus)/sqrt(length(Microphallus)))
+
+vergara_fig1b <- vergara_base %>%
+    group_by(Year) %>%
+    summarize(prop=sum(Ploidy=="asexual")/length(Ploidy),
+              se=sd(Microphallus)/sqrt(length(Microphallus)))
+
+fig1a <- fig2_base %+% vergara_fig1a +
+    scale_y_continuous(limits=c(0, 0.9), breaks=seq(0, 0.9, by=0.1), expand=c(0,0), name = "Prevalence of Microphallus infection") +
+    theme(legend.position = c(0.5, 0.85),
+          legend.title = element_blank())
+
+fig1b <- ggplot(vergara_fig1b, aes(Year, prop)) +
+    geom_errorbar(aes(ymin=prop-se, ymax=prop+se)) +
+    geom_point() +
+    geom_line() +
+    scale_y_continuous(limits=c(0, 0.6), breaks=seq(0, 0.6, by=0.1), expand=c(0,0), name="Proportion of asexual snails") +
+    vergara_theme
+
+grid.arrange(fig1a, fig1b)
+```
+
+For the prevalence of asexual snails across time, we get noticeably narrower standard errors compared to figure 1A in the paper. In figure 1B, we get a graph that is shifted upward by approximately 0.1. In this case we computed the mean and standard error of infection status (0/1) across all individuals at all sites, which gives us a closer match to the published figure. We think it would probably be better to calculate prevalence of each site and then compute means and standard errors across sites (this procedure would handle unbalanced sampling); we tried this procedure, but still were not able to match the results presented in the paper.
 
 ## ANOVA
 
@@ -60,9 +156,6 @@ We get chi square values that are almost identical to the ones presented in the 
 ## Geometric fitness
 
 ```{r fitness}
-sites <- c("West Point", "Halfway", "Swamp", "Camp")
-vergara_base <- vergara_nomale %>%
-    mutate(Site=factor(Site, level=sites), Year=as.numeric(as.character(Year)))
 
 vergara_freq <- vergara_base %>%
     group_by(Year) %>%
@@ -84,84 +177,4 @@ print(geom_fitness)
 ```
  
 We get slightly different values for geometric fitness.
- 
-## Figure 1
-
-```{r figure 1}
-## Figures
-vergara_fig1a <- vergara_base %>% 
-    group_by(Year, Ploidy) %>%
-    summarize(prev=sum(Microphallus)/length(Microphallus),
-              se=sd(Microphallus)/sqrt(length(Microphallus)))
-
-vergara_fig1b <- vergara_base %>%
-    group_by(Year) %>%
-    summarize(prop=sum(Ploidy=="asexual")/length(Ploidy),
-              se=sd(Microphallus)/sqrt(length(Microphallus)))
-
-fig1a_base <- ggplot(vergara_fig1a, aes(Year, prev, col=Ploidy, group=Ploidy))+
-    geom_errorbar(aes(ymin=prev-se, ymax=prev+se), col="black") +
-    geom_point() + 
-    geom_line() +
-    vergara_theme +
-    scale_color_grey()
-
-fig1a <- fig1a_base +
-    scale_y_continuous(limits=c(0, 0.9), breaks=seq(0, 0.9, by=0.1), expand=c(0,0), name = "Prevalence of Microphallus infection") +
-    theme(legend.position = c(0.5, 0.85),
-          legend.title = element_blank())
-
-fig1b <- ggplot(vergara_fig1b, aes(Year, prop)) +
-    geom_errorbar(aes(ymin=prop-se, ymax=prop+se)) +
-    geom_point() +
-    geom_line() +
-    scale_y_continuous(limits=c(0, 0.6), breaks=seq(0, 0.6, by=0.1), expand=c(0,0), name="Proportion of asexual snails") +
-    vergara_theme
-
-grid.arrange(fig1a, fig1b)
-```
-
-For the prevalence of asexual snails across time, we get noticeably narrower standard errors compared to figure 1A in the paper. In figure 1B, we get a graph that is shifted upward by approximately 0.1. In this case we computed the mean and standard error of infection status (0/1) across all individuals at all sites, which gives us a closer match to the published figure. We think it would probably be better to calculate prevalence of each site and then compute means and standard errors across sites (this procedure would handle unbalanced sampling); we tried this procedure, but still were not able to match the results presented in the paper.
-
-## Figure 2
-
-```{r figure 2}
-## Figure 2
-vergara_fig2 <- vergara_base %>%
-    group_by(Year, Site, Ploidy) %>%
-    summarize(prev=sum(Microphallus)/length(Microphallus), 
-              se=sd(Microphallus)/sqrt(length(Site)),
-              Site.count=length(Site))
-
-fig1a_base %+% vergara_fig2 +
-    facet_wrap(~Site, scales="free") +
-    scale_y_continuous(limits=c(0, 1.05), breaks=seq(0, 1, by=0.1), expand=c(0,0))
-
-```
-
-Prevalence of infection in 2002 at the West Point site has a noticeably larger standard error error than the one presented in the paper. We were able to match the figure in the paper when we switched from using the sample standard deviation to population standard deviation (not shown here). 
-
-## Figure 3
-
-```{r}
-## Figure 3
-vergara_fig3 <- vergara_fig2 %>%
-    filter(Site != "West Point") %>%
-    select(-c(se,Site.count)) %>%
-    spread(Ploidy, prev) %>%
-    summarize(ratio=(1-sexual)/(1-asexual))
-
-ggplot(vergara_fig3, aes(Year, ratio, col=Site, shape=Site)) +
-    geom_line() +
-    geom_point(size=5,fill="white") +
-    geom_hline(yintercept=1, lty=2) +
-    ## current order is Halfway, Swamp, Camp
-    scale_shape_manual(values=c(22,16,21))+
-    scale_y_continuous(limits=c(0, 3.5), breaks=seq(0, 3.5, by=0.5),
-                       expand=c(0,0), name="Ratio") +
-    vergara_theme +
-    scale_color_manual(values=gray(c(0.6,0.4,0.0)))
-```
-
-Two major discrepancies can be found by looking at the ratio of uninfected sexual females at Halfway in 2002 and at Swamp in 2004. In the paper, ratio of uninfected sexual females at Halfway in 2002 stays below the 1:1 ratio line. However, if we look at figure 2 (either the one presented here or the paper), asexual snails have higher prevalence compared to sexual snails at Halfway in 2002. This implies that the ratio of uninfected sexual females at Halfway in 2002 should be greater than 1. Similar argument applies to 2004 Swamp: we don't see a three-fold difference in figure 2.
 

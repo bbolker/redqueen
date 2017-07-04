@@ -1,3 +1,23 @@
+migratefun <- function(p) {
+    scaled_matrix(matrix(runif(16) < c(p * .upr), 4, 4))
+}
+
+pois_matrix <- function(mat){
+    tmpmat <- .upr
+    rvec <- rpois(n=10, lambda=mat[.upr])
+    tmpmat[.upr] <- rvec
+    
+    scaled_matrix(tmpmat)
+}
+
+binom_matrix <- function(mat, p) {
+    tmpmat <- .upr
+    rvec <- rbinom(n=10, size=mat[.upr], prob=p[.upr])
+    tmpmat[.upr] <- rvec
+    
+    scaled_matrix(tmpmat)
+}
+
 ##' Discrete stochsatic model without spatial structure
 ##' 
 ##' @param start list of starting values
@@ -18,7 +38,7 @@ stochastic_discrete_model <- function(start=discrete_initialize(),
                            s=0.5, 
                            r=0.2,
                            beta=5,
-                           aU=0.0001, aI=0.0001,
+                           aU=0.001, aI=0.001,
                            bU=30, bI=3,
                            migrate.host=0.1, migrate.pathogen=0.02,
                            epsilon=0.01,
@@ -30,43 +50,12 @@ stochastic_discrete_model <- function(start=discrete_initialize(),
     I <- lambda <- matrix(0, nrow=tmax+1, ncol=4)
     N.count <- S.count <- SI.count <- A.count <- AI.count <- rep(0,tmax+1)
     
-    migratefun <- function(p) {
-        scaled_matrix(matrix(runif(16) < c(p * .upr), 4, 4))
-    }
-    
-    pois_matrix <- function(mat){
-        tmpmat <- .upr
-        rvec <- rpois(n=10, lambda=mat[.upr])
-        tmpmat[.upr] <- rvec
-        
-        scaled_matrix(tmpmat)
-    }
-    
-    binom_matrix <- function(mat, p) {
-        tmpmat <- .upr
-        rvec <- rbinom(n=10, size=mat[.upr], prob=p[.upr])
-        tmpmat[.upr] <- rvec
-        
-        scaled_matrix(tmpmat)
-    }
-    
     S[1,,] <- start
     
     S.count[1] <- scaled_sum(S[1,,])
     N.count[1] <- scaled_sum(S[1,,])
     
-    SI.zero <- scaled_matrix(matrix(1, 4, 4))
-    
-    I.zero <- c(4, 4, 4, 4)
-    
-    lambda.zero <- beta * I.zero/(2*N.count[1])
-    
-    FOI <- outer(lambda.zero, lambda.zero, "+")
-    
-    P[1,,] <- 1 - exp(-FOI)
-    
-    ratio <- lambda.zero/FOI
-    diag(ratio) <- 1
+    ratio <- 1
     
     for(t in 1:(tmax)){
         if (t==tburnin) {
@@ -77,16 +66,10 @@ stochastic_discrete_model <- function(start=discrete_initialize(),
         WU <- bU/(1+aU*N.count[t])
         WI <- bI/(1+aI*N.count[t])
         
-        SI[t,,] <- binom_matrix(S[t,,], P[t,,])
-        SI.count[t] <- scaled_sum(SI[t,,])
-        
         Sp <- (1-s) * ((S[t,,]-SI[t,,])*WU + SI[t,,] * WI)
         S[t+1,,] <- pois_matrix(outcross(Sp, r)) + migratefun(migrate.host)
         S.count[t+1] <- scaled_sum(S[t+1,,])
-        
-        AI[t,,] <- binom_matrix(A[t,,], P[t,,])
-        AI.count[t] <- scaled_sum(AI[t,,])
-        
+
         A[t+1,,] <- pois_matrix((A[t,,]- AI[t,,])*WU + AI[t,,] * WI)
         A.count[t+1] <- scaled_sum(A[t+1,,])
         
@@ -108,6 +91,11 @@ stochastic_discrete_model <- function(start=discrete_initialize(),
         diag(ratio) <- 1
         ratio[which(is.nan(ratio))] <- 0
         
+        SI[t+1,,] <- binom_matrix(S[t+1,,], P[t+1,,])
+        SI.count[t+1] <- scaled_sum(SI[t+1,,])
+        
+        AI[t+1,,] <- binom_matrix(A[t+1,,], P[t+1,,])
+        AI.count[t+1] <- scaled_sum(AI[t+1,,])
     }
     
     return(list(
@@ -116,4 +104,106 @@ stochastic_discrete_model <- function(start=discrete_initialize(),
         N.count=N.count, I=I, lambda=lambda,
         P=P
     ))
+}
+
+stochastic_spatial_discrete_model <- function(start,
+                                   n.site=4,
+                                   epsilon.site=0.01,
+                                   s=0.5, 
+                                   r.host=0.2,
+                                   beta=c(5, 5, 5, 5),
+                                   aU=0.001, aI=0.001,
+                                   bU=20, bI=3,
+                                   migrate.host=0.1, migrate.pathogen=0.02,
+                                   epsilon=0.01,
+                                   seed=NULL, simplify=TRUE,
+                                   tmax=2100, tburnin=1000) {
+    if(!is.null(seed)) set.seed(seed)
+    
+    if(missing(start)) start <- discrete_initialize()
+    
+    S <- SI <- A <- AI <- array(0, dim=c(tmax+1, 4, 4, n.site))
+    I <- lambda <- array(0, dim=c(tmax+1, 4, n.site))
+    N.count <- S.count <- SI.count <- A.count <- AI.count <- matrix(0, nrow=tmax+1, ncol=n.site)
+    
+    for(i in 1:n.site) {
+        S[1,,,i] <- start
+        S.count[1,i] <- scaled_sum(S[1,,,i])
+        N.count[1,i] <- scaled_sum(S[1,,,i])
+    }
+    
+    inf <- array(0, dim=c(4, 4, n.site))
+    P <- array(0, dim=c(4, 4, n.site))
+    
+    ratio <- array(0, dim=c(4, 4, n.site))
+    
+    for(t in 1:(tmax)){
+        
+        tmp <- array(0, dim=c(4, 4, n.site))
+        
+        for(i in 1:n.site) {
+            if (t==tburnin) {
+                A[t,,,i] <- introduce()
+                A.count[t,i] <- 1
+            }
+            
+            WU <- bU/(1+aU*N.count[t,i])
+            WI <- bI/(1+aI*N.count[t,i])
+            
+            Sp <- (1-s) *  ((S[t,,,i] - SI[t,,,i]) * WU +SI[t,,,i] * WI)
+            S[t+1,,,i] <- pois_matrix(outcross(Sp, r.host)) + migratefun(migrate.host)
+            S.count[t+1,i] <- scaled_sum(S[t+1,,,i])
+            
+            A[t+1,,,i] <- pois_matrix((A[t,,,i] - AI[t,,,i]) * WU + AI[t,,,i] * WI)
+            A.count[t+1,i] <- scaled_sum(A[t+1,,,i])
+            
+            N.count[t+1,i] <- S.count[t+1,i] + A.count[t+1,i]
+            
+            tmp[,,i] <- SI[t,,,i] + AI[t,,,i]
+            
+            I.nomut <- rowSums(tmp[,,i] * ratio[,,i])
+            I[t,,i] <- (1-epsilon) * I.nomut + epsilon/2 * (sum(I.nomut) - (I.nomut + rev(I.nomut))) + as.numeric(runif(4) < 0.1)
+            
+            lambda[t,,i] <- beta[i] * I[t,,i]/(2 * N.count[t+1,i])
+            
+        }
+        
+        lambda.tot <- array(0, dim=c(4, n.site))
+        ratio <- array(0, dim=c(4, 4, n.site))
+        
+        for(i in 1:n.site) {
+            for(j in 1:n.site) {
+                lambda.tot[,i] <- lambda.tot[,i] + ifelse(i==j, 1-epsilon.site, epsilon.site/(n.site-1)) * lambda[t,,j]
+            }
+            
+            FOI <- outer(lambda.tot[,i], lambda.tot[,i], "+")
+            
+            P[,,i] <- 1 - exp(-FOI)
+            ratio[,,i] <- lambda[t,,i]/FOI
+            ratio[,,i][which(is.nan(ratio[,,i]))] <- 0
+            diag(ratio[,,i]) <- 1
+            
+            SI[t+1,,,i] <- binom_matrix(S[t+1,,,i], P[,,i])
+            SI.count[t+1,i] <- scaled_sum(SI[t+1,,,i])
+            
+            AI[t+1,,,i] <- binom_matrix(A[t+1,,,i], P[,,i])
+            AI.count[t+1,i] <- scaled_sum(AI[t+1,,,i])
+        }
+        
+    }
+    
+    if (simplify) {
+        list(
+            S.count=S.count, SI.count=SI.count,
+            A.count=A.count, AI.count=AI.count
+        )
+    } else{
+        list(
+            S=S, SI=SI,
+            S.count=S.count, SI.count=SI.count, 
+            A=A, AI=AI,
+            A.count=A.count, AI.count=AI.count, 
+            N.count=N.count, I=I
+        )
+    }
 }
