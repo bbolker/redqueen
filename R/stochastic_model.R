@@ -39,11 +39,11 @@ stochastic_discrete_model <- function(start=discrete_initialize(),
                            r=0.2,
                            beta=5,
                            aU=0.001, aI=0.001,
-                           bU=30, bI=3,
+                           bU=20, bI=3,
                            migrate.host=0.1, migrate.pathogen=0.02,
                            epsilon=0.01,
                            seed=NULL,
-                           tmax=2100, tburnin=1000) {
+                           tmax=1100, tburnin=500) {
     if(!is.null(seed)) set.seed(seed)
     
     S <- SI <- A <- AI <- P <- array(0, dim=c(tmax+1, 4, 4))
@@ -59,8 +59,8 @@ stochastic_discrete_model <- function(start=discrete_initialize(),
     
     for(t in 1:(tmax)){
         if (t==tburnin) {
-            A[t,,] <- introduce()
-            A.count[t] <- 1
+            A[t,,] <- 10 * introduce()
+            A.count[t] <- 10
         }
         
         WU <- bU/(1+aU*N.count[t])
@@ -117,7 +117,7 @@ stochastic_spatial_discrete_model <- function(start,
                                    migrate.host=0.1, migrate.pathogen=0.02,
                                    epsilon=0.01,
                                    seed=NULL, simplify=TRUE,
-                                   tmax=2100, tburnin=1000) {
+                                   tmax=1100, tburnin=500) {
     if(!is.null(seed)) set.seed(seed)
     
     if(missing(start)) start <- discrete_initialize()
@@ -143,8 +143,8 @@ stochastic_spatial_discrete_model <- function(start,
         
         for(i in 1:n.site) {
             if (t==tburnin) {
-                A[t,,,i] <- introduce()
-                A.count[t,i] <- 1
+                A[t,,,i] <- 10 * introduce()
+                A.count[t,i] <- 10
             }
             
             WU <- bU/(1+aU*N.count[t,i])
@@ -165,6 +165,7 @@ stochastic_spatial_discrete_model <- function(start,
             I[t,,i] <- (1-epsilon) * I.nomut + epsilon/2 * (sum(I.nomut) - (I.nomut + rev(I.nomut))) + as.numeric(runif(4) < 0.1)
             
             lambda[t,,i] <- beta[i] * I[t,,i]/(2 * N.count[t+1,i])
+            lambda[t,,i][which(is.nan(lambda[t,,i]))] <- 0
             
         }
         
@@ -179,12 +180,13 @@ stochastic_spatial_discrete_model <- function(start,
             FOI <- outer(lambda.tot[,i], lambda.tot[,i], "+")
             
             P[,,i] <- 1 - exp(-FOI)
-            ratio[,,i] <- lambda[t,,i]/FOI
+            ratio[,,i] <- lambda.tot[,i]/FOI
             ratio[,,i][which(is.nan(ratio[,,i]))] <- 0
             diag(ratio[,,i]) <- 1
-            
+
             SI[t+1,,,i] <- binom_matrix(S[t+1,,,i], P[,,i])
             SI.count[t+1,i] <- scaled_sum(SI[t+1,,,i])
+            
             
             AI[t+1,,,i] <- binom_matrix(A[t+1,,,i], P[,,i])
             AI.count[t+1,i] <- scaled_sum(AI[t+1,,,i])
