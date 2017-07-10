@@ -1,18 +1,11 @@
 library(dplyr)
 library(tidyr)
-load("../data/50sites.rda")
 
 s <- 0.5
-
-res_spatial2 <- within(res_spatial,{
-    FU.count=(S.count-SI.count)*s
-    MU.count=(S.count-SI.count)*s
-    FI.count=SI.count*s
-    MI.count=SI.count*s
-    AU.count=A.count-AI.count
-})
-
-subres <- res_spatial2[c("FU.count", "FI.count", "MU.count", "MI.count", "AU.count", "AI.count")]
+## rough estimates...
+meanlog <- 1.8
+sdlog <- 0.25
+bU <- 20
 
 spatial_power <- function(data,
          n.site=18,

@@ -37,7 +37,7 @@ simfun <- function(meanlog=1, sdlog=0.5,
 betafun <- function(meanlog=1, sdlog=0.5,
                     n.site=4,
                     subyear=c(1001:1100),
-                    nsim=20, verbose=FALSE,
+                    nsim=10, verbose=FALSE,
                     debug=FALSE,
                     ...) {
     i <- 1
@@ -63,11 +63,12 @@ betafun <- function(meanlog=1, sdlog=0.5,
 
 ## set up priors...
 set.seed(101)
-size <- 1000
+size <- 5000
+tol <- 0.2
 
 param.table <- data.frame(
     meanlog=rlnorm(size),
-    sdlog=rlnorm(size, meanlog=-2),
+    sdlog=rlnorm(size, meanlog=-2, sdlog=0.5),
     bU=runif(size, min=10, max=30) ## corresponding to virulence 70%-90%
 )
 
@@ -77,7 +78,7 @@ res <- vector('list', size)
 for (i in 1:size) {
     print(i)
     print(res[[i]] <- do.call(betafun, param.table[i,]))
-    print(param.keep[i] <- sqrt(sum((vergara_CV - res[[i]])^2)) < 0.2)
+    print(param.keep[i] <- sqrt(sum((vergara_CV - res[[i]])^2)) < tol)
     save("param.table", "res", "param.keep", file="ABC.rda")
 }
 
