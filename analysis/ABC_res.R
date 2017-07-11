@@ -5,14 +5,17 @@ vergara_CV <- structure(
     .Names = c("pinf", "psex", "pinf", "psex"
 ))
 
-param.keep <- sapply(res, function(x) sqrt(sum((vergara_CV - x)^2)) < 0.18)
+param.keep2 <- sapply(res, function(x) sqrt(sum((vergara_CV - x)^2)) < 0.15) & !is.na(param.keep)
+
+print(sum(param.keep2))
 
 par(mfrow=c(1, 3))
-ylim <- c(2, 5, 0.2)
+ylim <- c(2.5, 6.5, 0.2)
+title <- c("meanlog", "sdlog", "bU")
 
 for(i in 1:3) {
-    plot(density(param.table[,i]), ylim=c(0, ylim[i]))
-    lines(density(param.table[param.keep,i]), col=2)
+    plot(density(param.table[,i]), ylim=c(0, ylim[i]), main=title[i], xlab="")
+    lines(density(param.table[param.keep2,i]), col=2)
 }
 
-apply(param.table[param.keep,], 2, mean)
+apply(param.table[param.keep2,], 2, mean)

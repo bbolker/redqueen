@@ -16,7 +16,7 @@ for(i in 1:length(nsite)) {
     j <- 1
     while(j <= 100) {
         beta <- rlnorm(n.site, meanlog=meanlog, sdlog=sdlog)
-        sim <- stochastic_spatial_discrete_model(beta=beta, bU=bU)
+        sim <- stochastic_spatial_discrete_model(beta=beta, bU=bU,n.site=n.site)
         if (!any(sim$A.count[500:1100,] < 0.1)) {
             simlist[j,i][[1]] <- sim
             j <- j + 1

@@ -1,11 +1,20 @@
 library(dplyr)
 library(tidyr)
+load("../data/powersim.rda")
 
 s <- 0.5
-## rough estimates...
-meanlog <- 1.8
-sdlog <- 0.25
-bU <- 20
+
+target.gen <- 1000
+
+samplesize <- c(20, 50, 100, 200)
+
+for(i in 1:dim(simlist)[2]) {
+    for (j in 1:dim(simlist)[1]) {
+        sim <- simlist[j,i][[1]]
+        sim$S.count[target.gen,]
+    }
+}
+
 
 spatial_power <- function(data,
          n.site=18,
