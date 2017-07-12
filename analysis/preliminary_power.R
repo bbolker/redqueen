@@ -6,67 +6,39 @@ s <- 0.5
 
 target.gen <- 1000
 
-samplesize <- c(20, 50, 100, 200)
+samplesize <- seq(20, 200, by=20)
+
+level <- 0.05
+
+power <- matrix(0, nrow=dim(simlist)[2], ncol=length(samplesize))
+positivecor <- matrix(0, nrow=dim(simlist)[2], ncol=length(samplesize))
 
 for(i in 1:dim(simlist)[2]) {
+    multisample <- vector('list', dim(simlist)[1])
+    testres <- vector('list', dim(simlist)[1])
+    
     for (j in 1:dim(simlist)[1]) {
         sim <- simlist[j,i][[1]]
-        sim$S.count[target.gen,]
+        SU <- sim$S.count[target.gen,]-sim$SI.count[target.gen,]
+        SI <- sim$SI.count[target.gen,]
+        AU <- sim$A.count[target.gen,]-sim$AI.count[target.gen,]
+        AI <- sim$AI.count[target.gen,]
+        
+        prob <- matrix(c(s * SU, s*SI, s*SU, s*SI, AU, AI), nrow=length(SU))
+        
+        multisample[[j]] <- lapply(samplesize, function(s){
+            apply(prob, 1, function(p) rmultinom(1, size=s, prob=p/sum(p)))
+        })
+        
+        ## correlation between prevalence and male frequency
+        testres[[j]] <- sapply(multisample[[j]], function(x) {
+            cc <- cor.test(x[2,] + x[4,] + x[6,], x[1,])
+            c(cor=cc$estimate, p.value=cc$p.value)
+        })
     }
+    power[i,] <- rowSums(sapply(testres, function(x) x[2,]<level))
+    positivecor[i,] <- rowSums(sapply(testres, function(x) x[1,]>0))
 }
 
+image(x=c(5, 10, 15, 20, 25, 30), y=samplesize, power, xlab="Number of sites", ylab="Number of samples per site")
 
-spatial_power <- function(data,
-         n.site=18,
-         n.sample=100,
-         target.gen=2500,
-         n.replicate=100) {
-
-    powerres <- vector('list', n.replicate)
-    
-    for (i in 1:n.replicate) {
-        which.site <- sample(1:50, n.site)
-        
-        spreadres <- data %>% 
-            lapply(function(x) data.frame(site=which.site, count=x[target.gen,which.site])) %>%
-            bind_rows(.id="type") %>%
-            spread(type, count)
-        
-        sampledf <- spreadres %>% 
-            apply(1, function(x) rmultinom(n=1, size=n.sample, prob=x[-1]/sum(x[-1]))) %>%
-            t %>%
-            as.data.frame %>%
-            setNames(names(spreadres)[-1]) %>%
-            bind_cols(data.frame(site=which.site))
-        
-        maledf <- data.frame(
-            male=sampledf$MI.count+sampledf$MU.count,
-            female=n.sample-(sampledf$MI.count+sampledf$MU.count)
-        )
-        
-        infdf <- data.frame(
-            infected=(sampledf$AI.count+sampledf$FI.count+sampledf$MI.count),
-            uninfected=n.sample-(sampledf$AI.count+sampledf$FI.count+sampledf$MI.count)
-        )
-        
-        chi_male <- chisq.test(maledf)
-        chi_infection <- chisq.test(infdf)
-        corr <- cor.test(infdf$infected/n.sample, maledf$male/n.sample, method="spearman")
-        
-        powerres[[i]] <- data.frame(
-            chi_male=chi_male$p.value,
-            chi_infection=chi_infection$p.value,
-            corr=corr$p.value
-        )
-        
-    }
-    
-    power <- colSums(do.call("rbind", powerres) < 0.05)/n.replicate
-    return(power)
-}
-
-sample_vec <- c(20, 50, 100, 500, 1000)
-site_vec <- c(10, 20, 30, 40, 50)
-
-(power_list_sample <- lapply(sample_vec, function(x) spatial_power(subres, n.sample=x)))
-(power_list_site <- lapply(site_vec, function(x) spatial_power(subres, n.site=x)))

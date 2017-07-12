@@ -82,6 +82,7 @@ discrete_model <- function(start=discrete_initialize(),
                            aU=0.001, aI=0.001,
                            bU=20, bI=3,
                            migrate.host=0.1, migrate.pathogen=0.02,
+                           epsilon=0.01,
                            seed=NULL,
                            tmax=2100, tburnin=1000) {
     if(!is.null(seed)) set.seed(seed)
@@ -130,11 +131,12 @@ discrete_model <- function(start=discrete_initialize(),
         ## haplotype density
         tmp <- SI[t,,] + AI[t,,]
         
-        I[t,] <- rowSums(tmp * ratio) + migrate.pathogen
+        I.nomut <- rowSums(tmp * ratio)
+        I[t,] <- (1-epsilon) * I.nomut + epsilon/2 * (sum(I.nomut) - (I.nomut + rev(I.nomut))) + migrate.pathogen
         
-        lambda[t,] <- beta * I[t,]/N.count[t+1]
+        lambda[t,] <- beta * I[t,]/(2*N.count[t+1])
         
-        inf <- outer(lambda[t,], lambda[t,], "+")/2
+        inf <- outer(lambda[t,], lambda[t,], "+")
         
         P <- 1 - exp(-inf)
         
@@ -151,7 +153,7 @@ discrete_model <- function(start=discrete_initialize(),
 
 spatial_discrete_model <- function(start,
                                    n.site=10,
-                                   epsilon.site=0.01,
+                                   epsilon.site=0.01, epsilon=0.01,
                                    s=0.5,
                                    r.host=0.2,
                                    beta=5,
@@ -213,9 +215,11 @@ spatial_discrete_model <- function(start,
             
             tmp[,,i] <- SI[t,,,i] + AI[t,,,i]
             
-            I[t,,i] <- rowSums(tmp[,,i] * ratio[,,i]) + migrate.pathogen
+            I.nomut <- rowSums(tmp[,,i] * ratio[,,i])
             
-            lambda[t,,i] <- beta[i] * I[t,,i]/N.count[t+1,i]
+            I[t,,i] <- (1-epsilon) * I.nomut + epsilon/2 * (sum(I.nomut) - (I.nomut + rev(I.nomut))) + migrate.pathogen
+            
+            lambda[t,,i] <- beta[i] * I[t,,i]/(2*N.count[t+1,i])
             
         }
         
@@ -227,10 +231,10 @@ spatial_discrete_model <- function(start,
                 lambda.tot[,i] <- lambda.tot[,i] + ifelse(i==j, 1-epsilon.site, epsilon.site/(n.site-1)) * lambda[t,,j]
             }
             
-            inf <- outer(lambda.tot[,i], lambda.tot[,i], "+")/2
+            inf <- outer(lambda.tot[,i], lambda.tot[,i], "+")
             
             P[,,i] <- 1 - exp(-inf)
-            ratio[,,i] <- lambda[t,,i]/inf*2
+            ratio[,,i] <- lambda[t,,i]/inf
             diag(ratio[,,i]) <- 1
         }
         

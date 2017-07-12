@@ -1,14 +1,30 @@
 source("util.R")
 source("model.R")
 
-n.site <- 50
+n.site <- 20
 q <- (2*(1:n.site)-1)/(2*n.site)
 
 beta_vec <- qlnorm(q, meanlog = 1.5, sdlog=0.1)
 
-tmax <- 3000
+res <- spatial_discrete_model(beta=beta_vec, n.site=n.site, seed=113, tmax=1100, tburnin=500)
 
-res_spatial <- spatial_discrete_model(beta=beta_vec, n.site=n.site, seed=113, tmax=tmax)
+S <- res$S.count[1000,]
+A <- res$A.count[1000,]
+I <- (res$SI.count+res$AI.count)[1000,]
 
-save("res_spatial", file="50sites.rda")
-## move to ../data directory
+cor.test((I/(S+A)), (S/(S+A)))
+
+## playing around...
+source("util.R")
+source("stochastic_model.R")
+
+
+res_spatial <- spatial_discrete_model(beta=5, n.site=1, tmax=1100, tburnin=500, epsilon.site = 0,seed=101)
+res <- discrete_model(beta=5, tmax=1100, tburnin = 500, seed=101)
+res2 <- stochastic_spatial_discrete_model(beta=5, n.site = 1, seed=103)
+res3 <- stochastic_discrete_model(beta=5, seed=103)
+
+plot(res_spatial$S.count, type="l")
+lines(res$S.count, col=2)
+lines(res2$S.count, col=3)
+lines(res3$S.count, col=4)

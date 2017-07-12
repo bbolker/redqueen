@@ -23,8 +23,9 @@ vergara <- read_excel("../data/vergara2014.xlsx")
 
 cols <- c("Year", "Site", "Gender", "Ploidy")
 vergara[cols] <- lapply(vergara[cols], factor)
+vergara <- filter(vergara, Ploidy != "UNKNOWN")
 vergara_nomale <- vergara %>%
-    filter(Gender != "male", Ploidy != "UNKNOWN")
+    filter(Gender != "male")
 
 fit <- glm(Microphallus~(Year+Site+Ploidy)^2, 
            family=binomial("logit"), 
@@ -104,15 +105,13 @@ ggplot(vergara_fig3, aes(Year, ratio, col=Site, shape=Site)) +
     scale_color_manual(values=gray(c(0.6,0.4,0.0)))
 
 
-###########
+########### corelation
 
+vlm <- vergara %>% 
+    group_by(Year, Site) %>%
+    summarize(prev=sum(Microphallus==1)/length(Microphallus), 
+              freq=sum(Gender=="male")/length(Gender)) %>%
+    do(res=lm(freq~prev, data=.))
 
-
-
-
-
-
-
-
-
+lapply(vlm$res, summary)
 
