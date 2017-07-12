@@ -104,7 +104,6 @@ ggplot(vergara_fig3, aes(Year, ratio, col=Site, shape=Site)) +
     vergara_theme +
     scale_color_manual(values=gray(c(0.6,0.4,0.0)))
 
-
 ########### corelation
 
 vlm <- vergara %>% 

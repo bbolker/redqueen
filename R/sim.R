@@ -2,9 +2,9 @@ source("util.R")
 source("model.R")
 
 n.site <- 20
-q <- (2*(1:n.site)-1)/(2*n.site)
+#q <- (2*(1:n.site)-1)/(2*n.site)
 
-beta_vec <- qlnorm(q, meanlog = 1.5, sdlog=0.1)
+beta_vec <- rlnorm(n.site, meanlog = 0.5, sdlog=0.3)
 
 res <- spatial_discrete_model(beta=beta_vec, n.site=n.site, seed=113, tmax=1100, tburnin=500)
 
@@ -15,9 +15,7 @@ I <- (res$SI.count+res$AI.count)[1000,]
 cor.test((I/(S+A)), (S/(S+A)))
 
 ## playing around...
-source("util.R")
 source("stochastic_model.R")
-
 
 res_spatial <- spatial_discrete_model(beta=5, n.site=1, tmax=1100, tburnin=500, epsilon.site = 0,seed=101)
 res <- discrete_model(beta=5, tmax=1100, tburnin = 500, seed=101)

@@ -42,3 +42,4 @@ for(i in 1:dim(simlist)[2]) {
 
 image(x=c(5, 10, 15, 20, 25, 30), y=samplesize, power, xlab="Number of sites", ylab="Number of samples per site")
 
+
