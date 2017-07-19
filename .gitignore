@@ -6,4 +6,7 @@
 *.gz
 *-concordance.tex
 
+powersim.rda
+betasim.rda
+
 pull_upstream
