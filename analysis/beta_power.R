@@ -6,7 +6,7 @@ samplesize <-seq(20, 200, by=20)
 
 bb <- find_power(simlist, samplesize = samplesize)
 
-contour(x=meanlog, y=samplesize, bb$power, xlab="mean log beta", ylab="Number of samples per site")s
+contour(x=meanlog, y=samplesize, bb$power, xlab="mean log beta", ylab="Number of samples per site")
 contour(x=meanlog, y=samplesize, bb$effsize, xlab="mean log beta", ylab="Number of samples per site")
 
 ss <- with(as.list(simlist[3,5][[1]]), {
