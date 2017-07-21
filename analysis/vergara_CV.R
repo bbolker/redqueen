@@ -31,3 +31,11 @@ vergara_site_CV <- vergara_p  %>%
     unlist
 
 vergara_CV <- c(vergara_year_CV, vergara_site_CV)
+
+vergara_mean <- vergara_p %>%
+    group_by %>%
+    select(-Site, -Year) %>%
+    summarize_each(funs(mean(.))) %>%
+    unlist
+    
+    
