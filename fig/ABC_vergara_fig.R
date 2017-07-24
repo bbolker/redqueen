@@ -3,6 +3,7 @@ library(tidyr)
 library(ggplot2); theme_set(theme_bw())
 
 load("../data/ABC_vergara.rda")
+load("../data/vergara_fitted.rda")
 
 vergara_CV <- structure(
     c(0.118560462285074, 0.129710635277051, 0.291586199244854, 0.267463972926705),
@@ -42,5 +43,7 @@ ggplot(prior, aes(x=value)) +
 posterior %>%
     group_by(key) %>%
     summarise(mean=mean(value))
+
+
 
 

@@ -1,7 +1,7 @@
 source("../R/util.R")
 source("../R/stochastic_model.R")
 
-nsim <- 500
+nsim <- 100
 
 meanlog <- 1.82
 sdlog <- 0.16
@@ -24,8 +24,6 @@ while(j <= 100) {
         simlist[[j]] <- sim
         j <- j + 1
     }
-    cat(j, i, "\n")
+    cat(j, "\n")
     save("simlist", file="vergara_fitted.rda")
 }
-
-

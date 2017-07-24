@@ -1,38 +1,51 @@
-find_power <- function(simlist,
-                       s=0.5,
-                       target.gen=1000,
-                       samplesize=seq(20, 200, by=20),
-                       level=0.05) {
-    power <- matrix(0, nrow=dim(simlist)[2], ncol=length(samplesize))
-    effsize <- matrix(0, nrow=dim(simlist)[2], ncol=length(samplesize))
+lm2 <- function(sim, 
+                nsample,
+                nsite,
+                target.gen) {
+    sites <- ncol(sim$S.count)
+    target.sites <- sample(1:sites, nsite)
     
-    for(i in 1:dim(simlist)[2]) {
-        multisample <- vector('list', dim(simlist)[1])
-        testres <- vector('list', dim(simlist)[1])
-        
-        for (j in 1:dim(simlist)[1]) {
-            sim <- simlist[j,i][[1]]
-            SU <- sim$S.count[target.gen,]-sim$SI.count[target.gen,]
-            SI <- sim$SI.count[target.gen,]
-            AU <- sim$A.count[target.gen,]-sim$AI.count[target.gen,]
-            AI <- sim$AI.count[target.gen,]
-            
-            prob <- matrix(c(s * SU, s*SI, s*SU, s*SI, AU, AI), nrow=length(SU))
-            
-            multisample[[j]] <- lapply(samplesize, function(s){
-                apply(prob, 1, function(p) rmultinom(1, size=s, prob=p/sum(p)))
-            })
-            
-            ## correlation between prevalence and male frequency
-            testres[[j]] <- sapply(multisample[[j]], function(x) {
-                cc <- cor.test(x[2,] + x[4,] + x[6,], x[1,])
-                c(cor=cc$estimate, p.value=cc$p.value)
-            })
-        }
-        power[i,] <- rowMeans(sapply(testres, function(x) x[2,]<level & !is.na(x[2,])))
-        effmat <- sapply(testres, function(x) x[1,])
-        effmat[is.na(effmat)] <- 0
-        effsize[i,] <- rowMeans(effmat)
+    S <- sim$S.count[target.gen, target.sites]
+    SI <- sim$SI.count[target.gen, target.sites]
+    A <- sim$A.count[target.gen, target.sites]
+    AI <- sim$AI.count[target.gen, target.sites]
+    N <- S+A
+    prob <- matrix(c(S-SI, SI, A-AI, AI)/N, nrow=length(S))
+    
+    multisample <- lapply(nsample, function(s){
+        df <- as.data.frame(t(apply(prob, 1, function(p) rmultinom(1, size=s, prob=p))))
+        names(df) <- c("SU", "SI", "AU", "AI")
+        df
+    })
+    
+    testres <- sapply(multisample, function(x) {
+        cc <- cor.test(x$SI + x$AI, x$SU + x$SI)
+        c(cor=cc$estimate, p.value=cc$p.value)
+    })
+    
+    as.data.frame(t(testres))
+}
+
+powerfun <- function(simlist,
+                     level=0.05,
+                     nsim=50,
+                     nsample=50,
+                     nsite=20,
+                     target.gen=1001) {
+    reslist <- vector("list", length(simlist))
+    
+    for(i in 1:length(simlist)) {
+        sim <- simlist[[i]]
+        reslist[[i]] <- do.call("rbind", replicate(nsim, lm2(sim, nsample, nsite, target.gen), simplify=FALSE))
     }
-    return(list(power=power, effsize=effsize))
+    df <- do.call("rbind", reslist)
+    
+    power <- mean(df[,2]<level)
+    effect <- data.frame(
+        median=median(df[,1]),
+        lwr=quantile(df[,1], 0.025),
+        upr=quantile(df[,1], 0.975)
+    )
+    list(power=power,
+         effect=effect)
 }
