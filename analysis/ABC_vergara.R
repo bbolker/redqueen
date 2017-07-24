@@ -113,5 +113,5 @@ for (i in 1:size) {
     if(!inherits(res[[i]], "try-error")){
         print(param.keep[i] <- sqrt(sum((vergara_summ - res[[i]])^2)) < tol)
     }
-    save("param.table", "res", "param.keep", file="ABC2.rda")
+    save("param.table", "res", "param.keep", file="ABC_vergara.rda")
 }
