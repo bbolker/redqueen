@@ -19,7 +19,7 @@ lm2 <- function(sim,
     })
     
     testres <- sapply(multisample, function(x) {
-        cc <- cor.test(x$SI + x$AI, x$SU + x$SI)
+        cc <- cor.test((x$SI + x$AI)/nsample, (x$SU + x$SI)/nsample)
         c(cor=cc$estimate, p.value=cc$p.value)
     })
     

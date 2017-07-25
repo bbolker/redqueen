@@ -67,7 +67,7 @@ vergara_base <- vergara_nomale %>%
 vergara_fig2 <- vergara_base %>%
     group_by(Year, Site, Ploidy) %>%
     summarize(prev=sum(Microphallus)/length(Microphallus), 
-              se=sd(Microphallus)/sqrt(length(Site)),
+              se=sqrt(mean(Microphallus)*(1-mean(Microphallus))/length(Microphallus)),
               Site.count=length(Site))
 
 ## Figure 3
@@ -120,7 +120,7 @@ vergara_fig1a <- vergara_base %>%
 vergara_fig1b <- vergara_base %>%
     group_by(Year) %>%
     summarize(prop=sum(Ploidy=="asexual")/length(Ploidy),
-              se=sd(Microphallus)/sqrt(length(Microphallus)))
+              se=sqrt(mean(Microphallus)*(1-mean(Microphallus))/length(Microphallus)))
 
 fig1a <- fig2_base %+% vergara_fig1a +
     scale_y_continuous(limits=c(0, 0.9), breaks=seq(0, 0.9, by=0.1), expand=c(0,0), name = "Prevalence of Microphallus infection") +
@@ -156,7 +156,6 @@ We get chi square values that are almost identical to the ones presented in the 
 ## Geometric fitness
 
 ```{r fitness}
-
 vergara_freq <- vergara_base %>%
     group_by(Year) %>%
     summarise(sex.freq=sum(Ploidy=="sexual")/length(Ploidy)) %>%

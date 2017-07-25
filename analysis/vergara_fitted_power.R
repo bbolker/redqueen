@@ -24,14 +24,14 @@ for(i in 1:length(nsites)) {
 
 gens <- 1001:1100
 
-gen_power_list <- lapply(gens, function(s) powerfun(simlist, nsample=40, nsite = 25))
+gen_power_list <- lapply(gens, function(g) powerfun(simlist, nsample=40, nsite = 25, target.gen=g))
 
 gen_power <- data.frame(
     gens,
-    power=sapply(res, "[[", index="power")
+    power=sapply(gen_power_list, "[[", index="power")
 )
 
-gen_effect <- cbind(nsamples, do.call("rbind" ,lapply(gen_power_list, "[[", index="effect")))
+gen_effect <- cbind(gens, do.call("rbind" ,lapply(gen_power_list, "[[", index="effect")))
 rownames(gen_effect) <- NULL
 
 save("effect_list", "power_list", "gen_power", "gen_effect", file="vergara_fitted_power.rda")
