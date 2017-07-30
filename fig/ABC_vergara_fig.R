@@ -49,6 +49,14 @@ ggplot(prior, aes(x=value)) +
     geom_density(data=posterior, col=2) +
     facet_wrap(~key, scales="free")
 
+res[param.keep2] %>%
+    lapply(. %>% t %>% as.data.frame) %>%
+    bind_rows(.id="sim") %>%
+    gather(key, value, -sim) %>%
+    ggplot() +
+    geom_density(aes(value, col=key))
+
+
 posterior %>%
     group_by(key) %>%
     summarise(mean=mean(value))
