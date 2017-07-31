@@ -49,14 +49,19 @@ ggplot(prior, aes(x=value)) +
     geom_density(data=posterior, col=2) +
     facet_wrap(~key, scales="free")
 
+vergara_summ2 <- as.data.frame(vergara_summ) %>%
+    rename(value=vergara_summ) %>%
+    mutate(key=rownames(.))
+
 res[param.keep2] %>%
     lapply(. %>% t %>% as.data.frame) %>%
     bind_rows(.id="sim") %>%
     gather(key, value, -sim) %>%
     ggplot() +
-    geom_density(aes(value, col=key))
-
-
+    geom_density(aes(value, col=key)) +
+    geom_vline(data=vergara_summ2, aes(xintercept=value), lty=2) +
+    facet_wrap(~key, scale="free_y")
+    
 posterior %>%
     group_by(key) %>%
     summarise(mean=mean(value))
