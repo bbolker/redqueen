@@ -1,9 +1,17 @@
-sumfun <- function(sim, subyear=c(1001:1100)) {
+sumfun <- function(sim, subyear=c(1001:1100),
+                   sitesample=4) {
+    if (!missing(sitesample)) {
+        site <- sample(1:dim(sim$S.count)[2], sitesample)
+    } else {
+        site <- 1:(dim(S.count)[2])
+    }
+    
     with(sim,{
+        
         N.count <- S.count + A.count
         sl <- list(
-            pinf = (SI.count[subyear,] + AI.count[subyear,])/N.count[subyear,],
-            psex = S.count[subyear,]/N.count[subyear,]
+            pinf = (SI.count[subyear,site] + AI.count[subyear,site])/N.count[subyear,site],
+            psex = S.count[subyear,site]/N.count[subyear,site]
         )
         
         sl2 <- vector('list', 2)
@@ -27,7 +35,8 @@ simfun <- function(beta.meanlog=1, beta.sdlog=0.5,
                    n.site=50,
                    subyear=c(1001:1100),
                    summarize=TRUE,
-                   discard=TRUE, ...) {
+                   discard=TRUE, 
+                   sitesample=4, ...) {
     bI <- (1-V)*bU
     beta <- rlnorm(n.site, meanlog=beta.meanlog, sdlog=beta.sdlog)
     tmax <- max(subyear)
@@ -35,7 +44,7 @@ simfun <- function(beta.meanlog=1, beta.sdlog=0.5,
     
     if (discard && any(sim$A.count[subyear,] < 0.1)) return(NA)
     
-    summary <- sumfun(sim, subyear)
+    summary <- sumfun(sim=sim, subyear=subyear, sitesample=sitesample)
     
     if (summarize) {
         return(summary)

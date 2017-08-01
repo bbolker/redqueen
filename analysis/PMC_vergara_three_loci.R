@@ -7,16 +7,16 @@ load("../data/vergara_summ.rda")
 
 rprior <- function() {
     list(
-        beta.meanlog=rnorm(1, mean=2, sd=2),
-        log.beta.sdlog=rnorm(1, mean=0, sd=1),
+        beta.meanlog=rcauchy(1, location=2, scale=1),
+        log.beta.sdlog=rcauchy(1, location=0, scale=0.5),
         logit.V=rcauchy(1, location=1, scale=0.5)
     )
 }
 
 dprior <- function(x) {
     with(as.list(x),{
-        dnorm(beta.meanlog, mean=2, sd=2) *
-            dnorm(log.beta.sdlog, mean=0, sd=1) *
+        dcauchy(beta.meanlog, location=2, scale=1) *
+            dcauchy(log.beta.sdlog, location=0, scale=0.5) *
             dcauchy(logit.V, location=1, scale=0.5)
     })
 }
@@ -67,7 +67,7 @@ for(t in 1:tmax) {
             }
         }
     } else {
-        sigma <- sqrt(2*var(parlist[[t-1]]))
+        sigma <- 2*var(parlist[[t-1]])
         while(N <= Nmax) {
             cat(t, N, "\n")
             pindex <- sample(1:Nmax, 1, prob=ww[,t-1])
