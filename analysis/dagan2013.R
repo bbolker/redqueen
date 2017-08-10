@@ -7,6 +7,16 @@ library(quantreg)
 
 dagan <- read_excel("../data/JEB12245-Dryad.xlsx", sheet=1)
 
+dagan_summ <- dagan %>%
+    select_("Males", "Infected") %>%
+    mutate(sex=2*Males) %>%
+    summarize_all(funs(mean, sd(.)/mean(.))) %>%
+    select(5, 6, 2, 3) %>%
+    setNames(c("pinf.siteCV", "psex.siteCV", "pinf.mean", "psex.mean")) %>%
+    unlist
+
+save("dagan_summ", file="dagan_summ.rda")
+ 
 logitfun <- function(x, min.p) log((x+min.p)/(1-x+min.p))
 
 dagan_trans <- dagan %>%
