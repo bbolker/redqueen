@@ -1,5 +1,5 @@
 migratefun3 <- function(p) {
-    scaled_matrix(matrix(runif(16) < c(p * .upr), 8, 8))
+    scaled_matrix(matrix(runif(64) < c(p * .upr), 8, 8))
 }
 
 pois_matrix3 <- function(mat){
@@ -172,6 +172,146 @@ three_loci_stochastic_spatial_discrete_model <- function(start,
             lambda[t,,i] <- beta[i] * I[t,,i]/(2 * N.count[t+1,i])
             lambda[t,,i][which(is.nan(lambda[t,,i]))] <- 0
             
+        }
+        
+        lambda.tot <- array(0, dim=c(8, n.site))
+        ratio <- array(0, dim=c(8, 8, n.site))
+        
+        for(i in 1:n.site) {
+            for(j in 1:n.site) {
+                lambda.tot[,i] <- lambda.tot[,i] + ifelse(i==j, 1-epsilon.site, epsilon.site/(n.site-1)) * lambda[t,,j]
+            }
+            
+            FOI <- outer(lambda.tot[,i], lambda.tot[,i], "+")
+            
+            P[,,i] <- 1 - exp(-FOI)
+            ratio[,,i] <- lambda.tot[,i]/FOI
+            ratio[,,i][which(is.nan(ratio[,,i]))] <- 0
+            diag(ratio[,,i]) <- 1
+            
+            SI[t+1,,,i] <- binom_matrix3(S[t+1,,,i], P[,,i])
+            SI.count[t+1,i] <- scaled_sum(SI[t+1,,,i])
+            
+            
+            AI[t+1,,,i] <- binom_matrix3(A[t+1,,,i], P[,,i])
+            AI.count[t+1,i] <- scaled_sum(AI[t+1,,,i])
+        }
+        
+    }
+    
+    if (simplify) {
+        list(
+            S.count=S.count, SI.count=SI.count,
+            A.count=A.count, AI.count=AI.count
+        )
+    } else{
+        list(
+            S=S, SI=SI,
+            S.count=S.count, SI.count=SI.count, 
+            A=A, AI=AI,
+            A.count=A.count, AI.count=AI.count, 
+            N.count=N.count, I=I
+        )
+    }
+}
+
+##' @param n.genotype number of asexual genotype introduced to the population
+three_loci_stochastic_spatial_discrete_lim_model <- function(start,
+                                                         n.site=4,
+                                                         n.genotype=1,
+                                                         epsilon.site=0.01,
+                                                         s=0.5, 
+                                                         r.host=0.1,
+                                                         beta=c(5, 5, 5, 5),
+                                                         aU=0.001, aI=0.001,
+                                                         bU=20, bI=3,
+                                                         migrate.host=0.2, migrate.pathogen=0.1,
+                                                         epsilon=0.05,
+                                                         seed=NULL, simplify=TRUE,
+                                                         tmax=1100, tburnin=500) {
+    if(!is.null(seed)) set.seed(seed)
+    
+    if(missing(start)) start <- discrete_initialize3(N0=3200)
+    
+    S <- SI <- A <- AI <- array(0, dim=c(tmax+1, 8, 8, n.site))
+    I <- lambda <- array(0, dim=c(tmax+1, 8, n.site))
+    N.count <- S.count <- SI.count <- A.count <- AI.count <- matrix(0, nrow=tmax+1, ncol=n.site)
+    
+    asex.genotype <- sample(1:36, n.genotype)
+    asex.mat <- matrix(0, 8, 8)
+    asex.mat[which(.upr)[asex.genotype]] <- 1
+    asex.mat <- scaled_matrix(asex.mat)
+    
+    for(i in 1:n.site) {
+        S[1,,,i] <- start
+        S.count[1,i] <- scaled_sum(S[1,,,i])
+        N.count[1,i] <- scaled_sum(S[1,,,i])
+    }
+    
+    inf <- array(0, dim=c(8, 8, n.site))
+    P <- array(0, dim=c(8, 8, n.site))
+    
+    ratio <- array(0, dim=c(8, 8, n.site))
+    
+    asex.introduce <- function() {
+        asex <- matrix(0, 8, 8)
+        asex[which(.upr)[asex.genotype[sample(1:n.genotype, 1)]]] <- 1
+        scaled_matrix(asex)
+    }
+    
+    sex.migrate <- 1-(1-migrate.host)^(1/36)
+    asex.migrate <- 1-(1-migrate.host * asex.mat)^(1/n.genotype)
+    
+    for(t in 1:tmax){
+        
+        tmp <- array(0, dim=c(8, 8, n.site))
+        
+        S.tmp <- array(0, dim=c(8, 8, n.site))
+        A.tmp <- array(0, dim=c(8, 8, n.site))
+        
+        for(i in 1:n.site) {
+            if (t==tburnin) {
+                A[t,,,i] <- 10 * asex.introduce()
+                A.count[t,i] <- 10
+                N.count[t,i] <- N.count[t,i] + 10
+            }
+            
+            WU <- bU/(1+aU*N.count[t,i])
+            WI <- bI/(1+aI*N.count[t,i])
+            
+            Sp <- (1-s) *  ((S[t,,,i] - SI[t,,,i]) * WU +SI[t,,,i] * WI)
+            S.tmp[,,i] <- Sp
+            
+            A.tmp[,,i] <- (A[t,,,i] - AI[t,,,i]) * WU + AI[t,,,i] * WI
+        }
+        
+        for(i in 1:n.site) {
+            A.tmp2 <- S.tmp2 <- matrix(0, 8, 8)
+            for(j in 1:n.site) {
+                S.tmp2 <- S.tmp2 + ifelse(i==j, 1-epsilon.site, epsilon.site/(n.site-1)) * S.tmp[,,i]
+                A.tmp2 <- A.tmp2 + ifelse(i==j, 1-epsilon.site, epsilon.site/(n.site-1)) * A.tmp[,,i]
+            }
+            
+            S[t+1,,,i] <- pois_matrix3(outcross3(S.tmp2, r.host)) + migratefun3(sex.migrate)
+            S.count[t+1,i] <- scaled_sum(S[t+1,,,i])
+            
+            A[t+1,,,i] <- pois_matrix3(A.tmp2)
+            if (t >= tburnin) {
+                A[t+1,,,i] <- A[t+1,,,i] + migratefun3(asex.migrate)
+            }
+            
+            
+            A.count[t+1,i] <- scaled_sum(A[t+1,,,i])
+            
+            N.count[t+1,i] <- S.count[t+1,i] + A.count[t+1,i]
+            
+            tmp[,,i] <- SI[t,,,i] + AI[t,,,i]
+            
+            I.nomut <- rowSums(tmp[,,i] * ratio[,,i])
+            I[t,,i] <- pathogen.mutate(I.nomut, epsilon) + as.numeric(runif(8) < migrate.pathogen)
+            
+            lambda[t,,i] <- beta[i] * I[t,,i]/(2 * N.count[t+1,i])
+            lambda[t,,i][which(is.nan(lambda[t,,i]))] <- 0
         }
         
         lambda.tot <- array(0, dim=c(8, n.site))
