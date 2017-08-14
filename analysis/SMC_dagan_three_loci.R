@@ -109,7 +109,7 @@ for(t in 1:tmax) {
             print(summ <- try(do.call(simfun, pp2)))
             if (!any(is.nan(summ)) && !inherits(summ, "try-error") && !any(is.na(summ))) {
                 summ <- summ[dagan_var]
-                print(dist <- sum(abs(vergara_summ - summ)))
+                print(dist <- sum(abs(dagan_summ - summ)))
                 accept <- dist < tolerance[t]
                 if (accept) {
                     parlist[[t]][N,] <- unlist(pp)

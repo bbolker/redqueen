@@ -66,7 +66,6 @@ ggplot(dagan_trans, aes(logit.i, logit.m)) +
     geom_smooth(method='lm', formula=y~x, col="blue", fill="blue", alpha=0.1, lwd=1) +
     geom_ribbon(data=prr, aes(logit.i, ymin=lower, ymax=higher), alpha=0.1, fill=2)
 
-
 ## lin reg
 
 ggplot(dagan_trans, aes(logit.i, logit.m)) +
