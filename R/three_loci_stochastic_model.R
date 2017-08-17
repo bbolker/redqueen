@@ -261,6 +261,7 @@ three_loci_stochastic_spatial_discrete_lim_model <- function(start,
     
     sex.migrate <- 1-(1-migrate.host)^(1/36)
     asex.migrate <- 1-(1-migrate.host * asex.mat)^(1/n.genotype)
+    pathogen.migrate <- 1-(1-migrate.pathogen)^(1/8)
     
     for(t in 1:tmax){
         
@@ -288,8 +289,8 @@ three_loci_stochastic_spatial_discrete_lim_model <- function(start,
         for(i in 1:n.site) {
             A.tmp2 <- S.tmp2 <- matrix(0, 8, 8)
             for(j in 1:n.site) {
-                S.tmp2 <- S.tmp2 + ifelse(i==j, 1-epsilon.site, epsilon.site/(n.site-1)) * S.tmp[,,i]
-                A.tmp2 <- A.tmp2 + ifelse(i==j, 1-epsilon.site, epsilon.site/(n.site-1)) * A.tmp[,,i]
+                S.tmp2 <- S.tmp2 + ifelse(i==j, 1-epsilon.site, epsilon.site/(n.site-1)) * S.tmp[,,j]
+                A.tmp2 <- A.tmp2 + ifelse(i==j, 1-epsilon.site, epsilon.site/(n.site-1)) * A.tmp[,,j]
             }
             
             S[t+1,,,i] <- pois_matrix3(outcross3(S.tmp2, r.host)) + migratefun3(sex.migrate)
@@ -308,7 +309,7 @@ three_loci_stochastic_spatial_discrete_lim_model <- function(start,
             tmp[,,i] <- SI[t,,,i] + AI[t,,,i]
             
             I.nomut <- rowSums(tmp[,,i] * ratio[,,i])
-            I[t,,i] <- pathogen.mutate(I.nomut, epsilon) + as.numeric(runif(8) < migrate.pathogen)
+            I[t,,i] <- pathogen.mutate(I.nomut, epsilon) + as.numeric(runif(8) < pathogen.migrate)
             
             lambda[t,,i] <- beta[i] * I[t,,i]/(2 * N.count[t+1,i])
             lambda[t,,i][which(is.nan(lambda[t,,i]))] <- 0
@@ -331,7 +332,6 @@ three_loci_stochastic_spatial_discrete_lim_model <- function(start,
             
             SI[t+1,,,i] <- binom_matrix3(S[t+1,,,i], P[,,i])
             SI.count[t+1,i] <- scaled_sum(SI[t+1,,,i])
-            
             
             AI[t+1,,,i] <- binom_matrix3(A[t+1,,,i], P[,,i])
             AI.count[t+1,i] <- scaled_sum(AI[t+1,,,i])

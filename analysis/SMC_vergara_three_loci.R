@@ -11,7 +11,7 @@ rprior <- function() {
         beta.meanlog=rcauchy(1, location=2, scale=1),
         beta.sdlog=rlnorm(1, meanlog=0, sdlog=1),
         V=rbeta(1, shape1=6, shape2=2), ## mean of 0.75
-        epsilon.site=rbeta(1, shape1=1/9, shape2=11), ## mean of 0.01
+        epsilon.site=rbeta(1, shape1=1, shape2=19), ## mean of 0.05
         n.genotype=rbetabinom(n=1,size=35,prob=3/35,theta=5)+1 ## mean of 4 (1:9 asex to sex ratio)
     )
 }
@@ -21,7 +21,7 @@ dprior <- function(x) {
         dcauchy(beta.meanlog, location=2, scale=1) *
             dlnorm(beta.sdlog, meanlog=0, sdlog=1) *
             dbeta(V, shape1=6, shape2=2) *
-            dbeta(epsilon.site, shape1=1/9, shape2=11) *
+            dbeta(epsilon.site, shape1=1, shape2=19) *
             dbetabinom(n.genotype-1, size=35, prob=3/35, theta=5)
     })
 }
@@ -29,8 +29,8 @@ dprior <- function(x) {
 ## assuming that all parameters are independent
 rjump <- function(x, sigma) {
     with(as.list(x),{
-        logit.V <- car::logit(V, adjust=1e-5)
-        logit.epsilon <- car::logit(epsilon.site, adjust=1e-5)
+        logit.V <- car::logit(V, adjust=1e-4)
+        logit.epsilon <- car::logit(epsilon.site, adjust=1e-4)
         
         list(
             beta.meanlog=rnorm(1, mean=beta.meanlog, sd=sigma[1]), 
@@ -45,14 +45,14 @@ rjump <- function(x, sigma) {
 djump <- function(x, theta, sigma) {
     dnorm(x[[1]], mean=theta[[1]], sd=sigma[1]) *
         dnorm(log(x[[2]]), mean=log(theta[[2]]), sd=sigma[2]) *
-        dnorm(car::logit(x[[3]], adjust=1e-5), mean=car::logit(theta[[3]], adjust=1e-5), sigma[3]) *
-        dnorm(car::logit(x[[4]], adjust=1e-5), mean=car::logit(theta[[4]], adjust=1e-5), sigma[4]) *
+        dnorm(car::logit(x[[3]], adjust=1e-4), mean=car::logit(theta[[3]], adjust=1e-4), sigma[3]) *
+        dnorm(car::logit(x[[4]], adjust=1e-4), mean=car::logit(theta[[4]], adjust=1e-4), sigma[4]) *
         dbinom(x[[5]]-1, size=35, prob=(theta[[5]]-0.5)/36)
 }
 
-Nmax <- 100
-tmax <- 3
-tolerance <- c(1.2, 0.6, 0.3)
+Nmax <- 200
+tmax <- 2
+tolerance <- c(1.2, 0.6)
 
 ww <- matrix(NA, ncol=tmax, nrow=Nmax)
 sumlist <- parlist <- vector("list", tmax)
@@ -89,8 +89,8 @@ for(t in 1:tmax) {
             sqrt(2*c(
                 var(beta.meanlog),
                 var(log(beta.sdlog)),
-                var(car::logit(V, adjust=1e-5)),
-                var(car::logit(epsilon.site, adjust=1e-5))
+                var(car::logit(V, adjust=1e-4)),
+                var(car::logit(epsilon.site, adjust=1e-4))
             ))
         })
         while(N <= Nmax) {

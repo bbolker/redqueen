@@ -1,3 +1,4 @@
+library(emdbook)
 library(readxl)
 library(dplyr)
 library(tidyr)
@@ -6,6 +7,8 @@ library(grid)
 library(gridExtra)
 load("../data/vergara_summ.rda")
 load("../data/dagan_summ.rda")
+
+save <- FALSE
 
 src <- "../data/"
 SMC_files <- c("SMC_vergara_three_loci.rda", "SMC_dagan_three_loci.rda")
@@ -39,9 +42,11 @@ clean_fun <- function(x, target) {
 clean_list <- c("parlist", "sumlist") %>%
     sapply(clean_fun, x=comb_smc, simplify=FALSE)
 
-clean_list %>%
+SMC_summary <- clean_list %>%
     lapply(summarize, value=mean(value, na.rm=TRUE)) %>%
     lapply(spread, key, value)
+
+if(save) save("SMC_summary", file="SMC_summary.rda")
 
 gpar <- ggplot(NULL, aes(col=run, group=run)) +
     geom_density(aes(value)) +
@@ -63,36 +68,39 @@ glist <- clean_list$parlist %>%
 names(glist$plot) <- glist$key
 
 glist$plot$beta.meanlog <- glist$plot$beta.meanlog +
-    geom_vline(data=filter(smc_mean, key=="beta.meanlog"), aes(xintercept=mean, col=run), lty=2) +
-    stat_function(fun=function(x) dcauchy(x, location=2, scale=1))
+    stat_function(fun=function(x) dcauchy(x, location=2, scale=1), col="black")
 
 glist$plot$beta.sdlog <- glist$plot$beta.sdlog +
     scale_x_log10() +
-    stat_function(fun=function(x) dlnorm(x, meanlog=0, sdlog=1))
+    stat_function(fun=function(x) dlnorm(x, meanlog=0, sdlog=1), col="black")
 
 glist$plot$epsilon.site <- glist$plot$epsilon.site +
     scale_x_log10()
 
 glist$plot$V <- glist$plot$V +
     scale_x_continuous(limits=c(0, 1)) +
-    stat_function(fun=function(x) dbeta(x, shape1=6, shape2=2))
+    stat_function(fun=function(x) dbeta(x, shape1=6, shape2=2), col="black")
+
+geno_prior <- data.frame(vergara=dbetabinom(0:35, prob=3/35, size=35, theta=5),
+           dagan=dbetabinom(0:35, prob=3/35, size=35, theta=5),
+           n.genotype=1:36) %>%
+    gather(key,value, -n.genotype) %>%
+    rename(fit=key) %>%
+    mutate(key="n.genotype")
 
 ghist <- clean_list$parlist %>%
     filter(key=="n.genotype") %>%
     filter(!is.na(value)) %>%
-    group_by(fit, run, key, value) %>%
-    summarize(n=n()) %>%
-    mutate(freq=n/sum(n)) %>%
-    ggplot(aes(value,freq,col=run)) +
-        geom_point() +
-        geom_line(lty=2) +
+    ggplot() +
+        geom_histogram(aes(value, ..density.., fill=run), position="identity", alpha=0.5, bins=22) +
+        geom_line(data=geno_prior, aes(n.genotype, value)) +
         facet_grid(fit~key) +
         theme(axis.title.y=element_blank(),
             axis.text.y=element_blank(),
             axis.ticks.y=element_blank(),
             panel.grid.minor=element_blank())
 
-gg <- append(glist$plot, list(n.genotype=ghist)) 
+gg <- append(glist$plot, list(n.genotype=ghist))
 
 do.call(grid.arrange, list(grobs=gg, nrow=1, widths=c(0.8, 0.8, 0.8, 0.8, 1)))
 

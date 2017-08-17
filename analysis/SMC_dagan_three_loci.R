@@ -11,7 +11,7 @@ rprior <- function() {
         beta.meanlog=rcauchy(1, location=2, scale=1),
         beta.sdlog=rlnorm(1, meanlog=0, sdlog=1),
         V=rbeta(1, shape1=6, shape2=2), ## mean of 0.75
-        epsilon.site=rbeta(1, shape1=1/9, shape2=11), ## mean of 0.01
+        epsilon.site=rbeta(1, shape1=1, shape2=19), ## mean of 0.05
         n.genotype=rbetabinom(n=1,size=35,prob=7/35,theta=5)+1 ## higher asexual diversity (double)
     )
 }
@@ -21,7 +21,7 @@ dprior <- function(x) {
         dcauchy(beta.meanlog, location=2, scale=1) *
             dlnorm(beta.sdlog, meanlog=0, sdlog=1) *
             dbeta(V, shape1=6, shape2=2) *
-            dbeta(epsilon.site, shape1=1/9, shape2=11) *
+            dbeta(epsilon.site, shape1=1, shape2=19) *
             dbetabinom(n.genotype-1, size=35, prob=7/35, theta=5)
     })
 }
@@ -29,8 +29,8 @@ dprior <- function(x) {
 ## assuming that all parameters are independent
 rjump <- function(x, sigma) {
     with(as.list(x),{
-        logit.V <- car::logit(V, adjust=1e-5)
-        logit.epsilon <- car::logit(epsilon.site, adjust=1e-5)
+        logit.V <- car::logit(V, adjust=1e-4)
+        logit.epsilon <- car::logit(epsilon.site, adjust=1e-4)
         
         list(
             beta.meanlog=rnorm(1, mean=beta.meanlog, sd=sigma[1]), 
@@ -50,9 +50,9 @@ djump <- function(x, theta, sigma) {
         dbinom(x[[5]]-1, size=35, prob=(theta[[5]]-0.5)/36)
 }
 
-Nmax <- 100
-tmax <- 3
-tolerance <- c(0.8, 0.4, 0.2)
+Nmax <- 200
+tmax <- 2
+tolerance <- c(0.8, 0.4)
 
 ww <- matrix(NA, ncol=tmax, nrow=Nmax)
 sumlist <- parlist <- vector("list", tmax)
@@ -93,8 +93,8 @@ for(t in 1:tmax) {
             sqrt(2*c(
                 var(beta.meanlog),
                 var(log(beta.sdlog)),
-                var(car::logit(V, adjust=1e-5)),
-                var(car::logit(epsilon.site, adjust=1e-5))
+                var(car::logit(V, adjust=1e-4)),
+                var(car::logit(epsilon.site, adjust=1e-4))
             ))
         })
         while(N <= Nmax) {
