@@ -3,7 +3,7 @@ sumfun <- function(sim, subyear=c(1001:1100),
     if (!missing(sitesample)) {
         site <- sample(1:dim(sim$S.count)[2], sitesample)
     } else {
-        site <- 1:(dim(S.count)[2])
+        site <- 1:(dim(sim$S.count)[2])
     }
     
     with(sim,{
@@ -32,7 +32,8 @@ simfun <- function(beta.meanlog=1, beta.sdlog=0.5,
                    bU=20, V=0.85,
                    epsilon.site=0.01,
                    n.site=30,
-                   n.genotype=4,
+                   n.genotype=1,
+                   c_b=1,
                    subyear=c(1001:1100),
                    summarize=TRUE,
                    discard=TRUE, 
@@ -40,12 +41,13 @@ simfun <- function(beta.meanlog=1, beta.sdlog=0.5,
     bI <- (1-V)*bU
     beta <- rlnorm(n.site, meanlog=beta.meanlog, sdlog=beta.sdlog)
     tmax <- max(subyear)
-    sim <- three_loci_stochastic_spatial_discrete_lim_model(beta=beta, 
-                                                        n.site=n.site, 
-                                                        bU=bU, bI=bI, 
-                                                        epsilon.site=epsilon.site, 
-                                                        n.genotype=n.genotype,
-                                                        tmax=tmax, ...)
+    sim <- stochastic_spatial_discrete_lim_model(beta=beta, 
+                                                 n.site=n.site, 
+                                                 bU=bU, bI=bI, 
+                                                 epsilon.site=epsilon.site,
+                                                 c_b=c_b,
+                                                 n.genotype=n.genotype,
+                                                 tmax=tmax, ...)
     
     if (discard && any(sim$A.count[subyear,] < 0.1)) return(NA)
     

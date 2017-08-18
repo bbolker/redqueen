@@ -218,6 +218,7 @@ stochastic_spatial_discrete_lim_model <- function(start,
                                                   n.site=4,
                                                   n.genotype=1,
                                                   epsilon.site=0.01,
+                                                  c_b=1,
                                                   s=0.5, 
                                                   r.host=0.1,
                                                   beta=c(5, 5, 5, 5),
@@ -278,7 +279,7 @@ stochastic_spatial_discrete_lim_model <- function(start,
             WU <- bU/(1+aU*N.count[t,i])
             WI <- bI/(1+aI*N.count[t,i])
             
-            Sp <- (1-s) *  ((S[t,,,i] - SI[t,,,i]) * WU +SI[t,,,i] * WI)
+            Sp <- c_b * (1-s) *  ((S[t,,,i] - SI[t,,,i]) * WU +SI[t,,,i] * WI)
             S.tmp[,,i] <- Sp
             
             A.tmp[,,i] <- (A[t,,,i] - AI[t,,,i]) * WU + AI[t,,,i] * WI

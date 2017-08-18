@@ -1,7 +1,7 @@
 library(emdbook)
 library(car)
-source("../R/three_loci_util.R")
-source("../R/three_loci_stochastic_model.R")
+source("../R/util.R")
+source("../R/stochastic_model.R")
 source("../R/ABC_funs.R")
 
 load("../data/vergara_summ.rda")
@@ -12,7 +12,8 @@ rprior <- function() {
         beta.sdlog=rlnorm(1, meanlog=0, sdlog=1),
         V=rbeta(1, shape1=6, shape2=2), ## mean of 0.75
         epsilon.site=rbeta(1, shape1=1, shape2=19), ## mean of 0.05
-        n.genotype=rbetabinom(n=1,size=35,prob=3/35,theta=5)+1 ## mean of 4 (1:9 asex to sex ratio)
+        n.genotype=rbetabinom(n=1,size=9,prob=1/9,theta=5)+1, ## mean of 2
+        c_b=rlnorm(1, meanlog=0, sdlog=0.3)
     )
 }
 
@@ -22,7 +23,8 @@ dprior <- function(x) {
             dlnorm(beta.sdlog, meanlog=0, sdlog=1) *
             dbeta(V, shape1=6, shape2=2) *
             dbeta(epsilon.site, shape1=1, shape2=19) *
-            dbetabinom(n.genotype-1, size=35, prob=3/35, theta=5)
+            dbetabinom(n.genotype-1, size=9, prob=1/9, theta=5) *
+            dlnorm(c_b, meanlog=0, sdlog=0.3)
     })
 }
 
@@ -37,7 +39,8 @@ rjump <- function(x, sigma) {
             beta.sdlog=exp(rnorm(1, mean=log(beta.sdlog), sd=sigma[2])), 
             V=plogis(rnorm(1, mean=logit.V, sd=sigma[3])), 
             epsilon.site=plogis(rnorm(1, mean=logit.epsilon, sd=sigma[4])), 
-            n.genotype=rbinom(1, size=35, prob=((n.genotype-0.5)/36))+1 ## avoid p = 0 and 1
+            n.genotype=rbinom(1, size=9, prob=((n.genotype-0.5)/9))+1, ## avoid p = 0 and 1
+            c_b=exp(rnorm(1, mean=log(c_b), sd=sigma[5]))
         )
     })
 }
@@ -47,12 +50,13 @@ djump <- function(x, theta, sigma) {
         dnorm(log(x[[2]]), mean=log(theta[[2]]), sd=sigma[2]) *
         dnorm(car::logit(x[[3]], adjust=1e-4), mean=car::logit(theta[[3]], adjust=1e-4), sigma[3]) *
         dnorm(car::logit(x[[4]], adjust=1e-4), mean=car::logit(theta[[4]], adjust=1e-4), sigma[4]) *
-        dbinom(x[[5]]-1, size=35, prob=(theta[[5]]-0.5)/36)
+        dbinom(x[[5]]-1, size=9, prob=(theta[[5]]-0.5)/9) *
+        dnorm(log(x[[6]]), mean=log(theta[[6]]), sd=sigma[[5]])
 }
 
 Nmax <- 100
-tmax <- 2
-tolerance <- c(1.2, 0.6)
+tmax <- 3
+tolerance <- c(0.9, 0.45, 0.15)
 
 ww <- matrix(NA, ncol=tmax, nrow=Nmax)
 sumlist <- parlist <- vector("list", tmax)
@@ -80,7 +84,7 @@ for(t in 1:tmax) {
                     sumlist[[t]][N,] <- summ
                     ww[N,t] <- 1/Nmax
                     N <- N+1
-                    save("ww", "sumlist", "parlist", file="SMC_vergara_three_loci.rda")
+                    save("ww", "sumlist", "parlist", file="SMC_vergara.rda")
                 }
             }
         }
@@ -90,7 +94,8 @@ for(t in 1:tmax) {
                 var(beta.meanlog),
                 var(log(beta.sdlog)),
                 var(car::logit(V, adjust=1e-4)),
-                var(car::logit(epsilon.site, adjust=1e-4))
+                var(car::logit(epsilon.site, adjust=1e-4)),
+                var(log(c_b))
             ))
         })
         while(N <= Nmax) {
@@ -112,7 +117,7 @@ for(t in 1:tmax) {
                     ww[N,t] <- dprior(pp)/
                         sum(ww[,t-1] * apply(parlist[[t-1]], 1, djump, theta=pp, sigma=sigma))
                     N <- N+1
-                    save("ww", "sumlist", "parlist", file="SMC_vergara_three_loci.rda")
+                    save("ww", "sumlist", "parlist", file="SMC_vergara.rda")
                 }
             }
         }

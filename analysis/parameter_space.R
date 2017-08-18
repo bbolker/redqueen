@@ -10,7 +10,7 @@ res <- vector("list", length(beta_vec))
 summary <- vector("list", length(beta_vec))
 for(i in 1:length(beta_vec)) {
     cat(i)
-    res[[i]] <- stochastic_spatial_discrete_lim_model(beta=rep(beta_vec[i], 4), bI=2, seed=103)[c("S.count", "SI.count", "A.count", "AI.count")]
+    res[[i]] <- stochastic_spatial_discrete_lim_model(beta=rep(beta_vec[i], 4),seed=103)[c("S.count", "SI.count", "A.count", "AI.count")]
     summary[[i]] <- with(res[[i]],{
         S <- S.count[t_sub,]
         A <- A.count[t_sub,]
