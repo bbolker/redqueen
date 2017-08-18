@@ -2,7 +2,7 @@ test_lm <- function(sample) {
     fit <- lm(sexual~infected, data=sample)
     data.frame(
         effect.size=fit$coefficients[2],
-        p.value=summary(fit)$coefficients[2,'Pr(>|t|)']
+        p.value=ifelse(is.na(fit$coefficients[2]), NA, summary(fit)$coefficients[2,'Pr(>|t|)']) 
     )
 }
 
@@ -10,7 +10,15 @@ test_quad <- function(sample) {
     fit <- lm(sexual~I(infected)+I(infected^2), data=sample)
     data.frame(
         effect.size=fit$coefficients[3],
-        p.value=summary(fit)$coefficients[3,'Pr(>|t|)']
+        p.value=ifelse(is.na(fit$coefficients[3]), NA, summary(fit)$coefficients[3,'Pr(>|t|)']) 
+    )
+}
+
+test_quad_rq <- function(sample, tau=0.9) {
+    fit <- quantreg::rq(sexual~I(infected)+I(infected^2), data=sample, tau=tau)
+    data.frame(
+        effect.size=fit$coefficients[3],
+        p.value=NA
     )
 }
 

@@ -50,7 +50,7 @@ djump <- function(x, theta, sigma) {
         dbinom(x[[5]]-1, size=35, prob=(theta[[5]]-0.5)/36)
 }
 
-Nmax <- 200
+Nmax <- 100
 tmax <- 2
 tolerance <- c(0.8, 0.4)
 

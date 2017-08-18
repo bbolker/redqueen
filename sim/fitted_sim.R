@@ -3,7 +3,7 @@ source("../R/three_loci_stochastic_model.R")
 
 L <- load("../data/SMC_summary.rda")
 
-simfun <- function(nsim=100, 
+simfun <- function(nsim=50, 
                    beta.meanlog,
                    beta.sdlog,
                    epsilon.site,
