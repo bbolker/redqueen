@@ -224,7 +224,7 @@ stochastic_spatial_discrete_lim_model <- function(start,
                                                   beta=c(5, 5, 5, 5),
                                                   aU=0.001, aI=0.001,
                                                   bU=20, bI=3,
-                                                  migrate.host=0.1, migrate.pathogen=0.05,
+                                                  migrate.host=0.04, migrate.pathogen=0.02,
                                                   epsilon=0.05,
                                                   seed=NULL, simplify=TRUE,
                                                   tmax=1100, tburnin=500) {
@@ -242,9 +242,11 @@ stochastic_spatial_discrete_lim_model <- function(start,
     asex.mat <- scaled_matrix(asex.mat)
     
     for(i in 1:n.site) {
-        S[1,,,i] <- start
+        S[1,,,i] <- 0.96 * start
+        SI[1,,,i] <- 0.04 * start
         S.count[1,i] <- scaled_sum(S[1,,,i])
-        N.count[1,i] <- scaled_sum(S[1,,,i])
+        SI.count[1,i] <- scaled_sum(SI[1,,,i])
+        N.count[1,i] <- scaled_sum(SI[1,,,i] + S[1,,,i])
     }
     
     inf <- array(0, dim=c(4, 4, n.site))
@@ -258,9 +260,9 @@ stochastic_spatial_discrete_lim_model <- function(start,
         scaled_matrix(asex)
     }
     
-    sex.migrate <- migrate.host
-    asex.migrate <- migrate.host*asex.mat
-    pathogen.migrate <- migrate.pathogen
+    sex.migrate <- 1-(1-migrate.host)^(1/10)
+    asex.migrate <- 1-(1-migrate.host * asex.mat)^(1/n.genotype)
+    pathogen.migrate <- 1-(1-migrate.pathogen)^(1/4)
     
     for(t in 1:tmax){
         

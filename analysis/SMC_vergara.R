@@ -54,9 +54,9 @@ djump <- function(x, theta, sigma) {
         dnorm(log(x[[6]]), mean=log(theta[[6]]), sd=sigma[[5]])
 }
 
-Nmax <- 100
+Nmax <- 50
 tmax <- 3
-tolerance <- c(0.9, 0.45, 0.15)
+tolerance <- c(1.8, 0.9, 0.45)
 
 ww <- matrix(NA, ncol=tmax, nrow=Nmax)
 sumlist <- parlist <- vector("list", tmax)
