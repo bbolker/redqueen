@@ -1,4 +1,4 @@
-library(ggplot2)
+library(ggplot2); theme_set(theme_bw())
 library(dplyr)
 load("../data/fitted_power.rda")
 
@@ -10,7 +10,7 @@ simdf <- simlist %>%
     lapply(bind_rows, .id="test") %>%
     bind_rows(.id="sim") %>%
     as.tbl %>%
-    mutate(sites=factor(sites, label=seq(10, 50, by=5)))
+    mutate(sites=factor(sites, label=seq(10, 30, by=5)))
 
 sig_simdf <- simdf %>%
     group_by(sim, test, sites) %>%

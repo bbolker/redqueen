@@ -1,7 +1,7 @@
 source("../R/powerfun.R")
 load("../data/fitted_sim.rda")
 
-sites <- seq(10, 50, by=5)
+sites <- seq(10, 30, by=5)
 
 simlist <- list(
     dagan=dagan_sim,

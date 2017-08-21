@@ -47,7 +47,7 @@ sample_sim <- function(sim,
             } 
         },
         arcsin={
-            function(p) arcsin(sqrt(p))
+            function(p) asin(sqrt(p))
         },
         raw={
             function(p) p
@@ -99,7 +99,7 @@ powerfun <- function(simlist,
         testlist <- vector("list", nsim)
         for (j in 1:nsim) {
             sample <- sample_sim(sim, nsample, nsite, transform, target.gen)
-            testres <- suppressWarnings(test(sample)) 
+            testres <- suppressWarnings(test(sample))
             testlist[[j]] <- testres
         }
         comb_test <- do.call("rbind", testlist)
@@ -121,3 +121,4 @@ powerfun <- function(simlist,
     }
     return(df)
 }
+
