@@ -49,7 +49,8 @@ simfun <- function(beta.meanlog=1, beta.sdlog=0.5,
                                                  n.genotype=n.genotype,
                                                  tmax=tmax, ...)
     
-    if (discard && any(sim$A.count[subyear,] < 0.1)) return(NA)
+    if(discard && (all(sim$S.count[1000:1100] < 10) || all(sim$A.count[1000:1100] < 10)))
+        return(NA)
     
     summary <- sumfun(sim=sim, subyear=subyear, sitesample=sitesample)
     

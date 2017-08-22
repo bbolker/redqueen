@@ -39,7 +39,7 @@ rjump <- function(x, sigma) {
             beta.sdlog=exp(rnorm(1, mean=log(beta.sdlog), sd=sigma[2])), 
             V=plogis(rnorm(1, mean=logit.V, sd=sigma[3])), 
             epsilon.site=plogis(rnorm(1, mean=logit.epsilon, sd=sigma[4])), 
-            n.genotype=rbinom(1, size=9, prob=((n.genotype-0.5)/9))+1, ## avoid p = 0 and 1
+            n.genotype=rbinom(1, size=9, prob=((n.genotype-0.5)/10))+1, ## avoid p = 0 and 1
             c_b=exp(rnorm(1, mean=log(c_b), sd=sigma[5]))
         )
     })
@@ -50,11 +50,11 @@ djump <- function(x, theta, sigma) {
         dnorm(log(x[[2]]), mean=log(theta[[2]]), sd=sigma[2]) *
         dnorm(car::logit(x[[3]], adjust=1e-4), mean=car::logit(theta[[3]], adjust=1e-4), sigma[3]) *
         dnorm(car::logit(x[[4]], adjust=1e-4), mean=car::logit(theta[[4]], adjust=1e-4), sigma[4]) *
-        dbinom(x[[5]]-1, size=9, prob=(theta[[5]]-0.5)/9) *
+        dbinom(x[[5]]-1, size=9, prob=(theta[[5]]-0.5)/10) *
         dnorm(log(x[[6]]), mean=log(theta[[6]]), sd=sigma[[5]])
 }
 
-Nmax <- 50
+Nmax <- 100
 tmax <- 3
 tolerance <- c(1.2, 0.6, 0.3)
 
