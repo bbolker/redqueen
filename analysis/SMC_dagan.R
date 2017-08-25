@@ -11,9 +11,9 @@ rprior <- function() {
         beta.meanlog=rcauchy(1, location=0, scale=0.5),
         beta.sdlog=rlnorm(1, meanlog=0, sdlog=1),
         V=rbeta(1, shape1=6, shape2=2), ## mean of 0.75
-        epsilon.site=rbeta(1, shape1=1, shape2=19), ## mean of 0.05
-        n.genotype=rbetabinom(n=1,size=9,prob=3/9,theta=5)+1, ## mean of 4
-        c_b=rlnorm(1, meanlog=0, sdlog=0.3)
+        epsilon.site=rbeta(1, shape1=1, shape2=99), ## mean of 0.01
+        n.genotype=rbetabinom(n=1,size=9,prob=5/9,theta=5)+1, ## mean of 6
+        c_b=rlnorm(1, meanlog=-0.1, sdlog=0.1)
     )
 }
 
@@ -22,9 +22,9 @@ dprior <- function(x) {
         dcauchy(beta.meanlog, location=0, scale=0.5) *
             dlnorm(beta.sdlog, meanlog=0, sdlog=1) *
             dbeta(V, shape1=6, shape2=2) *
-            dbeta(epsilon.site, shape1=1, shape2=19) *
-            dbetabinom(n.genotype-1, size=9, prob=3/9, theta=5) *
-            dlnorm(c_b, meanlog=0, sdlog=0.3)
+            dbeta(epsilon.site, shape1=1, shape2=99) *
+            dbetabinom(n.genotype-1, size=9, prob=5/9, theta=5) *
+            dlnorm(c_b, meanlog=-0.1, sdlog=0.1)
     })
 }
 
@@ -54,7 +54,7 @@ djump <- function(x, theta, sigma) {
         dnorm(log(x[[6]]), mean=log(theta[[6]]), sd=sigma[[5]])
 }
 
-Nmax <- 100
+Nmax <- 50
 tmax <- 3
 tolerance <- c(1.2, 0.6, 0.3)
 
@@ -75,7 +75,6 @@ for(t in 1:tmax) {
         while(N <= Nmax) {
             cat(t, N, "\n")
             pp <- pp2 <- rprior()
-            pp2$discard <- FALSE
             pp2$sitesample <- 22
             
             print(summ <- try(do.call(simfun, pp2)))
@@ -108,7 +107,6 @@ for(t in 1:tmax) {
             pp.sample <- parlist[[t-1]][pindex,]
             
             pp <- pp2 <- rjump(pp.sample, sigma)
-            pp2$discard <- FALSE
             pp2$sitesample <- 22
             
             print(summ <- try(do.call(simfun, pp2)))
