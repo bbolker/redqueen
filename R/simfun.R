@@ -1,4 +1,4 @@
-simfun <- function(nsim=30, 
+simfun <- function(nsim=3, 
                    beta.meanlog,
                    beta.sdlog,
                    epsilon.site,

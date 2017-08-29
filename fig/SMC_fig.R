@@ -44,7 +44,7 @@ SMC_summary <- clean_list %>%
     lapply(summarize, value=mean(value, na.rm=TRUE)) %>%
     lapply(spread, key, value)
 
-if(save) save("SMC_summary", file="SMC_summary.rda")
+if(save) save("comb_smc", "clean_list", "SMC_summary", file="SMC_summary.rda")
 
 gpar <- ggplot(NULL, aes(col=run, group=run)) +
     geom_density(aes(value)) +
@@ -83,18 +83,18 @@ glist$plot$beta.sdlog <- glist$plot$beta.sdlog +
     stat_function(fun=function(x) dlnorm(x, meanlog=0, sdlog=1), col="black")
 
 glist$plot$epsilon.site <- glist$plot$epsilon.site +
-    stat_function(fun=function(x) dbeta(x, shape1=1, shape2=19), col="black")
+    stat_function(fun=function(x) dbeta(x, shape1=1, shape2=99), col="black")
 
 glist$plot$c_b <- glist$plot$c_b +
-    xlim(c(0,3)) +
-    stat_function(fun=function(x) dlnorm(x, meanlog=0, sdlog=0.3), col="black")
+    xlim(c(0.3,1.8)) +
+    stat_function(fun=function(x) dlnorm(x, meanlog=-0.1, sdlog=0.1), col="black")
 
 glist$plot$V <- glist$plot$V +
     scale_x_continuous(limits=c(0, 1)) +
     stat_function(fun=function(x) dbeta(x, shape1=6, shape2=2), col="black")
 
 geno_prior <- data.frame(vergara=dbetabinom(0:9, prob=1/9, size=9, theta=5),
-           dagan=dbetabinom(0:9, prob=3/9, size=9, theta=5),
+           dagan=dbetabinom(0:9, prob=5/9, size=9, theta=5),
            n.genotype=1:10) %>%
     gather(key,value, -n.genotype) %>%
     rename(fit=key) %>%
