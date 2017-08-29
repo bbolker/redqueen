@@ -6,7 +6,7 @@ samples <- seq(25, 200, by=25)
 nsim <- 10
 
 simlist <- list(
-    dagan=dagan_sim,
+##    dagan=dagan_sim,
     vergara=vergara_sim
 )
 
@@ -19,26 +19,28 @@ test_list <- list(
 reslist <- vector('list', length(simlist))
 
 for(sim_name in names(simlist)) {
-    cat(sim_name)
     sim <- simlist[[sim_name]]
     sub_reslist <- list()
     for(test_name in names(test_list)) {
-        cat(test_name)
         sample_reslist <- vector('list', length=length(samples))
         for(i in 1:length(samples)) {
-            res <- lapply(sites,
-                function(x) powerfun(
-                    simlist=sim,
-                    nsite=x,
-                    nsample=samples[i],
-                    nsim=nsim,
-                    test=test_list[[test_name]]
-                )
-            )
-            bres <- do.call('rbind', res)
-            bres$sites <- rep(sites, each=nsim*length(sim))
+            sim_reslist <- vector('list', length=length(sim))
+            for(j in 1:length(sim)) {
+                res <- try(lapply(sites,
+                    function(x) powerfun(
+                        simlist=sim[[j]],
+                        nsite=x,
+                        nsample=samples[i],
+                        nsim=nsim,
+                        test=test_list[[test_name]]
+                    )
+                ))
+                sim_reslist[[j]] <- try(do.call('rbind', res))
+                if(!inherits(sim_reslist[[j]], "try-error")) sim_reslist[[j]]$sim <- j
+                cat(sim_name, test_name, i, j, "\n")
+            }
                 
-            sample_reslist[[i]] <- bres
+            sample_reslist[[i]] <- do.call('rbind', sim_reslist)
         }
         
         sample_res <- do.call('rbind', sample_reslist)

@@ -1,3 +1,33 @@
+sumfun <- function(sim, subyear=c(1001:1100),
+                   sitesample=4) {
+    if (!missing(sitesample)) {
+        site <- sample(1:dim(sim$S.count)[2], sitesample)
+    } else {
+        site <- 1:(dim(sim$S.count)[2])
+    }
+    
+    with(sim,{
+        N.count <- S.count + A.count
+        sl <- list(
+            pinf = (SI.count[subyear,site] + AI.count[subyear,site])/N.count[subyear,site],
+            psex = S.count[subyear,site]/N.count[subyear,site]
+        )
+        
+        sl2 <- vector('list', 2)
+        
+        for (i in 1:2) sl2[[i]] <- lapply(sl, function(x) apply(x, i, mean))
+        
+        cv <- unlist(lapply(sl2, function(x) sapply(x, function(y) sd(y)/mean(y))))
+        
+        mean <- unlist(lapply(sl2, function(x) lapply(x, mean))[[1]])
+        
+        summ <- c(cv, mean)
+        
+        names(summ) <- c("pinf.timeCV", "psex.timeCV", "pinf.siteCV", "psex.siteCV", "pinf.mean", "psex.mean")
+        return(summ)
+    })
+}
+
 simfun <- function(nsim=3, 
                    beta.meanlog,
                    beta.sdlog,
@@ -21,8 +51,10 @@ simfun <- function(nsim=3,
             bI=bI,
             c_b=c_b
         )
-        ## avoid fixation
-        if(!(all(sim$S.count[1000:1100] < 10) || all(sim$A.count[1000:1100] < 10))) {
+        
+        summary <- sumfun(sim=sim, subyear=1000:1100, sitesample=n.site)
+        
+        if(summary[["psex.mean"]] > 0.001) {
             simlist[[j]] <- sim
             j <- j + 1
         }
