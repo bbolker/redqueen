@@ -19,6 +19,18 @@ simdf <- lapply(reslist2, function(x){
     as.tbl %>%
     mutate(sites=factor(sites))
     
+sig_simdf <- simdf %>%
+    group_by(data, test, sites, samples) %>%
+    summarize(positive.power=mean(p.value<=level & effect.size > 0, na.rm=TRUE),
+              negative.power=mean(p.value<=level & effect.size < 0, na.rm=TRUE)) %>%
+    gather(key, value, -data, -test, -sites, -samples)
+
+ggplot(sig_simdf, aes(samples, value, group=interaction(key, sites), col=key, shape=sites)) +
+    geom_point() +
+    geom_line(lty=2) +
+    scale_y_log10() +
+    facet_grid(data~test)
+
 sumdf <- simdf %>%
     group_by(data, test, sites, samples) %>%
     summarize(
@@ -36,23 +48,14 @@ sig_sumdf <- simdf %>%
         upr=quantile(effect.size, 0.975, na.rm=TRUE)
     )
 
-sig_simdf <- simdf %>%
-    group_by(data, test, sites, samples) %>%
-    summarize(power=mean(p.value<=level, na.rm=TRUE))
-
 (gg_sum <- ggplot(sumdf, aes(samples, median, fill=sites)) +
-    geom_ribbon(aes(ymax=upr, ymin=lwr), alpha=0.3) +
-    geom_point(aes(col=sites)) +
-    geom_line(aes(col=sites)) +
-    facet_grid(test~data, scale="free") +
-    geom_hline(yintercept=0, lty=2))
+        geom_ribbon(aes(ymax=upr, ymin=lwr), alpha=0.3) +
+        geom_point(aes(col=sites)) +
+        geom_line(aes(col=sites)) +
+        facet_grid(test~data, scale="free") +
+        geom_hline(yintercept=0, lty=2))
 
 gg_sum %+% sig_sumdf
-
-ggplot(sig_simdf, aes(samples, power, col=sites)) +
-    geom_point() +
-    geom_line(lty=2) +
-    facet_grid(data~test)
 
 pardf <- clean_list$parlist %>%
     filter(run==2) %>%
