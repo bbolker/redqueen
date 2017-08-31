@@ -8,7 +8,7 @@ load("../data/mckone_summ.rda")
 
 rprior <- function() {
     list(
-        beta.meanlog=rcauchy(1, location=1, scale=1),
+        beta.meanlog=rcauchy(1, location=0, scale=0.5),
         beta.sdlog=rlnorm(1, meanlog=0, sdlog=1),
         V=rbeta(1, shape1=6, shape2=2), ## mean of 0.75
         epsilon.site=rbeta(1, shape1=1, shape2=19), ## mean of 0.01
@@ -19,7 +19,7 @@ rprior <- function() {
 
 dprior <- function(x) {
     with(as.list(x),{
-        dcauchy(beta.meanlog, location=1, scale=1) *
+        dcauchy(beta.meanlog, location=0, scale=0.5) *
             dlnorm(beta.sdlog, meanlog=0, sdlog=1) *
             dbeta(V, shape1=6, shape2=2) *
             dbeta(epsilon.site, shape1=1, shape2=19) *

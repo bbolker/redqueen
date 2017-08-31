@@ -9,8 +9,8 @@ library(gridExtra)
 save <- FALSE
 
 src <- "../data/"
-SMC_files <- c("SMC_vergara.rda", "SMC_dagan.rda")
-summ_files <- c("vergara_summ.rda", "dagan_summ.rda")
+SMC_files <- c("SMC_vergara.rda", "SMC_dagan.rda", "SMC_mckone.rda")
+summ_files <- c("vergara_summ.rda", "dagan_summ.rda", "mckone_summ.rda")
 
 get_all <- function(x) {
     ## cat(x,"\n")
@@ -25,7 +25,7 @@ comb_smc <- comb_summ <- vector('list', 2)
 comb_smc <- lapply(paste0(src, SMC_files), get_all)
 comb_summ <- lapply(paste0(src, summ_files), get_all)
 
-names(comb_smc) <- names(comb_summ) <- c("vergara", "dagan")
+names(comb_smc) <- names(comb_summ) <- c("vergara", "dagan", "mckone")
 
 clean_fun <- function(x, target) {
     x %>%
@@ -69,6 +69,7 @@ beta_x <- seq(-3, 5, 0.01)
 
 beta_prior <- data.frame(vergara=dcauchy(beta_x, location=2, scale=1),
                          dagan=dcauchy(beta_x, location=0, scale=0.5),
+                         mckone=dcauchy(beta_x, location=1, scale=1),
                          x=beta_x) %>%
     gather(key,value, -x) %>%
     rename(fit=key) %>%
@@ -82,8 +83,18 @@ glist$plot$beta.sdlog <- glist$plot$beta.sdlog +
     scale_x_log10() +
     stat_function(fun=function(x) dlnorm(x, meanlog=0, sdlog=1), col="black")
 
+epsilon_x <- exp(seq(log(1e-5), log(3e-1), 0.01))
+
+epsilon_prior <- data.frame(vergara=dbeta(epsilon_x, shape1=1, shape2=99),
+                         dagan=dbeta(epsilon_x, shape1=1, shape2=99),
+                         mckone=dbeta(epsilon_x, shape1=1, shape2=19),
+                         x=epsilon_x) %>%
+    gather(key,value, -x) %>%
+    rename(fit=key) %>%
+    mutate(key="epsilon.site", run=1)
+
 glist$plot$epsilon.site <- glist$plot$epsilon.site +
-    stat_function(fun=function(x) dbeta(x, shape1=1, shape2=99), col="black")
+    geom_line(data=epsilon_prior, aes(x, value), col=1)
 
 glist$plot$c_b <- glist$plot$c_b +
     xlim(c(0.3,1.8)) +
@@ -95,6 +106,7 @@ glist$plot$V <- glist$plot$V +
 
 geno_prior <- data.frame(vergara=dbetabinom(0:9, prob=1/9, size=9, theta=5),
            dagan=dbetabinom(0:9, prob=5/9, size=9, theta=5),
+           mckone=dbetabinom(0:9, prob=1/9, size=9, theta=5),
            n.genotype=1:10) %>%
     gather(key,value, -n.genotype) %>%
     rename(fit=key) %>%
