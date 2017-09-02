@@ -69,7 +69,7 @@ beta_x <- seq(-3, 5, 0.01)
 
 beta_prior <- data.frame(vergara=dcauchy(beta_x, location=2, scale=1),
                          dagan=dcauchy(beta_x, location=0, scale=0.5),
-                         mckone=dcauchy(beta_x, location=1, scale=1),
+                         mckone=dcauchy(beta_x, location=0, scale=1),
                          x=beta_x) %>%
     gather(key,value, -x) %>%
     rename(fit=key) %>%

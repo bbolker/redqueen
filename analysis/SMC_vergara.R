@@ -12,7 +12,7 @@ rprior <- function() {
         beta.sdlog=rlnorm(1, meanlog=0, sdlog=1),
         V=rbeta(1, shape1=6, shape2=2), ## mean of 0.75
         epsilon.site=rbeta(1, shape1=1, shape2=99), ## mean of 0.01
-        n.genotype=rbetabinom(n=1,size=9,prob=1/9,theta=5)+1, ## mean of 2
+        n.genotype=rbetabinom(n=1,size=9,prob=2/9,theta=5)+1, ## mean of 3
         c_b=rlnorm(1, meanlog=-0.1, sdlog=0.1)
     )
 }
@@ -23,7 +23,7 @@ dprior <- function(x) {
             dlnorm(beta.sdlog, meanlog=0, sdlog=1) *
             dbeta(V, shape1=6, shape2=2) *
             dbeta(epsilon.site, shape1=1, shape2=99) *
-            dbetabinom(n.genotype-1, size=9, prob=1/9, theta=5) *
+            dbetabinom(n.genotype-1, size=9, prob=2/9, theta=5) *
             dlnorm(c_b, meanlog=-0.1, sdlog=0.1)
     })
 }
@@ -54,9 +54,9 @@ djump <- function(x, theta, sigma) {
         dnorm(log(x[[6]]), mean=log(theta[[6]]), sd=sigma[[5]])
 }
 
-Nmax <- 50
+Nmax <- 100
 tmax <- 3
-tolerance <- c(1.8, 0.9, 0.45)
+tolerance <- c(1.8, 0.9, 0.6)
 
 ww <- matrix(NA, ncol=tmax, nrow=Nmax)
 sumlist <- parlist <- vector("list", tmax)
