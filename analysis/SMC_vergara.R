@@ -79,7 +79,7 @@ for(t in 1:tmax) {
             cat(t, N, "\n")
             pp <- rprior()
             
-            sim <- do.call(simfun, c(pp, summarize=FALSE))
+            sim <- try(do.call(simfun, c(pp, summarize=FALSE)))
             print(summ <- try(do.call(sumfun, list(sim=sim, subyear=subyear, sitesample=sitesample))))
             
             if (!any(is.nan(summ)) && !inherits(summ, "try-error") && !any(is.na(summ))) {
@@ -112,7 +112,7 @@ for(t in 1:tmax) {
             
             pp <- rjump(pp.sample, sigma)
             
-            sim <- do.call(simfun, c(pp, summarize=FALSE))
+            sim <- try(do.call(simfun, c(pp, summarize=FALSE)))
             print(summ <- try(do.call(sumfun, list(sim=sim, subyear=subyear, sitesample=sitesample))))
             
             if (!any(is.nan(summ)) && !inherits(summ, "try-error") && !any(is.na(summ))) {

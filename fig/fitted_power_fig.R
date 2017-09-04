@@ -7,14 +7,11 @@ load("../data/SMC_summary.rda")
 level <- 0.05
 
 reslist2 <- reslist %>%
-    lapply(bind_rows, .id="test") %>%
+    lapply(function(x) mutate(x, p.value=ifelse(is.na(p.value), 1, p.value),
+                              effect.size=ifelse(is.na(effect.size), 0, effect.size))) %>%
     lapply(filter, !grepl("Error", effect.size)) ## remove try-error    
 
-simdf <- lapply(reslist2, function(x){
-    df <- as.data.frame(sapply(x[,-1], as.numeric))
-    df$test <- x[,1]
-    df
-}) %>%
+simdf <- reslist2 %>%
     bind_rows(.id="data") %>%
     as.tbl %>%
     mutate(sites=factor(sites))
@@ -28,7 +25,6 @@ sig_simdf <- simdf %>%
 ggplot(sig_simdf, aes(samples, value, group=interaction(key, sites), col=key, shape=sites)) +
     geom_point() +
     geom_line(lty=2) +
-    scale_y_log10() +
     facet_grid(data~test)
 
 sumdf <- simdf %>%

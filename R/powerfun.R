@@ -87,9 +87,8 @@ powerfun <- function(simlist,
                      nsample=50,
                      nsite=20,
                      transform=c("logit", "arcsin", "raw"),
-                     test=test_spearman,
-                     target.gen=1001, 
-                     summarize=FALSE,
+                     test=list(spearman=test_spearman),
+                     target.gen=1001,
                      verbose=FALSE) {
     reslist <- vector("list", length(simlist))
     
@@ -99,26 +98,18 @@ powerfun <- function(simlist,
         testlist <- vector("list", nsim)
         for (j in 1:nsim) {
             sample <- sample_sim(sim, nsample, nsite, transform, target.gen)
-            testres <- suppressWarnings(test(sample))
-            testlist[[j]] <- testres
+            suppressWarnings(testres <- lapply(test, function(test) test(sample)))
+            tt <- do.call("rbind", testres)
+            tt$test <- names(testres)
+            testlist[[j]] <- tt
         }
         comb_test <- do.call("rbind", testlist)
         rownames(comb_test) <- NULL
-        
+         
         reslist[[i]] <- comb_test
     }
     df <- do.call("rbind", reslist)
     
-    if (summarize) {
-        power <- sum(df[,2]<level, na.rm=TRUE)/(nsim*length(simlist))
-        effect <- data.frame(
-            median=median(df[,1], na.rm=TRUE),
-            lwr=quantile(df[,1], 0.025, na.rm=TRUE),
-            upr=quantile(df[,1], 0.975, na.rm=TRUE)
-        )
-        return(list(power=power,
-             effect=effect))
-    }
     return(df)
 }
 
