@@ -31,8 +31,8 @@ dprior <- function(x) {
 ## assuming that all parameters are independent
 rjump <- function(x, sigma) {
     with(as.list(x),{
-        logit.V <- car::logit(V, adjust=1e-4)
-        logit.epsilon <- car::logit(epsilon.site, adjust=1e-4)
+        logit.V <- car::logit(V, adjust=1e-10)
+        logit.epsilon <- car::logit(epsilon.site, adjust=1e-10)
         
         list(
             beta.meanlog=rnorm(1, mean=beta.meanlog, sd=sigma[1]), 
@@ -48,18 +48,21 @@ rjump <- function(x, sigma) {
 djump <- function(x, theta, sigma) {
     dnorm(x[[1]], mean=theta[[1]], sd=sigma[1]) *
         dnorm(log(x[[2]]), mean=log(theta[[2]]), sd=sigma[2]) *
-        dnorm(car::logit(x[[3]], adjust=1e-4), mean=car::logit(theta[[3]], adjust=1e-4), sigma[3]) *
-        dnorm(car::logit(x[[4]], adjust=1e-4), mean=car::logit(theta[[4]], adjust=1e-4), sigma[4]) *
+        dnorm(car::logit(x[[3]], adjust=1e-10), mean=car::logit(theta[[3]], adjust=1e-10), sigma[3]) *
+        dnorm(car::logit(x[[4]], adjust=1e-10), mean=car::logit(theta[[4]], adjust=1e-10), sigma[4]) *
         dbinom(x[[5]]-1, size=9, prob=(theta[[5]]-0.5)/10) *
         dnorm(log(x[[6]]), mean=log(theta[[6]]), sd=sigma[[5]])
 }
 
-Nmax <- 100
+Nmax <- 50
 tmax <- 3
 tolerance <- c(1.8, 0.9, 0.6)
 
 ww <- matrix(NA, ncol=tmax, nrow=Nmax)
-sumlist <- parlist <- vector("list", tmax)
+sumlist <- simlist <- parlist <- vector("list", tmax)
+
+subyear <- c(1001:1100)
+sitesample <- 4
 
 for(t in 1:tmax) {
     parlist[[t]] <- as.data.frame(matrix(NA, ncol=length(rprior()), nrow=Nmax))
@@ -67,24 +70,28 @@ for(t in 1:tmax) {
     
     sumlist[[t]] <- as.data.frame(matrix(NA, ncol=length(vergara_summ), nrow=Nmax))
     names(sumlist[[t]]) <- names(vergara_summ)
+    
+    simlist[[t]] <- vector('list', Nmax)
 
     N <- 1
     if (t== 1) {
         while(N <= Nmax) {
             cat(t, N, "\n")
-            pp <- pp2 <- rprior()
-            pp2$sitesample <- 4
+            pp <- rprior()
             
-            print(summ <- try(do.call(simfun, pp2)))
+            sim <- do.call(simfun, c(pp, summarize=FALSE))
+            print(summ <- try(do.call(sumfun, list(sim=sim, subyear=subyear, sitesample=sitesample))))
+            
             if (!any(is.nan(summ)) && !inherits(summ, "try-error") && !any(is.na(summ))) {
                 print(dist <- sum(abs(vergara_summ - summ)))
                 accept <- dist < tolerance[t]
                 if (accept) {
                     parlist[[t]][N,] <- unlist(pp)
                     sumlist[[t]][N,] <- summ
+                    simlist[[t]][[N]] <- sim
                     ww[N,t] <- 1/Nmax
                     N <- N+1
-                    save("ww", "sumlist", "parlist", file="SMC_vergara.rda")
+                    save("ww", "sumlist", "simlist", "parlist", file="SMC_vergara.rda")
                 }
             }
         }
@@ -93,8 +100,8 @@ for(t in 1:tmax) {
             sqrt(2*c(
                 var(beta.meanlog),
                 var(log(beta.sdlog)),
-                var(car::logit(V, adjust=1e-4)),
-                var(car::logit(epsilon.site, adjust=1e-4)),
+                var(car::logit(V, adjust=1e-10)),
+                var(car::logit(epsilon.site, adjust=1e-10)),
                 var(log(c_b))
             ))
         })
@@ -103,21 +110,23 @@ for(t in 1:tmax) {
             pindex <- sample(1:Nmax, 1, prob=ww[,t-1])
             pp.sample <- parlist[[t-1]][pindex,]
             
-            pp <- pp2 <- rjump(pp.sample, sigma)
-            pp2$sitesample <- 4
+            pp <- rjump(pp.sample, sigma)
             
-            print(summ <- try(do.call(simfun, pp2)))
+            sim <- do.call(simfun, c(pp, summarize=FALSE))
+            print(summ <- try(do.call(sumfun, list(sim=sim, subyear=subyear, sitesample=sitesample))))
+            
             if (!any(is.nan(summ)) && !inherits(summ, "try-error") && !any(is.na(summ))) {
                 print(dist <- sum(abs(vergara_summ - summ)))
                 accept <- dist < tolerance[t]
                 if (accept) {
                     parlist[[t]][N,] <- unlist(pp)
                     sumlist[[t]][N,] <- summ
+                    simlist[[t]][[N]] <- sim
                     
                     ww[N,t] <- dprior(pp)/
                         sum(ww[,t-1] * apply(parlist[[t-1]], 1, djump, theta=pp, sigma=sigma))
                     N <- N+1
-                    save("ww", "sumlist", "parlist", file="SMC_vergara.rda")
+                    save("ww", "sumlist", "simlist", "parlist", file="SMC_vergara.rda")
                 }
             }
         }

@@ -72,13 +72,13 @@ alldf <- simdf %>%
     filter(samples==100, sites==20)
 
 ggplot(alldf, aes(value, median.effect, col=data)) +
-    geom_point() +
+    geom_point(alpha=0.3) +
     geom_smooth(method='lm') +
     facet_grid(test~key, scale="free") +
     geom_hline(yintercept=0, lty=2)
 
 ggplot(alldf, aes(value, power, col=data)) +
-    geom_point() +
+    geom_point(alpha=0.3) +
     geom_smooth(method='lm') +
     scale_y_continuous(limits=c(0, 1)) +
     facet_grid(test~key, scale="free_x")

@@ -7,7 +7,8 @@ nsim <- 10
 
 simlist <- list(
     dagan=dagan_sim,
-    vergara=vergara_sim
+    vergara=vergara_sim,
+    mckone=mckone_sim
 )
 
 test_list <- list(

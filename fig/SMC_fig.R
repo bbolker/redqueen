@@ -68,8 +68,8 @@ names(glist$plot) <- glist$key
 beta_x <- seq(-3, 5, 0.01)
 
 beta_prior <- data.frame(vergara=dcauchy(beta_x, location=2, scale=1),
-                         dagan=dcauchy(beta_x, location=0, scale=0.5),
-                         mckone=dcauchy(beta_x, location=0, scale=1),
+                         dagan=dcauchy(beta_x, location=0, scale=2),
+                         mckone=dcauchy(beta_x, location=-1, scale=1),
                          x=beta_x) %>%
     gather(key,value, -x) %>%
     rename(fit=key) %>%
@@ -104,9 +104,9 @@ glist$plot$V <- glist$plot$V +
     scale_x_continuous(limits=c(0, 1)) +
     stat_function(fun=function(x) dbeta(x, shape1=6, shape2=2), col="black")
 
-geno_prior <- data.frame(vergara=dbetabinom(0:9, prob=1/9, size=9, theta=5),
+geno_prior <- data.frame(vergara=dbetabinom(0:9, prob=2/9, size=9, theta=5),
            dagan=dbetabinom(0:9, prob=5/9, size=9, theta=5),
-           mckone=dbetabinom(0:9, prob=1/9, size=9, theta=5),
+           mckone=dbetabinom(0:9, prob=2/9, size=9, theta=5),
            n.genotype=1:10) %>%
     gather(key,value, -n.genotype) %>%
     rename(fit=key) %>%
