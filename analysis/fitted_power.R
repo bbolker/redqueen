@@ -1,14 +1,15 @@
+library(dplyr)
 source("../R/powerfun.R")
-load("../data/fitted_sim.rda")
+load("../data/SMC_summary.rda")
 
 sites <- seq(10, 30, by=5)
 samples <- seq(25, 150, by=25)
-nsim <- 10
+nsim <- 100
 
 simlist <- list(
-    dagan=dagan_sim,
-    vergara=vergara_sim,
-    mckone=mckone_sim
+    dagan=simlist$dagan[[2]],
+    vergara=simlist$vergara[[2]],
+    mckone=simlist$mckone[[2]]
 )
 
 test_list <- list(
@@ -25,28 +26,24 @@ for(sim_name in names(simlist)) {
     
     sample_reslist <- vector('list', length=length(samples))
     for(i in 1:length(samples)) {
-        sim_reslist <- vector('list', length=length(sim))
-        for(j in 1:length(sim)) {
-            res <- try(lapply(sites,
-                function(x) powerfun(
-                    simlist=sim[[j]],
-                    nsite=x,
-                    nsample=samples[i],
-                    nsim=nsim,
-                    test=test_list
-                )
-            ))
-            
-            sim_reslist[[j]] <- try(do.call('rbind', res))
-            if(!inherits(sim_reslist[[j]], "try-error")) {
-                sim_reslist[[j]]$sim <- j
-                sim_reslist[[j]]$sites <- rep(sites, each=nsim*length(sim[[j]]))
-            } 
-            cat(sim_name, i, j, "\n")
-        }
-            
-        sample_reslist[[i]] <- do.call('rbind', sim_reslist)
-        sample_reslist[[i]]$samples <- samples[i]
+        res <- lapply(sites,
+            function(x) powerfun(
+                simlist=sim,
+                nsite=x,
+                nsample=samples[i],
+                nsim=nsim,
+                test=test_list,
+                verbose=TRUE
+            )
+        )
+        names(res) <- sites
+        rres <- res %>%
+            bind_rows(.id="sites")
+        
+        rres$sim <- rep(rep(1:50, each=3*nsim), length(sites))
+        
+        rres$samples <- samples[i]
+        sample_reslist[[i]] <- rres
     }
     
     sample_res <- do.call('rbind', sample_reslist)

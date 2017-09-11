@@ -34,7 +34,8 @@ sample_sim <- function(sim,
                   nsample,
                   nsite,
                   transform=c("logit", "arcsin", "raw"),
-                  target.gen) {
+                  target.gen,
+                  target.sites) {
     transform <- match.arg(transform)
     transfun <- switch(transform,
         logit={
@@ -55,7 +56,9 @@ sample_sim <- function(sim,
     )
     
     sites <- ncol(sim$S.count)
-    target.sites <- sample(1:sites, nsite)
+    
+    if(missing(target.sites)) target.sites <- sample(1:sites, nsite)
+    
     
     S <- sim$S.count[target.gen, target.sites]
     SI <- sim$SI.count[target.gen, target.sites]

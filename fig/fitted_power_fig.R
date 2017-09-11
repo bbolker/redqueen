@@ -6,10 +6,10 @@ load("../data/SMC_summary.rda")
 
 level <- 0.05
 
-reslist2 <- reslist %>%
-    lapply(function(x) mutate(x, p.value=ifelse(is.na(p.value), 1, p.value),
-                              effect.size=ifelse(is.na(effect.size), 0, effect.size))) %>%
-    lapply(filter, !grepl("Error", effect.size)) ## remove try-error    
+reslist2 <- reslist # %>%
+#    lapply(function(x) mutate(x, p.value=ifelse(is.na(p.value), 1, p.value),
+#                              effect.size=ifelse(is.na(effect.size), 0, effect.size))) %>%
+#    lapply(filter, !grepl("Error", effect.size)) ## remove try-error    
 
 simdf <- reslist2 %>%
     bind_rows(.id="data") %>%

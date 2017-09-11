@@ -40,11 +40,14 @@ clean_fun <- function(x, target) {
 clean_list <- c("parlist", "sumlist") %>%
     sapply(clean_fun, x=comb_smc, simplify=FALSE)
 
+simlist <- comb_smc %>%
+    lapply("[[", "simlist")
+
 SMC_summary <- clean_list %>%
     lapply(summarize, value=mean(value, na.rm=TRUE)) %>%
     lapply(spread, key, value)
 
-if(save) save("comb_smc", "clean_list", "SMC_summary", file="SMC_summary.rda")
+if(save) save("comb_smc", "clean_list", "simlist", "SMC_summary", file="SMC_summary.rda")
 
 gpar <- ggplot(NULL, aes(col=run, group=run)) +
     geom_density(aes(value)) +
@@ -69,7 +72,7 @@ beta_x <- seq(-3, 5, 0.01)
 
 beta_prior <- data.frame(vergara=dcauchy(beta_x, location=2, scale=1),
                          dagan=dcauchy(beta_x, location=0, scale=2),
-                         mckone=dcauchy(beta_x, location=-1, scale=1),
+                         mckone=dcauchy(beta_x, location=0, scale=2),
                          x=beta_x) %>%
     gather(key,value, -x) %>%
     rename(fit=key) %>%
@@ -83,7 +86,7 @@ glist$plot$beta.sdlog <- glist$plot$beta.sdlog +
     scale_x_log10() +
     stat_function(fun=function(x) dlnorm(x, meanlog=0, sdlog=1), col="black")
 
-epsilon_x <- exp(seq(log(1e-5), log(3e-1), 0.01))
+epsilon_x <- exp(seq(log(1e-10), log(3e-1), 0.01))
 
 epsilon_prior <- data.frame(vergara=dbeta(epsilon_x, shape1=1, shape2=99),
                          dagan=dbeta(epsilon_x, shape1=1, shape2=99),
@@ -139,4 +142,3 @@ ggplot(clean_list$sumlist) +
     geom_vline(data=summ_df, aes(xintercept=value)) +
     geom_vline(data=gather(SMC_summary$sumlist, key, value, -fit, -run), aes(xintercept=value, col=run, group=run), lty=2) +
     facet_wrap(fit~key, ncol=6, scale="free")
-
