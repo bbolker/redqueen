@@ -7,9 +7,9 @@ samples <- seq(25, 150, by=25)
 nsim <- 100
 
 simlist <- list(
-    dagan=simlist$dagan[[2]],
-    vergara=simlist$vergara[[2]],
-    mckone=simlist$mckone[[2]]
+    dagan=simlist$dagan[[3]],
+    vergara=simlist$vergara[[3]],
+    mckone=simlist$mckone[[3]]
 )
 
 test_list <- list(

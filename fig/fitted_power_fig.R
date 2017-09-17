@@ -54,7 +54,7 @@ sig_sumdf <- simdf %>%
 gg_sum %+% sig_sumdf
 
 pardf <- clean_list$parlist %>%
-    filter(run==2) %>%
+    filter(run==3) %>%
     mutate(sim=1:50) %>%
     rename(data=fit)
 
@@ -73,8 +73,13 @@ ggplot(alldf, aes(value, median.effect, col=data)) +
     facet_grid(test~key, scale="free") +
     geom_hline(yintercept=0, lty=2)
 
+pardf_mean <- pardf%>%
+    summarize(mean=mean(value))
+
 ggplot(alldf, aes(value, power, col=data)) +
     geom_point(alpha=0.3) +
-    geom_smooth(method='lm') +
+    geom_smooth(method='lm', aes(fill=data), alpha=0.2) +
+    geom_vline(data=pardf_mean, aes(xintercept=mean, col=data), lty=2) + 
     scale_y_continuous(limits=c(0, 1)) +
     facet_grid(test~key, scale="free_x")
+
