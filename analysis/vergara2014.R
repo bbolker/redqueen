@@ -28,7 +28,6 @@ sum_df <- vergara %>%
     summarize(sex=mean(Ploidy=="sexual"),
               inf=mean(Microphallus)) 
 
-
 sumfun <- function(x, ...) {
     name <- as.character(substitute(...))
     x %>%

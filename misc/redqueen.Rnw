@@ -17,38 +17,45 @@
 
 \subsection{Model}
 
-To study the effect of parasite on the evolution of sex and perform a power analysis, we developed a discrete time stochastic model that can be applied to various systems. We model discrete generations to test for robustness of experimental designs to systems that have different generation lengths. Using a continuous time model would require us to adjust parameters to a proper time scale.
+%% Although natural systems that have been studied under the context of the Red Queen Hypothesis often contains polyploid asexuals \citep{dybdahl1995diverse, michiels2001parthenogenetic, ben2005spatial, bruvo2007synergism, verhoeven2013geographic, vsimkova2013mhc}, we do not consider polyploidy for simplicity.
 
-Here, we model diploid hosts and haploid parasites where the hosts are divided into obligate sexuals and obligate asexuals. Although natural systems that have been studied under the context of the Red Queen Hypothesis often contains polyploid asexuals \citep{dybdahl1995diverse, michiels2001parthenogenetic, ben2005spatial, bruvo2007synergism, verhoeven2013geographic, vsimkova2013mhc}, we do not consider polyploidy for simplicity.
-Assuming there are two biallelic loci, there are four types of haplotypes: $AB, Ab, aB, ab$. 
-We will be using indices $1-4$ herefafter to refer to these gametes \citep{agrawal2006host}. For example, a genotype $12$ has haplotypes $AB$ and $Ab$.
+We model obligate sexual hosts competing with obligate asexual hosts based on the model introduced by \cite{lively2010epidemiological}.
+Whereas most mathematical models used in the context of evolution of sex study population in a theoretical setting, \cite{lively2010epidemiological} explicitly models epidemiological and ecological structure, making it a suitable candidate for modeling a natural population \cite{ashby2015diversity}.
+We further extend the model by adding a spatial structure and stochasticity.
+
+All hosts are assumed to be diploids with two biallelic loci, and parasites are assumed to be haploids. For convenience, we use indices $1-4$ to refer to following haplotypes \citep{agrawal2006host}. For example, an individual with genotype $12$ has haplotypes $AB$ and $Ab$ and an arbitrty genotype is denoted as $ij$.
 
 Let $S_{ij}^k(t)$ and $A_{ij}^k(t)$ be the number of sexual and asexual hosts with genotype $ij$ in site $k$ at generation $t$. 
-For simplicity, we drop the superscript representing sites and all dynamics apply to each site independently unless noted otherwise.
-Following \cite{lively2010epidemiological}, we can write the expected number of sexual individuals in the next generation without recombination or outcrossing as follows:
+For simplicity, we drop the superscript representing sites and write $S_{ij}(t)$ and $A_{ij}(t)$, unless denoted otherwise. 
+Following \cite{lively2010epidemiological}, the expected number of sexual offsprings (without recombination or outcrossing) produced by hosts from a single site in the next generation is given by
 \begin{equation}
 S_{ij}' = (1-s) \left(W_U S_{ij,U} (t) + W_I S_{ij,I} (t)\right),
 \end{equation}
-where $s$ is the proportion of males produced. $S_{ij, U}$ and $S_{ij,I}$ represent the number of uninfected and infected sexual hosts in site $k$, respectively and $W_U$ and $W_I$ are their corresponding fitnesses. $S_{ij}'$ can be thought of as genotype contribution to the next generation.
+where $s$ is the proportion of males produced. $S_{ij, U}$ and $S_{ij,I}$ represent the number of uninfected and infected sexual hosts in site $k$, respectively and $W_U$ and $W_I$ are their corresponding fitnesses.
 
-Let $G_i$ be the expected number of haplotype $i$ passed on to the next generation in site $k$. Then, we have
+Let $g_i$ be the expected number of gametes with haplotype $i$ passed on to the next generation from a single site:
 \begin{equation}
 \begin{aligned}
-G_1 &= \sum_{j=1}^4 \delta_{1j} S_{1j}' - r S_{14}' + r S_{23}, \\
-G_2 &= \sum_{j=1}^4 \delta_{2j} S_{2j}' - r S_{23}' + r S_{14}, \\
-G_3 &= \sum_{j=1}^4 \delta_{3j} S_{3j}' - r S_{23}' + r S_{14}, \\
-G_4 &= \sum_{j=1}^4 \delta_{4j} S_{4j}' - r S_{14}' + r S_{23},
+g_1 &= \sum_{j=1}^4 \delta_{1j} S_{1j}' - r S_{14}' + r S_{23}', \\
+g_2 &= \sum_{j=1}^4 \delta_{2j} S_{2j}' - r S_{23}' + r S_{14}', \\
+g_3 &= \sum_{j=1}^4 \delta_{3j} S_{3j}' - r S_{23}' + r S_{14}', \\
+g_4 &= \sum_{j=1}^4 \delta_{4j} S_{4j}' - r S_{14}' + r S_{23}',
 \end{aligned}
 \end{equation}
 where $r$ is the recombination probability.
-Following outcrossing, the expected the number of genotypes in the next generation is
+After recombination and outcrossing, the expected the number of sexual offsprings with genotype $ij$ produced by hosts from a single site in the next generation can be written as
 \begin{equation}
-S_{ij}'' = \frac{(1- \delta_{ij}) G_i G_j}{2 \sum_k G_k},
+S_{ij}'' = \frac{(1- \delta_{ij}) g_i g_j}{2 \sum_k g_k},
 \end{equation}
 where $\delta_{ij}$ is the Kronecker-delta.
-Finally, the number of sexual hosts with genotype $ij$ in the next generation follows a poisson distribution:
+
+We assume that a population distribution $\epsilon \cdot 100 \%$ of its offsprings to other sites evenly. Then, the expected number of sexual offspring with genotype $ij$ in the next generation (accounting for contribution from all sites) is given by
 $$
-S_{ij}(t+1) \sim \mathrm{Poisson}(\lambda=S_{ij}'')
+\mathrm{E}\left(S_{ij}^k(t+1)\right) = (1 - \epsilon) \left(S_{ij}^k\right)'' + \frac{\epsilon}{n_\textrm{site}-1} \sum_{l \neq k} \left(S_{ij}^l\right)''.
+$$
+We then allow for process error by using poisson random variable:
+$$
+S_{ij}^k(t+1) \sim \mathrm{Poisson}\left(\lambda=\mathrm{E}\left(S_{ij}^k(t+1)\right)\right)
 $$
 
 As recombination and outcrossing do not occur in the asexual population, the expected number of asexual individuals in the next generation is given by
