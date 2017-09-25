@@ -11,7 +11,7 @@ rprior <- function() {
         beta.meanlog=rcauchy(1, location=0, scale=2),
         beta.sdlog=rlnorm(1, meanlog=0, sdlog=2),
         V=rbeta(1, shape1=6, shape2=2), ## mean of 0.75
-        epsilon.site=rbeta(1, shape1=1, shape2=19), ## mean of 0.05
+        epsilon.site=rbeta(1, shape1=2, shape2=8), ## mean of 0.2
         n.genotype=rbetabinom(n=1,size=9,prob=2/9,theta=5)+1, ## mean of 3
         c_b=rlnorm(1, meanlog=-0.1, sdlog=0.1)
     )
@@ -22,7 +22,7 @@ dprior <- function(x) {
         dcauchy(beta.meanlog, location=0, scale=2) *
             dlnorm(beta.sdlog, meanlog=0, sdlog=2) *
             dbeta(V, shape1=6, shape2=2) *
-            dbeta(epsilon.site, shape1=1, shape2=19) *
+            dbeta(epsilon.site, shape1=2, shape2=8) *
             dbetabinom(n.genotype-1, size=9, prob=2/9, theta=5) *
             dlnorm(c_b, meanlog=-0.1, sdlog=0.1)
     })
@@ -54,7 +54,7 @@ djump <- function(x, theta, sigma) {
         dnorm(log(x[[6]]), mean=log(theta[[6]]), sd=sigma[[5]])
 }
 
-Nmax <- 100
+Nmax <- 50
 tmax <- 3
 tolerance <- c(1.2, 0.6, 0.4)
 
