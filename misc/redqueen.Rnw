@@ -129,6 +129,15 @@ A_{ij,i,I}^k(t+1) &= \frac{\lambda_{i, \textrm{total}}^k}{\lambda_{i, \textrm{to
 \section{Results}
 
 \begin{figure}[!ht]
+\includegraphics[width=\textwidth]{../fig/smc_param.pdf}
+\caption{{\bf Need caption.}
+Need caption}
+\label{fig:smcparam}
+\end{figure}
+
+
+
+\begin{figure}[!ht]
 \includegraphics[width=\textwidth]{../fig/inf_vs_sex.pdf}
 \caption{{\bf Need caption.}
 Need caption}

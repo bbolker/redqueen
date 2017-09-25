@@ -20,6 +20,10 @@ get_all <- function(x) {
     return(r)
 }
 
+data_name <- c(expression(Dagan~italic(et~al.)~"(2005)"), 
+               expression(McKone~italic(et~al.)~"(2016)"), 
+               expression(Vergara~italic(et~al.)~"(2014)"))
+
 comb_smc <- comb_summ <- vector('list', 2)
 
 comb_smc <- lapply(paste0(src, SMC_files), get_all)
@@ -50,19 +54,36 @@ SMC_summary <- clean_list %>%
 if(save) save("comb_smc", "clean_list", "simlist", "SMC_summary", file="SMC_summary.rda")
 
 gpar <- ggplot(NULL, aes(col=run, group=run)) +
-    geom_density(aes(value)) +
-    facet_grid(fit~key) +
+    geom_line(stat="density", aes(value)) +
+    facet_grid(fit~key, labeller=label_parsed) +
     theme(
         legend.position = "none",
         strip.text.y=element_blank(),
-        axis.title.y=element_blank(),
+        axis.title=element_blank(),
         axis.text.y=element_blank(),
         axis.ticks.y=element_blank(),
-        panel.grid.minor=element_blank()
+        panel.grid.minor=element_blank(),
+        panel.spacing=grid::unit(0,"lines")
     )
 
-glist <- clean_list$parlist %>%
-    filter(key!="n.genotype") %>%
+parlist_factor <- clean_list$parlist %>%
+    group_by %>%
+    filter(run==3) %>%
+    mutate(key=factor(key,
+        labels=c(
+            "beta[meanlog]",
+            "beta[sdlog]",
+            "c[b]",
+            "epsilon[site]",
+            "asex[genotype]",
+            "V"
+        )                  
+    ), fit=factor(fit,
+        labels=data_name
+    ))
+
+glist <- parlist_factor %>%
+    filter(!(key %in% c("asex[genotype]", "epsilon[site]"))) %>%
     group_by(key) %>%
     do(plot=gpar%+%.)
 
@@ -76,30 +97,17 @@ beta_prior <- data.frame(vergara=dcauchy(beta_x, location=2, scale=1),
                          x=beta_x) %>%
     gather(key,value, -x) %>%
     rename(fit=key) %>%
-    mutate(key="beta.meanlog", run=1)
+    mutate(key="beta[meanlog]", run="1", fit=factor(fit, labels=data_name))
 
-glist$plot$beta.meanlog <- glist$plot$beta.meanlog +
+glist$plot$`beta[meanlog]` <- glist$plot$`beta[meanlog]` +
     geom_line(data=beta_prior, aes(x, value), col=1) +
     xlim(c(-2, 4))
 
-glist$plot$beta.sdlog <- glist$plot$beta.sdlog +
-    scale_x_log10() +
+glist$plot$`beta[sdlog]` <- glist$plot$`beta[sdlog]` +
+    xlim(c(0, 3)) +
     stat_function(fun=function(x) dlnorm(x, meanlog=0, sdlog=1), col="black")
 
-epsilon_x <- exp(seq(log(1e-10), log(3e-1), 0.01))
-
-epsilon_prior <- data.frame(vergara=dbeta(epsilon_x, shape1=1, shape2=99),
-                         dagan=dbeta(epsilon_x, shape1=1, shape2=99),
-                         mckone=dbeta(epsilon_x, shape1=1, shape2=19),
-                         x=epsilon_x) %>%
-    gather(key,value, -x) %>%
-    rename(fit=key) %>%
-    mutate(key="epsilon.site", run=1)
-
-glist$plot$epsilon.site <- glist$plot$epsilon.site +
-    geom_line(data=epsilon_prior, aes(x, value), col=1)
-
-glist$plot$c_b <- glist$plot$c_b +
+glist$plot$`c[b]` <- glist$plot$`c[b]` +
     xlim(c(0.3,1.8)) +
     stat_function(fun=function(x) dlnorm(x, meanlog=-0.1, sdlog=0.1), col="black")
 
@@ -113,32 +121,36 @@ geno_prior <- data.frame(vergara=dbetabinom(0:9, prob=2/9, size=9, theta=5),
            n.genotype=1:10) %>%
     gather(key,value, -n.genotype) %>%
     rename(fit=key) %>%
-    mutate(key="n.genotype")
+    mutate(key="asex[genotype]", fit=factor(fit, labels=data_name))
 
-ghist <- clean_list$parlist %>%
-    filter(key=="n.genotype") %>%
+ghist <- parlist_factor %>%
+    filter(key=="asex[genotype]") %>%
     filter(!is.na(value)) %>%
     ggplot() +
         geom_histogram(aes(value, ..density.., fill=run), position="identity", alpha=0.5, bins=10) +
         geom_line(data=geno_prior, aes(n.genotype, value)) +
-        facet_grid(fit~key) +
-        theme(axis.title.y=element_blank(),
+        facet_grid(fit~key, labeller=label_parsed) +
+        theme(axis.title=element_blank(),
+            legend.position = "none",
             axis.text.y=element_blank(),
             axis.ticks.y=element_blank(),
-            panel.grid.minor=element_blank())
+            panel.grid.minor=element_blank(),
+            panel.spacing=grid::unit(0,"lines"))
 
-gg <- append(glist$plot, list(n.genotype=ghist))
+gg <- append(glist$plot, list(`asex[genotype]`=ghist))
 
-do.call(grid.arrange, list(grobs=gg, nrow=1, widths=c(0.8, 0.8, 0.8, 0.8, 0.8, 1)))
+gg_smc_param <- do.call(arrangeGrob, list(grobs=gg, nrow=1))
+
+ggsave("smc_param.pdf", gg_smc_param, width=8, height=6)
 
 summ_df <- comb_summ  %>%
     lapply(function(x) as.list(x[[1]])) %>%
     lapply(bind_rows) %>%
     lapply(gather) %>%
-    bind_rows(.id="fit")
+    bind_rows(.id="fit") 
 
-ggplot(clean_list$sumlist) +
+ggplot(clean_list$sumlist %>% filter(run==3)) +
     geom_density(aes(value, col=run, group=run)) +
+    geom_vline(data=gather(SMC_summary$sumlist %>% filter(run==3), key, value, -fit, -run), aes(xintercept=value, col=run, group=run)) +
     geom_vline(data=summ_df, aes(xintercept=value)) +
-    geom_vline(data=gather(SMC_summary$sumlist, key, value, -fit, -run), aes(xintercept=value, col=run, group=run), lty=2) +
-    facet_wrap(fit~key, ncol=6, scale="free")
+    facet_grid(fit~key, scale="free")
