@@ -135,17 +135,24 @@ Need caption}
 \label{fig:smcparam}
 \end{figure}
 
-
-
 \begin{figure}[!ht]
-\includegraphics[width=\textwidth]{../fig/inf_vs_sex.pdf}
+\includegraphics[width=\textwidth]{../fig/simulated_data.pdf}
 \caption{{\bf Need caption.}
 Need caption}
 \label{fig:ivs}
 \end{figure}
 
 
+\begin{figure}[!ht]
+\includegraphics[width=\textwidth]{../fig/true_effect.pdf}
+\caption{{\bf Need caption.}
+Need caption}
+\label{fig:teff}
+\end{figure}
 
+
+
+\pagebreak
 
 \bibliography{redqueen}
 \end{document}

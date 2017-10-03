@@ -6,31 +6,45 @@ load("../data/SMC_summary.rda")
 
 level <- 0.05
 
-reslist2 <- reslist # %>%
-#    lapply(function(x) mut2ate(x, p.value=ifelse(is.na(p.value), 1, p.value),
-#                              effect.size=ifelse(is.na(effect.size), 0, effect.size))) %>%
-#    lapply(filter, !grepl("Error", effect.size)) ## remove try-error    
-
-simdf <- reslist2 %>%
+simdf <- reslist %>%
     bind_rows(.id="data") %>%
     as.tbl %>%
-    mutate(sites=factor(sites))
-    
-sig_simdf <- simdf %>%
-    group_by(data, test, sites, samples, sim) %>%
-    summarize(positive.power=mean(p.value<=level & effect.size > 0, na.rm=TRUE),
-              negative.power=mean(p.value<=level & effect.size < 0, na.rm=TRUE)) %>%
-    gather(key, value, -data, -test, -sites, -samples, -sim) %>%
-    group_by(data, test, sites, samples, key) %>%
-    summarize(median=median(value),
-              lwr=quantile(value, 0.025, na.rm=TRUE),
-              upr=quantile(value, 0.975, na.rm=TRUE)) %>%
-    filter(sites %in% c(10, 20, 30))
+    mutate(sites=factor(sites),
+           p.value=ifelse(is.na(p.value), 1, p.value),
+           effect.size=ifelse(is.na(effect.size), 0, effect.size))
 
-ggplot(sig_simdf, aes(samples, median, group=sites, col=sites)) +
+spread_simdf <- simdf %>%
+    group_by(sim, test) %>%
+    mutate(id=1:n()) %>%
+    gather(key, value, -data, -sites, -test, -sim, -samples, -id) %>%
+    spread(test, value)
+    
+## ???
+
+spread_simdf %>%
+    filter(key=="p.value") %>%
+    group_by(data, sites, samples) %>%
+    summarize(s.ratio=mean(spearman < level & linear > level),
+              l.ratio=mean(spearman > level & linear < level)) %>%
+    as.tbl
+
+
+
+
+sig_simdf <- simdf %>%
+    group_by(data, test, sites, samples) %>%
+    summarize(positive.power=mean(p.value<=level & effect.size > 0),
+              negative.power=mean(p.value<=level & effect.size < 0)) %>%
+    gather(key, value, -data, -test, -sites, -samples) %>%
+    group_by() %>%
+    mutate(test=factor(test, level=c("spearman", "linear", "quadratic")),
+           key=factor(key, labels=c("negative effect", "positive effect")))
+
+ggplot(sig_simdf, aes(samples, value, group=sites, col=sites)) +
     geom_point() +
-    geom_ribbon(aes(ymin=lwr, ymax=upr, fill=sites), alpha=0.1) +
     geom_line() +
+    scale_y_continuous(name="power", limits=c(0,1)) +
+    scale_x_continuous(name="number of samples") +
     facet_grid(data~test+key)
 
 sumdf <- simdf %>%
@@ -91,3 +105,5 @@ ggplot(alldf, aes(value, power, col=data)) +
     geom_vline(data=pardf_mean, aes(xintercept=mean, col=data), lty=2) + 
     scale_y_continuous(limits=c(0, 1)) +
     facet_grid(test+type~key, scale="free_x")
+
+

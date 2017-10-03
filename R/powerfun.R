@@ -1,25 +1,36 @@
 test_lm <- function(sample) {
-    fit <- lm(sexual~infected, data=sample)
+    fit <- cor.test(sample$infected, sample$sexual, method="pearson")
     data.frame(
-        effect.size=fit$coefficients[2],
-        p.value=ifelse(is.na(fit$coefficients[2]), NA, summary(fit)$coefficients[2,'Pr(>|t|)']) 
+        effect.size=fit$estimate,
+        p.value=fit$p.value
     )
 }
 
 test_quad <- function(sample) {
     fit <- lm(sexual~I(infected)+I(infected^2), data=sample)
+    ss <- summary(fit)
     data.frame(
-        effect.size=fit$coefficients[3],
+        effect.size=ss$coefficients[3,3],
         p.value=ifelse(is.na(fit$coefficients[3]), NA, summary(fit)$coefficients[3,'Pr(>|t|)']) 
     )
 }
 
-test_quad_rq <- function(sample, tau=0.9) {
-    fit <- quantreg::rq(sexual~I(infected)+I(infected^2), data=sample, tau=tau)
-    data.frame(
-        effect.size=fit$coefficients[3],
-        p.value=NA
-    )
+test_quad_rq <- function(sample, tau=0.8) {
+    fit <- try(quantreg::rq(sexual~I(infected)+I(infected^2), data=sample, tau=tau), silent=TRUE)
+    if (inherits(fit, "try-error")) {
+        data.frame(
+            effect.size=NA,
+            p.value=NA
+        )
+    } else {
+        ss <- try(summary(fit, se="boot"), silent=TRUE)
+        
+        data.frame(
+            effect.size=ss$coefficients[3,3],
+            p.value=ifelse(inherits(ss, "try-error"), NA, ss$coefficients[3,4])
+        )
+    }
+    
 }
 
 test_spearman <- function(sample) {
@@ -30,35 +41,45 @@ test_spearman <- function(sample) {
     )
 }
 
+.logitfun <- function(p) {
+    up <- unlist(p)
+    minp <- min(c(up[which(up != 0)], 1-max(up[which(up != 1)])))
+    
+    if(any(p==0) || any(p==1)) {
+        log((p+minp)/(1-p+minp))
+    } else {
+        log(p/(1-p))
+    }
+} 
+
+transfun <- function(transform=c("logit", "arcsin", "raw")) {
+    transform <- match.arg(transform)
+    switch(transform,
+        logit={
+            function(df) {
+                as.data.frame(lapply(df, .logitfun))
+            } 
+        },
+        arcsin={
+            function(df) asin(sqrt(df))
+        },
+        raw={
+            function(df) df
+        }
+    )
+}
+
 sample_sim <- function(sim,
                   nsample,
                   nsite,
                   transform=c("logit", "arcsin", "raw"),
                   target.gen,
                   target.sites) {
-    transform <- match.arg(transform)
-    transfun <- switch(transform,
-        logit={
-            function(p) {
-                if(any(p==0) || any(p==1)) {
-                    log((p+1/nsample)/(1-p+1/nsample))
-                } else {
-                    log(p/(1-p))
-                }
-            } 
-        },
-        arcsin={
-            function(p) asin(sqrt(p))
-        },
-        raw={
-            function(p) p
-        }
-    )
+    transfun <- transfun(transform)
     
     sites <- ncol(sim$S.count)
     
     if(missing(target.sites)) target.sites <- sample(1:sites, nsite)
-    
     
     S <- sim$S.count[target.gen, target.sites]
     SI <- sim$SI.count[target.gen, target.sites]
@@ -74,12 +95,12 @@ sample_sim <- function(sim,
     }
     multisample <- multisample/nsample
     
-    sampledf <- with(multisample,{
-        transfun(data.frame(
+    sampledf <- transfun(with(multisample,{
+        data.frame(
             infected=SI+AI,
             sexual=SU+SI
-        ))
-    })
+        )
+    }))
     
     sampledf
 }
@@ -108,7 +129,7 @@ powerfun <- function(simlist,
         }
         comb_test <- do.call("rbind", testlist)
         rownames(comb_test) <- NULL
-         
+        
         reslist[[i]] <- comb_test
     }
     df <- do.call("rbind", reslist)

@@ -2,9 +2,17 @@ library(emdbook)
 library(readxl)
 library(dplyr)
 library(tidyr)
-library(ggplot2); theme_set(theme_bw())
+library(ggplot2); theme_set(theme_bw(base_size = 12,
+                                     base_family = "Times"))
 library(grid)
 library(gridExtra)
+
+scale_colour_discrete <- function(...,palette="Set1") scale_colour_brewer(...,palette=palette)
+scale_fill_discrete <- function(...,palette="Set1") scale_fill_brewer(...,palette=palette)
+
+if (.Platform$OS.type=="windows") {
+    windowsFonts(Times=windowsFont("Times"))
+} 
 
 save <- FALSE
 
@@ -56,13 +64,16 @@ if(save) save("comb_smc", "clean_list", "simlist", "SMC_summary", file="SMC_summ
 gpar <- ggplot(NULL, aes(col=run, group=run)) +
     geom_line(stat="density", aes(value)) +
     facet_grid(fit~key, labeller=label_parsed) +
+    scale_y_continuous(expand=c(0,0.05)) +
     theme(
         legend.position = "none",
+        strip.background = element_blank(),
+        panel.border = element_rect(colour = "black"),
         strip.text.y=element_blank(),
         axis.title=element_blank(),
         axis.text.y=element_blank(),
         axis.ticks.y=element_blank(),
-        panel.grid.minor=element_blank(),
+        panel.grid=element_blank(),
         panel.spacing=grid::unit(0,"lines")
     )
 
@@ -75,7 +86,7 @@ parlist_factor <- clean_list$parlist %>%
             "beta[sdlog]",
             "c[b]",
             "epsilon[site]",
-            "asex[genotype]",
+            "asex.genotype",
             "V"
         )                  
     ), fit=factor(fit,
@@ -83,7 +94,7 @@ parlist_factor <- clean_list$parlist %>%
     ))
 
 glist <- parlist_factor %>%
-    filter(!(key %in% c("asex[genotype]", "epsilon[site]"))) %>%
+    filter(!(key %in% c("asex.genotype", "epsilon[site]"))) %>%
     group_by(key) %>%
     do(plot=gpar%+%.)
 
@@ -107,12 +118,13 @@ glist$plot$`beta[sdlog]` <- glist$plot$`beta[sdlog]` +
     xlim(c(0, 3)) +
     stat_function(fun=function(x) dlnorm(x, meanlog=0, sdlog=1), col="black")
 
+
 glist$plot$`c[b]` <- glist$plot$`c[b]` +
     xlim(c(0.3,1.8)) +
     stat_function(fun=function(x) dlnorm(x, meanlog=-0.1, sdlog=0.1), col="black")
 
 glist$plot$V <- glist$plot$V +
-    scale_x_continuous(limits=c(0, 1)) +
+    scale_x_continuous(limits=c(0, 1), breaks=seq(0, 1, 0.2)) +
     stat_function(fun=function(x) dbeta(x, shape1=6, shape2=2), col="black")
 
 geno_prior <- data.frame(vergara=dbetabinom(0:9, prob=2/9, size=9, theta=5),
@@ -121,36 +133,75 @@ geno_prior <- data.frame(vergara=dbetabinom(0:9, prob=2/9, size=9, theta=5),
            n.genotype=1:10) %>%
     gather(key,value, -n.genotype) %>%
     rename(fit=key) %>%
-    mutate(key="asex[genotype]", fit=factor(fit, labels=data_name))
+    mutate(key="G[asex]", fit=factor(fit, labels=data_name))
 
 ghist <- parlist_factor %>%
-    filter(key=="asex[genotype]") %>%
+    filter(key=="asex.genotype") %>%
+    mutate(key="G[asex]") %>%
     filter(!is.na(value)) %>%
     ggplot() +
-        geom_histogram(aes(value, ..density.., fill=run), position="identity", alpha=0.5, bins=10) +
-        geom_line(data=geno_prior, aes(n.genotype, value)) +
+        geom_bar(data=geno_prior, aes(n.genotype, value), stat="identity", width=0.5) +
+        geom_bar(aes(value, y=3*(..count..)/sum(..count..), fill=run), position=position_nudge(x=-0.1), width=0.5) +
         facet_grid(fit~key, labeller=label_parsed) +
+        scale_x_continuous(breaks=1:10) +
+        scale_y_continuous(expand=c(0,0.05)) +
         theme(axis.title=element_blank(),
             legend.position = "none",
             axis.text.y=element_blank(),
             axis.ticks.y=element_blank(),
-            panel.grid.minor=element_blank(),
+            strip.background = element_blank(),
+            panel.border = element_rect(colour = "black"),
+            panel.grid=element_blank(),
             panel.spacing=grid::unit(0,"lines"))
+
+glist$plot <- lapply(glist$plot, function(x) {x$layers <- rev(x$layers); x})
 
 gg <- append(glist$plot, list(`asex[genotype]`=ghist))
 
 gg_smc_param <- do.call(arrangeGrob, list(grobs=gg, nrow=1))
 
-ggsave("smc_param.pdf", gg_smc_param, width=8, height=6)
+if (save) ggsave("smc_param.pdf", gg_smc_param, width=8, height=5)
 
 summ_df <- comb_summ  %>%
     lapply(function(x) as.list(x[[1]])) %>%
     lapply(bind_rows) %>%
     lapply(gather) %>%
-    bind_rows(.id="fit") 
+    bind_rows(.id="fit") %>%
+    mutate(fit=factor(fit, labels=data_name)) %>%
+    mutate(gvar=ifelse(grepl("pinf", key), "proportion~infected", "proportion~sexual")) %>%
+    mutate(key=factor(key,
+                      levels=c("pinf.mean", "pinf.siteCV", "pinf.timeCV", "psex.mean", "psex.siteCV", "psex.timeCV"),
+                      labels=rep(c("mean", "across~site~CV", "across~generation~CV"),2)))
 
-ggplot(clean_list$sumlist %>% filter(run==3)) +
-    geom_density(aes(value, col=run, group=run)) +
-    geom_vline(data=gather(SMC_summary$sumlist %>% filter(run==3), key, value, -fit, -run), aes(xintercept=value, col=run, group=run)) +
+gg_summary_df <- clean_list$sumlist %>% 
+    filter(run==3) %>%
+    group_by() %>%
+    mutate(fit=factor(fit, labels=data_name)) %>%
+    mutate(gvar=ifelse(grepl("pinf", key), "proportion~infected", "proportion~sexual")) %>%
+    mutate(key=factor(key,
+                      levels=c("pinf.mean", "pinf.siteCV", "pinf.timeCV", "psex.mean", "psex.siteCV", "psex.timeCV"),
+                      labels=rep(c("mean", "across~site~CV", "across~generation~CV"),2)))
+
+gg_summary_mean <- SMC_summary$sumlist %>% 
+    group_by() %>%
+    mutate(fit=factor(fit, labels=data_name)) %>%
+    filter(run==3) %>%
+    gather(key, value, -fit, -run) %>%
+    mutate(gvar=ifelse(grepl("pinf", key), "proportion~infected", "proportion~sexual")) %>%
+    mutate(key=factor(key,
+                      levels=c("pinf.mean", "pinf.siteCV", "pinf.timeCV", "psex.mean", "psex.siteCV", "psex.timeCV"),
+                      labels=rep(c("mean", "across~site~CV", "across~generation~CV"),2)))
+
+gg_smc_summ <- ggplot(gg_summary_df) +
+    geom_line(stat="density", aes(value, col=run, group=run)) +
+    geom_vline(data=gg_summary_mean, aes(xintercept=value, col=run, group=run)) +
     geom_vline(data=summ_df, aes(xintercept=value)) +
-    facet_grid(fit~key, scale="free")
+    facet_grid(fit~gvar+key, scale="free", labeller = label_parsed) +
+    scale_x_continuous(name="") +
+    scale_y_continuous(expand=c(1e-3, 0)) +
+    theme(
+        legend.position = "none"
+    )
+
+if (save) ggsave("smc_summary.pdf", gg_smc_summ, width=8, height=6)
+
