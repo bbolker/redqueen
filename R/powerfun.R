@@ -15,22 +15,21 @@ test_quad <- function(sample) {
     )
 }
 
-test_quad_rq <- function(sample, tau=0.8) {
+test_quad_rq <- function(sample, tau=0.9) {
     fit <- try(quantreg::rq(sexual~I(infected)+I(infected^2), data=sample, tau=tau), silent=TRUE)
-    if (inherits(fit, "try-error")) {
+    if (inherits(fit, "try-error") || all(fit$coefficients==0)) {
         data.frame(
             effect.size=NA,
             p.value=NA
         )
     } else {
-        ss <- try(summary(fit, se="boot"), silent=TRUE)
+        ss <- try(summary(fit, se="BLB"), silent=TRUE)
         
         data.frame(
-            effect.size=ss$coefficients[3,3],
+            effect.size=ifelse(inherits(ss, "try-error"), NA, ss$coefficients[3,3]),
             p.value=ifelse(inherits(ss, "try-error"), NA, ss$coefficients[3,4])
         )
     }
-    
 }
 
 test_spearman <- function(sample) {

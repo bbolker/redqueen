@@ -2,7 +2,7 @@ library(dplyr)
 source("../R/powerfun.R")
 load("../data/SMC_summary.rda")
 
-gens <- 1001:1100
+gens <- 1001
 
 sites <- seq(10, 30, by=10)
 samples <- seq(25, 150, by=25)
@@ -29,7 +29,8 @@ for(sim_name in names(simlist)) {
     sample_reslist <- vector('list', length=length(samples))
     for(i in 1:length(samples)) {
         print(i)
-        gg <- sample(gens, 1)
+        set.seed(i)
+        gg <- 1001
         
         res <- lapply(sites,
             function(x) powerfun(
@@ -59,3 +60,4 @@ for(sim_name in names(simlist)) {
 }
 
 save("reslist", file="fitted_power.rda")
+

@@ -125,7 +125,6 @@ quadres %>%
     group_by(data) %>%
     summarize(prop=mean(QR<0 & LS >0),
               prop2=mean(QR>0 & LS < 0))
-    
 
 g2 <- ggplot(quadres) +
     geom_boxplot(aes(transformation, effect, col=test)) +

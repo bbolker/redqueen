@@ -2,7 +2,6 @@ library(ggplot2); theme_set(theme_bw())
 library(tidyr)
 library(dplyr)
 load("../data/fitted_power.rda")
-load("../data/SMC_summary.rda")
 
 level <- 0.05
 
@@ -18,18 +17,6 @@ spread_simdf <- simdf %>%
     mutate(id=1:n()) %>%
     gather(key, value, -data, -sites, -test, -sim, -samples, -id) %>%
     spread(test, value)
-    
-## ???
-
-spread_simdf %>%
-    filter(key=="p.value") %>%
-    group_by(data, sites, samples) %>%
-    summarize(s.ratio=mean(spearman < level & linear > level),
-              l.ratio=mean(spearman > level & linear < level)) %>%
-    as.tbl
-
-
-
 
 sig_simdf <- simdf %>%
     group_by(data, test, sites, samples) %>%
@@ -37,8 +24,7 @@ sig_simdf <- simdf %>%
               negative.power=mean(p.value<=level & effect.size < 0)) %>%
     gather(key, value, -data, -test, -sites, -samples) %>%
     group_by() %>%
-    mutate(test=factor(test, level=c("spearman", "linear", "quadratic")),
-           key=factor(key, labels=c("negative effect", "positive effect")))
+    mutate(key=factor(key, labels=c("negative effect", "positive effect")))
 
 ggplot(sig_simdf, aes(samples, value, group=sites, col=sites)) +
     geom_point() +
@@ -105,5 +91,3 @@ ggplot(alldf, aes(value, power, col=data)) +
     geom_vline(data=pardf_mean, aes(xintercept=mean, col=data), lty=2) + 
     scale_y_continuous(limits=c(0, 1)) +
     facet_grid(test+type~key, scale="free_x")
-
-
