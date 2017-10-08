@@ -1,0 +1,36 @@
+\documentclass{article}
+
+\usepackage{graphics}
+\usepackage[vcentering]{geometry}
+
+\geometry{papersize={5in,3.5in}, top=0.2in, bottom=0.2in}
+
+\pagestyle{empty}
+
+\input{tikzlib.tex}
+\input{diagram_geom.tex}
+
+\begin{document}
+
+\begin{tikzpicture}
+    \node(S)[bigcompartment]{$S_{\,\textrm{susceptible}}$};
+    \node(StoSI)[right=of S]{};
+    \node(SI)[bigcompartment, right=of StoSI]{$S_{\,\textrm{infected}}$};
+    \draw[->, very thick] (S) to (SI); 
+    \node(A)[bigcompartment, below=of S]{$A_{\,\textrm{susceptible}}$};
+    \node(AtoAI)[right=of A]{};
+    \node(AI)[bigcompartment, right=of AtoAI]{$A_{\,\textrm{infected}}$};
+    \draw[->, very thick] (A) to (AI); 
+    \node(Sextra)[left=of S]{};
+    \draw[->, very thick] ([yshift=0.3 cm]Sextra.east) to ([yshift=0.3 cm]S.west);
+    \draw[->, very thick] ([yshift=-0.3 cm]Sextra.east) to ([yshift=-0.3 cm]S.west);
+    \node(Sextra2)[above=of S]{};
+    \draw[->, very thick] ([xshift=-0.7 cm]S.north) to ([xshift=-0.7 cm]Sextra2.south);
+    \node(Aextra)[left=of A]{};
+    \draw[->, very thick] ([yshift=0.3 cm]Aextra.east) to ([yshift=0.3 cm]A.west);
+    \draw[->, very thick] ([yshift=-0.3 cm]Aextra.east) to ([yshift=-0.3 cm]A.west);
+    \node(Aextra2)[below=of A]{};
+    \draw[->, very thick] ([xshift=-0.7 cm]A.south) to ([xshift=-0.7 cm]Aextra2.north);
+\end{tikzpicture}
+
+\end{document}

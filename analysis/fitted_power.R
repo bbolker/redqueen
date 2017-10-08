@@ -6,7 +6,7 @@ gens <- 1001
 
 sites <- seq(10, 30, by=10)
 samples <- seq(25, 150, by=25)
-nsim <- 100
+nsim <- 10
 
 simlist <- list(
     dagan=simlist$dagan[[3]],
@@ -41,7 +41,7 @@ for(sim_name in names(simlist)) {
                 test=test_list,
                 transform="raw",
                 target.gen=gg,
-                verbose=TRUE
+                verbose=FALSE
             )
         )
         names(res) <- sites

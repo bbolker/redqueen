@@ -17,13 +17,13 @@ test_quad <- function(sample) {
 
 test_quad_rq <- function(sample, tau=0.9) {
     fit <- try(quantreg::rq(sexual~I(infected)+I(infected^2), data=sample, tau=tau), silent=TRUE)
-    if (inherits(fit, "try-error") || all(fit$coefficients==0)) {
+    if (inherits(fit, "try-error") || fit$coefficients[3]==0) {
         data.frame(
             effect.size=NA,
             p.value=NA
         )
     } else {
-        ss <- try(summary(fit, se="BLB"), silent=TRUE)
+        ss <- try(summary(fit, se="boot"), silent=TRUE)
         
         data.frame(
             effect.size=ifelse(inherits(ss, "try-error"), NA, ss$coefficients[3,3]),
@@ -121,6 +121,7 @@ powerfun <- function(simlist,
         testlist <- vector("list", nsim)
         for (j in 1:nsim) {
             sample <- sample_sim(sim, nsample, nsite, transform, target.gen)
+            save("sample", file="bug2.rda")
             suppressWarnings(testres <- lapply(test, function(test) test(sample)))
             tt <- do.call("rbind", testres)
             tt$test <- names(testres)

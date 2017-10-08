@@ -54,6 +54,7 @@ nsim <- length(simlist$dagan)
 reslist <- dflist <- vector('list', length(simlist))
 names(dflist) <- names(reslist) <- names(simlist)
 
+set.seed(101)
 for (sim_name in names(simlist)) {
     siml <- simlist[[sim_name]]
     
@@ -190,3 +191,6 @@ gsim <- ggplot(comb_sim, aes(pinf, psex, col=data, fill=data)) +
     )
 
 if (save) ggsave("simulated_data.pdf", gsim, width=7, height=3)
+
+if (save) save("resdf", "comb_sim", file="true_effect.rda")
+

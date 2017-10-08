@@ -1,0 +1,331 @@
+---
+title: "Temporal effects"
+output: html_document
+---
+
+The relationship between mean prevalence of sex v.s. mean prevalence of infection (both avergared over 100 generations) is different from the relationship between prevalence of sex v.s. prevalence of infection at each generation. Our goal is to figure out why this happens. 
+
+First, let's compare the true effect and the temporal effect (effect at each generation averaged over 100 generations to account for variation).
+
+```{r pkg, echo=FALSE, message=FALSE, warning=FALSE}
+library(dplyr)
+library(tidyr)
+library(ggplot2); theme_set(theme_bw())
+library(gridExtra)
+```
+
+```{r load, echo=FALSE}
+load("../data/SMC_summary.rda")
+load("../data/temporal_effect.rda")
+load("../data/true_effect.rda")
+```
+
+```{r temporal effect, echo=FALSE, message=FALSE}
+temporal_effect <- effect_list %>%
+    bind_rows(.id="data") %>%
+    gather(key, value, -data, -gen, -sim) %>%
+    as.tbl %>%
+    group_by(data, sim, key) %>%
+    summarize(temporal.effect=mean(value, na.rm=TRUE)) %>%
+    rename(test=key)
+     
+true_effect <- resdf %>%
+    filter(test %in% c("spearman", "quantile_quad"), transformation=="raw")  %>%
+    mutate(test=factor(test, labels=c("quad", "spearman"))) %>%
+    as.tbl %>%
+    select(-c(transformation, tgroup)) %>%
+    rename(true.effect=effect)
+
+relative_effect <- merge(true_effect, temporal_effect) %>% 
+    as.tbl %>%
+    group_by %>%
+    mutate(relative.effect=temporal.effect/true.effect)
+
+sensitivity <- clean_list$parlist %>%
+    filter(run==3) %>%
+    mutate(sim=1:n()) %>%
+    group_by() %>%
+    select(-run) %>%
+    rename(param=key, param.value=value, data=fit) %>%
+    as.tbl %>%
+    merge(relative_effect)
+
+ggplot(sensitivity, aes(true.effect, temporal.effect)) +
+    geom_point() +
+    geom_hline(yintercept=0, lty=2) +
+    geom_vline(xintercept=0, lty=2) +
+    geom_abline(lty=1) +
+    facet_wrap(test~data, scale="free", nrow=2)
+```
+
+In this figure, solid lines denote the one to one relationsip. We can see that the Spearman's rho is almost always underestimated when we take a single generation. Simulations fit to Dagan et al. show relatively consistent effect sizes in the quadratic regression compared to the true effect size. For other simulations, temporal effects underestimates the true effect "size" (weaker negative curvature) and even shows opposite signs. Unerestimation of an effect size isn't necessarily a big problem because we are adding process error. However, getting an opposite sign is a big problem.
+
+Maybe looking at the sensitivity plot will help us?
+
+```{r temporal_sensitivity, echo=FALSE}
+temporal_sensitivity <- sensitivity %>%
+    filter(param %in% c("beta.meanlog", "beta.sdlog"))
+
+g1 <- ggplot(temporal_sensitivity) +
+    geom_point(aes(param.value, temporal.effect, col=data, pch=data)) +
+    geom_smooth(method="loess", aes(param.value, temporal.effect), col="black", lty=2, alpha=0.3, span=0.95) +
+    geom_hline(yintercept=0, lty=1) +
+    facet_grid(test~param, scale="free") +
+    theme(
+        legend.position = "none",
+        strip.text.y = element_blank(),
+        axis.title.x=element_blank()
+    )
+
+dummy <- data.frame(
+    param="epsilon.site",
+    test=c("spearman", "spearman"),
+    param.value=rep(1e-3, 2),
+    temporal.effect=c(
+        c(-1.43,0.1)
+        )
+)
+
+g2 <- ggplot(sensitivity %>% filter(param=="epsilon.site")) +
+    geom_blank(data=dummy, aes(param.value, temporal.effect)) +
+    geom_point(aes(param.value, temporal.effect, col=data, pch=data)) +
+    geom_smooth(method="loess", aes(param.value, temporal.effect), col="black", lty=2, alpha=0.3,
+                span=0.95) +
+    scale_x_log10() +
+    geom_hline(yintercept=0, lty=1) +
+    facet_grid(test~param, scale="free") +
+    theme(
+        axis.title = element_blank(),
+        axis.ticks.y = element_blank(),
+        axis.text.y = element_blank()
+    )
+
+grid.arrange(g1, g2, widths=c(1, 0.7), nrow=1)
+```
+
+Sensitivity plot doesn't help us much with what's going on with the quadratic but I think it gies us some insight. Simulations fitted to Vergara et al. data are clearly different from the other two. It has high parasite fecundity but low variation in fecundity among sites and low mixing between sites.
+
+Let's take a look at some simulations. Here's a simulation that was fitted to Vergara et al. and has the lowest `beta.sdlog` value among posterior samples:
+
+```{r sample_vergara, echo=FALSE}
+gen <- 1001:1100
+vergsim <- which.min(comb_smc$vergara$parlist[[3]]$beta.sdlog)
+sim1 <- simlist$vergara[[3]][[vergsim]]
+
+print(comb_smc$vergara$parlist[[3]][vergsim,])
+
+dflist <- vector('list', 30)
+
+for (i in 1:30) {
+    dflist[[i]] <- with(sim1,{
+    N.count <- S.count + A.count
+    S <- (S.count/N.count)[gen,i]
+    I <- ((SI.count + AI.count)/N.count)[gen,i]
+        data.frame(
+            gen=gen,
+            infected=I,
+            sexual=S
+        )
+    })
+}
+
+rawdf <- dflist %>%
+    bind_rows(.id="site")
+
+df1 <- rawdf %>%
+    gather(key, value, -gen, -site) %>%
+    as.tbl
+
+vergpost <- comb_sim %>%
+    as.tbl %>%
+    filter(grepl("Vergara",data))
+
+df1 %>%
+    group_by(site, key) %>%
+    summarize(mean=mean(value)) %>%
+    spread(key,mean) %>%
+    ggplot() +
+        geom_point(data=vergpost, aes(pinf, psex), alpha=0.05) +
+        geom_smooth(data=vergpost, aes(pinf, psex), method="loess", col="black") +
+        geom_point(aes(infected, sexual), col=2) +
+        xlim(c(0, 1)) + 
+        ylim(c(0, 1))
+```
+
+Because variation in beta is so small, range of mean prevalence across all sites is narrow but we still see a positive correlation that is consistent with the predicted true effect (loess curve). If we plot out all 30 simulations, we find that all sites show similar patterns but are out of phase:
+
+```{r all, echo=FALSE}
+ggplot(df1) +
+    geom_line(aes(gen, value, col=key)) +
+    facet_wrap(~site)
+```
+
+We get a very interesting looking curve if we plot out proportion infected and proportion sexual for all 100 generations for all sites
+
+```{r vergara_cycle, echo=FALSE}
+ggplot(rawdf, aes(infected, sexual)) +
+    geom_point(alpha=0.1) +
+    geom_point(data=(vergpost %>% filter(sim==vergsim)), aes(pinf, psex), col=2, size=3) +
+    xlim(c(0,1)) +
+    ylim(c(0,1))
+```
+
+I've highlighted mean prevalence for each site. So each site goes through a similar cycle (accounting for process error and small variation in parameters) but are in different phases so we end up getting a negative correlation (for each cycle, sexual level is low when infection level is high and vice versa).
+
+I don't know whether mixing between sites has an effect because the mixing rate is so small (on the order of $10^{-6}$) but the variation and $\beta$ and mean $\beta$ certainly has an effect for this simulation. Lively (2010) showed that we can get a wide range of "red queen" dynamics depending on $\beta$. Here, we happen to be in the range where we get these large cycles (and small variation allow all sites to be in this range).
+
+With spatial variation, there's even wider range of cycles we can get and I can't explain all of them. Also, it's possible for each site to go through cycles that are qualitatively different. First, I present another extreme case where mixing rate is high.
+
+```{r sample_dagan, echo=FALSE}
+mckonesim <- which.max(comb_smc$mckone$parlist[[3]]$epsilon.site)
+sim2 <- simlist$mckone[[3]][[mckonesim]]
+
+print(comb_smc$mckone$parlist[[3]][mckonesim,])
+
+dflist2 <- vector('list', 30)
+
+for (i in 1:30) {
+    dflist2[[i]] <- with(sim2,{
+    N.count <- S.count + A.count
+    S <- (S.count/N.count)[gen,i]
+    I <- ((SI.count + AI.count)/N.count)[gen,i]
+        data.frame(
+            gen=gen,
+            infected=I,
+            sexual=S
+        )
+    })
+}
+
+rawdf2 <- dflist2 %>%
+    bind_rows(.id="site")
+
+df2 <- rawdf2 %>%
+    gather(key, value, -gen, -site) %>%
+    as.tbl
+
+mckonepost <- comb_sim %>%
+    as.tbl %>%
+    filter(grepl("McKone",data))
+
+df2 %>%
+    group_by(site, key) %>%
+    summarize(mean=mean(value)) %>%
+    spread(key,mean) %>%
+    ggplot() +
+        geom_point(data=mckonepost, aes(pinf, psex), alpha=0.05) +
+        geom_smooth(data=mckonepost, aes(pinf, psex), method="loess", col="black") +
+        geom_point(aes(infected, sexual), col=2) +
+        xlim(c(0, 1)) + 
+        ylim(c(0, 1))
+```
+
+We get a very interesting looking curve... Let's see what's going on in each site:
+
+```{r all2, echo=FALSE}
+ggplot(df2) +
+    geom_line(aes(gen, value, col=key)) +
+    facet_wrap(~site)
+```
+
+When mixing rate is high, cycles stabilize and become flattened (consistent with my hypothesis). So we end up getting temporal effect that is consistent with the true effect:
+
+```{r mckone, echo=FALSE}
+ggplot(rawdf2) +
+    geom_point(alpha=0.1, aes(infected, sexual)) +
+    geom_point(data=(mckonepost %>% filter(sim==mckonesim)), aes(pinf, psex), col=2, size=3) +
+    xlim(c(0,1)) +
+    ylim(c(0,1))
+```
+
+Again, I plotted the mean prevalence along with prevalence at each generation. We see small blobs around each point which represent the "flattened" cyles. I don't know whether that weird curve is just coincidence or not but I think there might be something going on that I can't explain.
+
+We can even get a mixture of these cycles. Here's a randomly selected simulation fitted to Vergara et al.
+
+```{r sample_vergara2, echo=FALSE}
+## too lazy to rename these...
+vergsim <- 34
+sim1 <- simlist$vergara[[3]][[vergsim]]
+
+print(comb_smc$vergara$parlist[[3]][vergsim,])
+
+dflist <- vector('list', 30)
+
+for (i in 1:30) {
+    dflist[[i]] <- with(sim1,{
+    N.count <- S.count + A.count
+    S <- (S.count/N.count)[gen,i]
+    I <- ((SI.count + AI.count)/N.count)[gen,i]
+        data.frame(
+            gen=gen,
+            infected=I,
+            sexual=S
+        )
+    })
+}
+
+rawdf <- dflist %>%
+    bind_rows(.id="site")
+
+df1 <- rawdf %>%
+    gather(key, value, -gen, -site) %>%
+    as.tbl
+
+vergpost <- comb_sim %>%
+    as.tbl %>%
+    filter(grepl("Vergara",data))
+
+df1 %>%
+    group_by(site, key) %>%
+    summarize(mean=mean(value)) %>%
+    spread(key,mean) %>%
+    ggplot() +
+        geom_point(data=vergpost, aes(pinf, psex), alpha=0.05) +
+        geom_smooth(data=vergpost, aes(pinf, psex), method="loess", col="black") +
+        geom_point(aes(infected, sexual), col=2) +
+        xlim(c(0, 1)) + 
+        ylim(c(0, 1))
+```
+
+We have a case of high infection, which should show negative correlation but we also see some funny looking points in the middle. Let's look at all 30 sites:
+
+```{r all333, echo=FALSE}
+ggplot(df1) +
+    geom_line(aes(gen, value, col=key)) +
+    facet_wrap(~site)
+```
+
+So some cycles look like the one we saw in the low variation case (16, 19, 2, 29, 30, 4) but we also have cycles that look flattened (11, 13, 15, 20) like in the previous case; I can't explain other cycles. but they look different. So let's group these cycles and see what they look like (I chose these cycles by looking at the figure above and didn't change the groupings after I generated the figure after so I don't think doing post hoc fishing...): 
+
+```{r another_chunk, echo=FALSE}
+group1 <- c(16, 19, 2, 29, 30, 4)
+group2 <- c(11, 13, 15, 20)
+
+rawdf <- rawdf %>%
+    mutate(
+        group=ifelse(site %in% group1, 1, ifelse(site %in% group2, 2, 3))
+    )
+```
+
+```{r some_name, echo=FALSE}
+vergpost2 <- vergpost %>%  
+    filter(sim==vergsim) %>%
+    mutate(site=1:n()) %>%
+    mutate(
+        group=ifelse(site %in% group1, 1, ifelse(site %in% group2, 2, 3))
+    )
+
+ggplot(rawdf) +
+    geom_point(alpha=0.1, aes(infected, sexual)) +
+    geom_point(data=vergpost2, aes(pinf, psex), col=2, size=3) +
+    geom_vline(xintercept = c(0.6, 0.75), lty=2) +
+    xlim(c(0,1)) +
+    ylim(c(0,1)) +
+    facet_wrap(~group)
+```
+
+I think I categorized these pretty well... Again, the red points represent average prevalence. So we get different kinds of cycles in the case of high infection rate. I can't explain why we get those flattened cycles in between.
+
+I think we can even divide the regions of different dynamics (dashed lines) but it would depend on other parameters as well.
+
+I didn't plot out simulations that were fitted to Dagan et al. because it would just show bunch of zeroes with couple non-zero points and was not interesting. So we would get a "positive" correlation but there's really not much going on in many cases...
