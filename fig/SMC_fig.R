@@ -94,7 +94,7 @@ parlist_factor <- clean_list$parlist %>%
     ))
 
 glist <- parlist_factor %>%
-    filter(!(key %in% c("asex.genotype", "epsilon[site]"))) %>%
+    filter(!(key %in% c("asex.genotype"))) %>%
     group_by(key) %>%
     do(plot=gpar%+%.)
 
@@ -115,9 +115,8 @@ glist$plot$`beta[meanlog]` <- glist$plot$`beta[meanlog]` +
     xlim(c(-2, 4))
 
 glist$plot$`beta[sdlog]` <- glist$plot$`beta[sdlog]` +
-    xlim(c(0, 3)) +
-    stat_function(fun=function(x) dlnorm(x, meanlog=0, sdlog=1), col="black")
-
+    scale_x_log10(limits=c(1e-3, 10)) +
+    stat_function(fun=function(x) dlnorm(x, meanlog=0, sdlog=2), col="black")
 
 glist$plot$`c[b]` <- glist$plot$`c[b]` +
     xlim(c(0.3,1.8)) +
@@ -126,6 +125,20 @@ glist$plot$`c[b]` <- glist$plot$`c[b]` +
 glist$plot$V <- glist$plot$V +
     scale_x_continuous(limits=c(0, 1), breaks=seq(0, 1, 0.2)) +
     stat_function(fun=function(x) dbeta(x, shape1=6, shape2=2), col="black")
+
+epsilon_x <- exp(seq(log(1e-5), 1, 0.01))
+
+epsilon_prior <- data.frame(vergara=dbeta(epsilon_x, shape1=1, shape2=9),
+                         dagan=dbeta(epsilon_x, shape1=1, shape2=9),
+                         mckone=dbeta(epsilon_x, shape1=2, shape2=8),
+                         x=epsilon_x) %>%
+    gather(key,value, -x) %>%
+    rename(fit=key) %>%
+    mutate(key="epsilon[site]", run="1", fit=factor(fit, labels=data_name))
+
+glist$plot$`epsilon[site]` <- glist$plot$`epsilon[site]`+
+    geom_line(data=epsilon_prior, aes(x, value), col=1) +
+    scale_x_continuous(limits=c(0,0.2))
 
 geno_prior <- data.frame(vergara=dbetabinom(0:9, prob=2/9, size=9, theta=5),
            dagan=dbetabinom(0:9, prob=5/9, size=9, theta=5),
@@ -192,13 +205,20 @@ gg_summary_mean <- SMC_summary$sumlist %>%
                       levels=c("pinf.mean", "pinf.siteCV", "pinf.timeCV", "psex.mean", "psex.siteCV", "psex.timeCV"),
                       labels=rep(c("mean", "across~site~CV", "across~generation~CV"),2)))
 
+blank_df <- data.frame(
+    fit=gg_summary_mean$fit[1],
+    key="mean",
+    value=0,
+    gvar="proportion~infected"
+)
+
 gg_smc_summ <- ggplot(gg_summary_df) +
+    geom_blank(data=blank_df, aes(value)) +
     geom_line(stat="density", aes(value, col=run, group=run)) +
     geom_vline(data=gg_summary_mean, aes(xintercept=value, col=run, group=run)) +
     geom_vline(data=summ_df, aes(xintercept=value)) +
     facet_grid(fit~gvar+key, scale="free", labeller = label_parsed) +
     scale_x_continuous(name="") +
-    scale_y_continuous(expand=c(1e-3, 0)) +
     theme(
         legend.position = "none"
     )
