@@ -12,3 +12,8 @@ betasim.rda
 vergara
 
 pull_upstream
+
+*.bbl
+*.nav
+*.snm
+*.toc
