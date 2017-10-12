@@ -1,0 +1,219 @@
+
+\documentclass[final]{beamer}
+
+\usepackage[scale=1.24]{beamerposter} % Use the beamerposter package for laying out the poster
+
+\usetheme{confposter} % Use the confposter theme supplied with this template
+
+\setbeamercolor{block title}{fg=ngreen,bg=white} % Colors of the block titles
+\setbeamercolor{block body}{fg=black,bg=white} % Colors of the body of blocks
+\setbeamercolor{block alerted title}{fg=white,bg=dblue!70} % Colors of the highlighted block titles
+\setbeamercolor{block alerted body}{fg=black,bg=dblue!10} % Colors of the body of highlighted blocks
+% Many more colors are available for use in beamerthemeconfposter.sty
+
+%-----------------------------------------------------------
+% Define the column widths and overall poster size
+% To set effective sepwid, onecolwid and twocolwid values, first choose how many columns you want and how much separation you want between columns
+% In this template, the separation width chosen is 0.024 of the paper width and a 4-column layout
+% onecolwid should therefore be (1-(# of columns+1)*sepwid)/# of columns e.g. (1-(4+1)*0.024)/4 = 0.22
+% Set twocolwid to be (2*onecolwid)+sepwid = 0.464
+% Set threecolwid to be (3*onecolwid)+2*sepwid = 0.708
+
+\newlength{\sepwid}
+\newlength{\onecolwid}
+\newlength{\twocolwid}
+\newlength{\threecolwid}
+\setlength{\paperwidth}{48in} % A0 width: 46.8in
+\setlength{\paperheight}{36in} % A0 height: 33.1in
+\setlength{\sepwid}{0.024\paperwidth} % Separation width (white space) between columns
+\setlength{\onecolwid}{0.22\paperwidth} % Width of one column
+\setlength{\twocolwid}{0.464\paperwidth} % Width of two columns
+\setlength{\threecolwid}{0.708\paperwidth} % Width of three columns
+\setlength{\topmargin}{-0.5in} % Reduce the top margin size
+%-----------------------------------------------------------
+
+\usepackage{graphicx}  % Required for including images
+
+\usepackage{booktabs} % Top and bottom rules for tables
+
+\newcommand{\etal}{\emph{et al.}}
+
+%----------------------------------------------------------------------------------------
+%	TITLE SECTION 
+%----------------------------------------------------------------------------------------
+
+\title{Estimating the effects of parasites on the maintenance of sex} % Poster title
+
+\author{Sang Woo Park and Ben Bolker} % Author(s)
+
+\institute[McMaster University]{McMaster University, Hamilton, Ontario, Canada} % Institution(s)
+
+%----------------------------------------------------------------------------------------
+
+\begin{document}
+
+\addtobeamertemplate{block end}{}{\vspace*{2ex}} % White space under blocks
+\addtobeamertemplate{block alerted end}{}{\vspace*{2ex}} % White space under highlighted (alert) blocks
+
+\setlength{\belowcaptionskip}{2ex} % White space under figures
+\setlength\belowdisplayshortskip{2ex} % White space under equations
+
+\begin{frame}[t] % The whole poster is enclosed in one beamer frame
+
+\begin{columns}[t] % The whole poster consists of three major columns, the second of which is split into two columns twice - the [t] option aligns each column's content to the top
+
+\begin{column}{\sepwid}\end{column} % Empty spacer column
+
+\begin{column}{\onecolwid} % The first column
+
+\begin{alertblock}{Summary}
+Why must \textbf{sexual reproduction} persist in nature given its \textbf{twofold cost}? The \textbf{Red Queen Hypothesis} predicts sexually reproducing individuals to overcome the cost of sex by escaping infection more easily under strong parasite selection. Here, we tried to quantify the effect of the Red Queen and perform a power analysis.
+\end{alertblock}
+
+%----------------------------------------------------------------------------------------
+%	QUICK REVISION
+%----------------------------------------------------------------------------------------
+
+\begin{block}{Evolution of sex}
+\begin{itemize}
+    \item \textbf{Two fold cost of sex}: (1) cost of producing males and (2) cost of meiosis
+    \item the two fold cost of cost of sex asumes that \textbf{all else is equal}
+    \item only 0.01\% eukaryotes conform to purely asexual reproduction. How?
+\end{itemize}
+\end{block}
+
+\begin{block}{Red Queen Hypothesis}
+\begin{figure}
+\includegraphics[width=0.9\textwidth]{McKone.png}\\
+McKone \etal\ \cite{mckone2016fine}
+\end{figure}
+\begin{itemize}
+    \item sexual reproduction creates rare genotypes that can escape infection (\textbf{negative frequncy dependence})
+    \item snail population in New Zealand (host for sterilizing trematode infection) is believed to support the hypothesis
+    \item prevalence of sex should be positively correlated with prevalence of infection
+    \item unable to detect any correlation in a similar snail-trematode system \cite{dagan2013clonal}
+\end{itemize}
+\end{block}
+
+%------------------------------------------------
+
+% \begin{figure}
+% \includegraphics[width=0.8\linewidth]{1.jpg}
+% \caption{Graph of $f(x)=ax^2|_{\{0.1, 0.3, 1.0, 3.0\}}$}
+% \end{figure}
+
+%----------------------------------------------------------------------------------------
+
+\end{column} % End of the first column
+
+\begin{column}{\sepwid}\end{column} % Empty spacer column
+
+\begin{column}{\twocolwid} % Begin a column which is two columns wide (column 2)
+
+\begin{columns}[t,totalwidth=\twocolwid] % Split up the two columns wide column
+
+\begin{column}{\onecolwid}\vspace{-.6in} % The first column within column 2 (column 2.1)
+
+%----------------------------------------------------------------------------------------
+%	MATERIALS
+%----------------------------------------------------------------------------------------
+
+\begin{block}{Mathematical model}
+\begin{figure}
+\includegraphics[width=0.9\textwidth]{../fig/model_diagram.pdf}
+\end{figure}
+\begin{itemize}
+    \item diploid hosts with haploid parasites
+    \item obligate sexual v.s. obligate asexual
+\end{itemize}
+\end{block}
+
+%----------------------------------------------------------------------------------------
+
+\end{column} % End of column 2.1
+
+\begin{column}{\onecolwid}\vspace{-.6in} % The second column within column 2 (column 2.2)
+
+%----------------------------------------------------------------------------------------
+%	P
+%----------------------------------------------------------------------------------------
+
+\begin{block}{Approximate Bayesian Computation (ABC)}
+\includegraphics[width=0.9\textwidth]{../fig/smc_param.pdf}
+\begin{itemize}
+    \item Bayes' theorem: $p(\theta|X) \propto p(X|\theta) p(\theta)$
+    \item relies on difference between observed and simulated data rather than explicit likelihood
+    \item Sequential Monte Carlo method allows for efficient approximation of the posterior \cite{turner2012tutorial}
+    \item summary statistics compared: mean prevalence of infection/sex and variation in mean prevalence across time/site 
+\end{itemize}
+\end{block}
+
+%----------------------------------------------------------------------------------------
+
+\end{column} % End of column 2.2
+
+\end{columns} % End of the split of column 2 - any content after this will now take up 2 columns width
+
+%----------------------------------------------------------------------------------------
+%	IMPORTANT To REMEMBER
+%----------------------------------------------------------------------------------------
+
+\begin{block}{Simulated data vs. observed data}
+\begin{figure}
+\includegraphics[width=0.8\textwidth]{../fig/simulated_data.pdf}
+\end{figure}
+\begin{itemize}
+    \item lorem ipsum
+\end{itemize}
+\end{block} 
+
+\end{column} % End of the second column
+
+\begin{column}{\sepwid}\end{column} % Empty spacer column
+
+\begin{column}{\onecolwid} % The third column
+
+%----------------------------------------------------------------------------------------
+%	CONCLUSION
+%----------------------------------------------------------------------------------------
+
+\begin{block}{Cycles and spatial structure}
+\begin{itemize}
+    \item lorem ipsum
+\end{itemize}
+\end{block}
+
+\begin{alertblock}{Conclusion}
+\begin{itemize}
+    \item Red queen dynamics is hard to measure from spatial data
+\end{itemize}
+\end{alertblock}
+
+
+%----------------------------------------------------------------------------------------
+%	ACKNOWLEDGEMENTS
+%----------------------------------------------------------------------------------------
+
+\begin{block}{Reference}
+{\tiny
+%% Add numbered references
+\setbeamertemplate{bibliography item}[text]
+%% Stop line breaks
+\setbeamertemplate{bibliography entry title}{}
+\setbeamertemplate{bibliography entry location}{}
+\setbeamertemplate{bibliography entry note}{}
+\bibliographystyle{plain}
+\bibliography{../misc/redqueen}
+}
+\end{block}
+
+
+%----------------------------------------------------------------------------------------
+
+\end{column} % End of the third column
+
+\end{columns} % End of all the columns in the poster
+
+\end{frame} % End of the enclosing frame
+
+\end{document}

@@ -16,11 +16,11 @@
     \node(S)[bigcompartment]{$S_{\,\textrm{susceptible}}$};
     \node(StoSI)[right=of S]{};
     \node(SI)[bigcompartment, right=of StoSI]{$S_{\,\textrm{infected}}$};
-    \draw[->, very thick] (S) to (SI); 
+    \draw[->, very thick] (S) -- node [text width=2cm, midway, above, align=center] {infection} (SI); 
     \node(A)[bigcompartment, below=of S]{$A_{\,\textrm{susceptible}}$};
     \node(AtoAI)[right=of A]{};
     \node(AI)[bigcompartment, right=of AtoAI]{$A_{\,\textrm{infected}}$};
-    \draw[->, very thick] (A) to (AI); 
+    \draw[->, very thick] (A) -- node [text width=2cm, midway, below, align=center] {infection} (AI); 
     \node(Sextra)[left=of S]{};
     \draw[->, very thick] ([yshift=0.3 cm]Sextra.east) to ([yshift=0.3 cm]S.west);
     \draw[->, very thick] ([yshift=-0.3 cm]Sextra.east) to ([yshift=-0.3 cm]S.west);
@@ -31,6 +31,11 @@
     \draw[->, very thick] ([yshift=-0.3 cm]Aextra.east) to ([yshift=-0.3 cm]A.west);
     \node(Aextra2)[below=of A]{};
     \draw[->, very thick] ([xshift=-0.7 cm]A.south) to ([xshift=-0.7 cm]Aextra2.north);
+    \draw[thick,dotted] ($(SI.north west)+(-0.3,0.15)$) rectangle ($(AI.south east)+(0.3,-0.15)$);
+    \node(I) at ($(AI)!0.5!(SI)$){};
+    \node[above] at ([yshift=0.3cm] SI.north){Total infected};
+    \node(Iextra)[right=of I]{};
+    \draw[->, very thick] ([xshift=1.3cm]Iextra.east) -- ([xshift=1.3cm]I.east);
 \end{tikzpicture}
 
 \end{document}

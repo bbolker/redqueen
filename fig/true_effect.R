@@ -93,6 +93,15 @@ corres <- resdf %>%
     filter(tgroup=="cor") %>%
     mutate(test=factor(test, labels=c("Pearson correlation", "Spearman's rho")))
 
+## is spearman better?
+corres %>%
+    mutate(test=factor(test, labels=c("Pearson", "Spearman"))) %>%
+    spread(test, effect) %>%
+    filter(transformation=="raw") %>%
+    group_by(data) %>%
+    summarize(prop=mean(Spearman > 0 & Pearson < 0),
+              prop2=mean(Spearman < 0 & Pearson > 0))
+
 g1 <- ggplot(corres) +
     geom_boxplot(aes(transformation, effect, col=test)) +
     geom_hline(yintercept = 0, lty=2) +
@@ -174,10 +183,32 @@ comb_sim <- dflist %>%
     bind_rows(.id="data") %>%
     rename(pinf=infected, psex=sexual) %>%
     mutate(data=factor(data, labels=data_name))
-    
+
 gsim <- ggplot(comb_sim, aes(pinf, psex, col=data, fill=data)) +
     geom_point(alpha=0.1) + 
-    geom_smooth(method="loess", alpha=0.4) +
+    geom_point(data=aggr, pch=2, size=2.5, col="black") +
+    scale_x_continuous(name="Proportion infected", breaks=seq(0,1,0.2), expand=c(0, 0.07)) +
+    scale_y_continuous(name="Proportion sexual", breaks=seq(0,1,0.2)) +
+    facet_grid(~data, labeller = label_parsed) +
+    theme(
+        panel.spacing=grid::unit(0,"lines"),
+        strip.background = element_blank(),
+        panel.border = element_rect(colour = "black"),
+        panel.grid = element_blank(),
+        legend.position="none"
+    )
+
+pround <- 0.05
+
+comb_sim2 <- comb_sim %>%
+    mutate(pinf=round(pinf/pround)*pround, psex=round(psex/pround)*pround) %>%
+    group_by(data, pinf, psex) %>%
+    tally %>%
+    group_by(data) %>%
+    mutate(intensity=2*plogis(n/max(n), location=0, scale=0.1)-1)
+
+gsim_tally <- ggplot(comb_sim2, aes(pinf, psex, fill=data)) +
+    geom_raster(aes(alpha=intensity)) +
     geom_point(data=aggr, pch=2, size=2.5, col="black") +
     scale_x_continuous(name="Proportion infected", breaks=seq(0,1,0.2), expand=c(0, 0.07)) +
     scale_y_continuous(name="Proportion sexual", breaks=seq(0,1,0.2)) +
@@ -193,4 +224,3 @@ gsim <- ggplot(comb_sim, aes(pinf, psex, col=data, fill=data)) +
 if (save) ggsave("simulated_data.pdf", gsim, width=7, height=3)
 
 if (save) save("resdf", "comb_sim", file="true_effect.rda")
-
