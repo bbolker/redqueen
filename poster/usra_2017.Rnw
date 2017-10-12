@@ -89,8 +89,8 @@ McKone \etal\ \cite{mckone2016fine}
 \end{figure}
 \begin{itemize}
     \item sexual reproduction creates rare genotypes that can escape infection (\textbf{negative frequncy dependence})
-    \item snail population in New Zealand (host for sterilizing trematode infection) is believed to support the hypothesis
-    \item prevalence of sex should be positively correlated with prevalence of infection
+    \item snail population in New Zealand (host for sterilizing trematode infection) is believed to support the hypothesis \cite{vergara2014infection}
+    \item prevalence of sex should be \textbf{positively correlated} with prevalence of infection
     \item unable to detect any correlation in a similar snail-trematode system \cite{dagan2013clonal}
 \end{itemize}
 \end{block}
@@ -123,8 +123,9 @@ McKone \etal\ \cite{mckone2016fine}
 \includegraphics[width=0.9\textwidth]{../fig/model_diagram.pdf}
 \end{figure}
 \begin{itemize}
-    \item diploid hosts with haploid parasites
-    \item obligate sexual v.s. obligate asexual
+    \item extension of \cite{lively2010epidemiological}; the figure represents a dynamic of a single site at each generation
+    \item solid lines represent dynamics with spatial feature (i.e., mixing between sites)
+    \item dashed lines represent stochastic migration from an external source
 \end{itemize}
 \end{block}
 
@@ -143,8 +144,8 @@ McKone \etal\ \cite{mckone2016fine}
 \begin{itemize}
     \item Bayes' theorem: $p(\theta|X) \propto p(X|\theta) p(\theta)$
     \item relies on difference between observed and simulated data rather than explicit likelihood
-    \item Sequential Monte Carlo method allows for efficient approximation of the posterior \cite{turner2012tutorial}
-    \item summary statistics compared: mean prevalence of infection/sex and variation in mean prevalence across time/site 
+    \item \textbf{Sequential Monte Carlo} method allows for efficient approximation of the posterior \cite{turner2012tutorial}
+    \item summary statistics: mean proportion infection/sexual and variation in mean proportion across generation/site 
 \end{itemize}
 \end{block}
 
@@ -158,7 +159,7 @@ McKone \etal\ \cite{mckone2016fine}
 %	IMPORTANT To REMEMBER
 %----------------------------------------------------------------------------------------
 
-\begin{block}{Simulated data vs. observed data}
+\begin{block}{Simulated data v.s. observed data}
 \begin{figure}
 \includegraphics[width=0.8\textwidth]{../fig/simulated_data.pdf}
 \end{figure}
@@ -183,7 +184,7 @@ McKone \etal\ \cite{mckone2016fine}
 \end{itemize}
 \end{block}
 
-\begin{alertblock}{Conclusion}
+\begin{alertblock}{Discussion and conclusion}
 \begin{itemize}
     \item Red queen dynamics is hard to measure from spatial data
 \end{itemize}
