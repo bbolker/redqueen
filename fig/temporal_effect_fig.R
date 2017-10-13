@@ -1,10 +1,20 @@
 library(dplyr)
 library(tidyr)
-library(ggplot2); theme_set(theme_bw())
+library(ggplot2); theme_set(theme_bw(base_size = 12,
+                                     base_family = "Times"))
+
+scale_colour_discrete <- function(...,palette="Set1") scale_colour_brewer(...,palette=palette)
+scale_fill_discrete <- function(...,palette="Set1") scale_fill_brewer(...,palette=palette)
 
 load("../data/SMC_summary.rda")
 load("../data/temporal_effect.rda")
 load("../data/true_effect.rda")
+
+save <- FALSE
+
+data_name <- c(expression(Dagan~italic(et~al.)~"(2005)"), 
+               expression(McKone~italic(et~al.)~"(2016)"), 
+               expression(Vergara~italic(et~al.)~"(2014)"))
 
 temporal_effect <- effect_list %>%
     bind_rows(.id="data") %>%
@@ -34,12 +44,21 @@ sensitivity <- clean_list$parlist %>%
     rename(param=key, param.value=value, data=fit) %>%
     as.tbl %>%
     merge(relative_effect)
-    
-ggplot(sensitivity, aes(param.value, relative.effect, col=data)) +
+
+sensitivity_epsilon <- sensitivity %>%
+    as.tbl %>%
+    filter(param=="epsilon.site") %>%
+    mutate(data=factor(data, labels=data_name),
+           test=factor(test, labels=c(
+               expression("Spearman's"~rho),
+               "Quantile~regression~(tau==0.9)"
+           )))
+
+ggplot(sensitivity_epsilon, aes(param.value, relative.effect, col=data)) +
     geom_point() +
     geom_hline(yintercept=1, lty=2) +
     geom_hline(yintercept=0, lty=1) +
-    facet_grid(test~param, scale="free") 
+    facet_grid(test~param, scale="free", labeller=label_parsed)
 
 ggplot(sensitivity, aes(param.value, temporal.effect, col=data)) +
     geom_point() +

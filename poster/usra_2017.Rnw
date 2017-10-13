@@ -42,7 +42,7 @@
 %	TITLE SECTION 
 %----------------------------------------------------------------------------------------
 
-\title{Estimating the effects of parasites on the maintenance of sex} % Poster title
+\title{Quantifying the effects of parasites on the maintenance of sex} % Poster title
 
 \author{Sang Woo Park and Ben Bolker} % Author(s)
 
@@ -90,7 +90,7 @@ McKone \etal\ \cite{mckone2016fine}
 \begin{itemize}
     \item sexual reproduction creates rare genotypes that can escape infection (\textbf{negative frequncy dependence})
     \item snail population in New Zealand (host for sterilizing trematode infection) is believed to support the hypothesis \cite{vergara2014infection}
-    \item prevalence of sex should be \textbf{positively correlated} with prevalence of infection
+    \item prevalence of sex should be \textbf{positively correlated} with prevalence of infection \cite{lively2001trematode}
     \item unable to detect any correlation in a similar snail-trematode system \cite{dagan2013clonal}
 \end{itemize}
 \end{block}
@@ -126,6 +126,7 @@ McKone \etal\ \cite{mckone2016fine}
     \item extension of \cite{lively2010epidemiological}; the figure represents a dynamic of a single site at each generation
     \item solid lines represent dynamics with spatial feature (i.e., mixing between sites)
     \item dashed lines represent stochastic migration from an external source
+    \item transmission rate varies across site
 \end{itemize}
 \end{block}
 
@@ -140,7 +141,7 @@ McKone \etal\ \cite{mckone2016fine}
 %----------------------------------------------------------------------------------------
 
 \begin{block}{Approximate Bayesian Computation (ABC)}
-\includegraphics[width=0.9\textwidth]{../fig/smc_param.pdf}
+\includegraphics[width=0.8\textwidth]{../fig/smc_param.pdf}
 \begin{itemize}
     \item Bayes' theorem: $p(\theta|X) \propto p(X|\theta) p(\theta)$
     \item relies on difference between observed and simulated data rather than explicit likelihood
@@ -161,11 +162,19 @@ McKone \etal\ \cite{mckone2016fine}
 
 \begin{block}{Simulated data v.s. observed data}
 \begin{figure}
-\includegraphics[width=0.8\textwidth]{../fig/simulated_data.pdf}
+\includegraphics[width=0.85\textwidth]{../fig/simulated_data.pdf}
 \end{figure}
+\begin{minipage}[c]{0.5\textwidth}
 \begin{itemize}
-    \item lorem ipsum
+    \item spatial structure allows high level of infection to be maintained even at high virulence
+    \item initially increasing prevalence of sexual reproduction pulls back infection (consistent with \cite{lively2001trematode}) and causes prevalence of infection to decrease; quadratic overall
+    \item fitted result does not appear to match Dagan \etal\ \cite{dagan2013clonal}.
 \end{itemize}
+\vfill
+\end{minipage}
+\begin{minipage}[c]{0.5\textwidth}
+\includegraphics[width=0.85\textwidth]{../fig/true_effect.pdf}
+\end{minipage}
 \end{block} 
 
 \end{column} % End of the second column
@@ -180,13 +189,16 @@ McKone \etal\ \cite{mckone2016fine}
 
 \begin{block}{Cycles and spatial structure}
 \begin{itemize}
-    \item lorem ipsum
+    \item Insert a figure
 \end{itemize}
 \end{block}
 
-\begin{alertblock}{Discussion and conclusion}
+\begin{alertblock}{Discussion and further questions}
 \begin{itemize}
-    \item Red queen dynamics is hard to measure from spatial data
+    \item High asexual diversity \cite{dagan2013clonal} and different environment (e.g., seasonal flood \cite{ben2007temporal} and highly interconnected sites \cite{dagan2013clonal}) may not be appropriate for the Red Queen Hypothesis?
+    \item Detecting a positive correlation is not easy; [CITE] used a simple model. What about [CITE]?
+    \item expected relationship may be masked by different cycles but may be recovered with high spatial mixing
+    \item try test for risk rather than looking at prevalence?
 \end{itemize}
 \end{alertblock}
 
