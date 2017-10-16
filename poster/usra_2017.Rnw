@@ -38,6 +38,7 @@
 
 \newcommand{\etal}{\emph{et al.}}
 
+
 %----------------------------------------------------------------------------------------
 %	TITLE SECTION 
 %----------------------------------------------------------------------------------------
@@ -84,8 +85,9 @@ Why must \textbf{sexual reproduction} persist in nature given its \textbf{twofol
 
 \begin{block}{Red Queen Hypothesis}
 \begin{figure}
-\includegraphics[width=0.9\textwidth]{McKone.png}\\
-McKone \etal\ \cite{mckone2016fine}
+\includegraphics[width=0.9\textwidth]{McKone.png}
+\caption{Parasitism rate is positively correlated with male frequency \cite{mckone2016fine}.}
+\vspace{-1em}
 \end{figure}
 \begin{itemize}
     \item sexual reproduction creates rare genotypes that can escape infection (\textbf{negative frequncy dependence})
@@ -121,12 +123,13 @@ McKone \etal\ \cite{mckone2016fine}
 \begin{block}{Mathematical model}
 \begin{figure}
 \includegraphics[width=0.9\textwidth]{../fig/model_diagram.pdf}
+\caption{Graphical representation of simulated events that occur in a habitat at each time step. Double lined arrows represent dynamics that are affected by mixing betwee habitats.}
+\vspace{-1em}
 \end{figure}
 \begin{itemize}
-    \item extension of \cite{lively2010epidemiological}; the figure represents a dynamic of a single site at each generation
-    \item solid lines represent dynamics with spatial feature (i.e., mixing between sites)
-    \item dashed lines represent stochastic migration from an external source
-    \item transmission rate varies across site
+    \item competition between obligate sexual ($S$) and clonal ($A$) population under parasite selection is represented by a mathematical model \cite{lively2010epidemiological}
+    \item hosts stay within their habitats and can mix with hosts in different habitats
+    \item relies on stochastic computer simulations
 \end{itemize}
 \end{block}
 
@@ -137,16 +140,15 @@ McKone \etal\ \cite{mckone2016fine}
 \begin{column}{\onecolwid}\vspace{-.6in} % The second column within column 2 (column 2.2)
 
 %----------------------------------------------------------------------------------------
-%	P
+%	
 %----------------------------------------------------------------------------------------
 
 \begin{block}{Approximate Bayesian Computation (ABC)}
-\includegraphics[width=0.8\textwidth]{../fig/smc_param.pdf}
 \begin{itemize}
-    \item Bayes' theorem: $p(\theta|X) \propto p(X|\theta) p(\theta)$
-    \item relies on difference between observed and simulated data rather than explicit likelihood
-    \item \textbf{Sequential Monte Carlo} method allows for efficient approximation of the posterior \cite{turner2012tutorial}
-    \item summary statistics: mean proportion infection/sexual and variation in mean proportion across generation/site 
+    \item a random sample of parameters is drawn
+    \item a data simulated from the sample parameter is compared to the actual data using summary statistics (mean proportion of sex and infected and variation in mean across time/space)
+    \item if the difference is small enough, the parameter sample that generated the data is \emph{accepted}
+    \item the process is repeated but parameters are sampled from deviates of the aceepted parameters and lower acceptance rate is used
 \end{itemize}
 \end{block}
 
@@ -160,20 +162,36 @@ McKone \etal\ \cite{mckone2016fine}
 %	IMPORTANT To REMEMBER
 %----------------------------------------------------------------------------------------
 
-\begin{block}{Simulated data v.s. observed data}
+\begin{block}{Results}
+\begin{minipage}[c]{0.5\textwidth}
 \begin{figure}
-\includegraphics[width=0.85\textwidth]{../fig/simulated_data.pdf}
+\includegraphics[width=0.9\textwidth]{../fig/simulated_data.pdf}
+\caption{Simulated data v.s. observed data. Each point represents mean proportion infected and sexual at each site.}
 \end{figure}
+\end{minipage}
 \begin{minipage}[c]{0.5\textwidth}
 \begin{itemize}
-    \item spatial structure allows high level of infection to be maintained even at high virulence
-    \item initially increasing prevalence of sexual reproduction pulls back infection (consistent with \cite{lively2001trematode}) and causes prevalence of infection to decrease; quadratic overall
-    \item fitted result does not appear to match Dagan \etal\ \cite{dagan2013clonal}.
+    \item fitted result does not appear to match Dagan \etal\ \cite{dagan2013clonal}
+    \item overestimates proportion infected when fitted to McKone \etal\ \cite{mckone2016fine}
+    \item spatial structure allow shigh level of infection to be maintained even at high virulence (middle panel)
+    \item initially increasing prevalence of sexual reproduction pulls back infection (consistent with \cite{lively2001trematode}) and causes prevalence of infection to decrease; quadratic overall?
+\end{itemize}
+\end{minipage}
+\begin{minipage}[c]{0.35\textwidth}
+\begin{itemize}
+    \item better to increase number of sites than number of samples
+    \item spearman's rank correlation has higher power for detecting a positive correlation than Pearson correlation
+    \item a negative correlation is observed from simulated data fitted to vergara \etal\
+    \item very low power for detecting a negative quadratic curvature
 \end{itemize}
 \vfill
 \end{minipage}
-\begin{minipage}[c]{0.5\textwidth}
-\includegraphics[width=0.85\textwidth]{../fig/true_effect.pdf}
+\begin{minipage}[c]{0.65\textwidth}
+\vspace*{20px}
+\begin{figure}
+\includegraphics[width=1\textwidth]{../fig/power.pdf}
+\caption{Power analysis for detecting a correlation and negative quadratic curvature.}
+\end{figure}
 \end{minipage}
 \end{block} 
 
@@ -215,7 +233,7 @@ McKone \etal\ \cite{mckone2016fine}
 \setbeamertemplate{bibliography entry title}{}
 \setbeamertemplate{bibliography entry location}{}
 \setbeamertemplate{bibliography entry note}{}
-\bibliographystyle{plain}
+\bibliographystyle{unsrt}
 \bibliography{../misc/redqueen}
 }
 \end{block}

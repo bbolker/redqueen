@@ -6,7 +6,7 @@ gens <- 1001
 
 sites <- seq(10, 30, by=10)
 samples <- seq(25, 150, by=25)
-nsim <- 10
+nsim <- 100
 
 simlist <- list(
     dagan=simlist$dagan[[3]],
@@ -15,8 +15,9 @@ simlist <- list(
 )
 
 test_list <- list(
+    pearson=test_lm,
     spearman=test_spearman,
-    quadratic_rq=test_quad_rq
+    quadratic=test_quad
 )
 
 reslist <- list()
@@ -30,7 +31,6 @@ for(sim_name in names(simlist)) {
     for(i in 1:length(samples)) {
         print(i)
         set.seed(i)
-        gg <- 1001
         
         res <- lapply(sites,
             function(x) powerfun(
@@ -40,7 +40,7 @@ for(sim_name in names(simlist)) {
                 nsim=nsim,
                 test=test_list,
                 transform="raw",
-                target.gen=gg,
+                target.gen=gens,
                 verbose=FALSE
             )
         )
@@ -60,4 +60,3 @@ for(sim_name in names(simlist)) {
 }
 
 save("reslist", file="fitted_power.rda")
-

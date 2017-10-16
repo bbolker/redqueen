@@ -1,7 +1,21 @@
-library(ggplot2); theme_set(theme_bw())
 library(tidyr)
 library(dplyr)
+library(ggplot2); theme_set(theme_bw(base_size = 12,
+                                     base_family = "Times"))
+library(gridExtra)
 load("../data/fitted_power.rda")
+load("../data/SMC_summary.rda")
+
+scale_colour_discrete <- function(...,palette="Set1") scale_colour_brewer(...,palette=palette)
+scale_fill_discrete <- function(...,palette="Set1") scale_fill_brewer(...,palette=palette)
+
+if (.Platform$OS.type=="windows") {
+    windowsFonts(Times=windowsFont("Times"))
+} 
+
+data_name <- c(expression(Dagan~italic(et~al.)~"(2005)"), 
+               expression(McKone~italic(et~al.)~"(2016)"), 
+               expression(Vergara~italic(et~al.)~"(2014)"))
 
 level <- 0.05
 
@@ -24,14 +38,45 @@ sig_simdf <- simdf %>%
               negative.power=mean(p.value<=level & effect.size < 0)) %>%
     gather(key, value, -data, -test, -sites, -samples) %>%
     group_by() %>%
-    mutate(key=factor(key, labels=c("negative effect", "positive effect")))
+    mutate(key=factor(key, labels=c("negative~effect", "positive~effect")))
 
-ggplot(sig_simdf, aes(samples, value, group=sites, col=sites)) +
+spearman_power <- sig_simdf %>%
+    filter(test=="spearman") %>%
+    mutate(data=factor(data, labels=data_name))
+
+pearson_power <- sig_simdf %>%
+    filter(test=="pearson") %>%
+    mutate(data=factor(data, labels=data_name))
+
+quadratic_power <- sig_simdf %>%
+    filter(test=="quadratic") %>%
+    mutate(data=factor(data, labels=data_name))
+
+gg_spearman_power <- ggplot(spearman_power, aes(samples, value, group=sites, col=sites)) +
+    ggtitle("Spearman's rank correlation") +
     geom_point() +
     geom_line() +
     scale_y_continuous(name="power", limits=c(0,1)) +
-    scale_x_continuous(name="number of samples") +
-    facet_grid(data~test+key)
+    scale_x_continuous(name="number of samples per site") +
+    facet_grid(data~key, labeller=label_parsed) +
+    scale_color_discrete(name="number of sites") +
+    theme(plot.title = element_text(hjust = 0.5),
+          strip.background = element_blank(),
+          panel.border = element_rect(colour = "black"),
+          panel.grid=element_blank(),
+          panel.spacing=grid::unit(0,"lines"),
+          legend.position="none")
+
+gg_pearson_power <- gg_spearman_power %+% pearson_power +
+    ggtitle("Pearson correlation") +
+    theme(legend.position = c(0.2, 0.88))
+
+gg_quadratic_power <- gg_spearman_power %+% quadratic_power +
+    ggtitle("Quadratic regression")
+
+gg_comb <- arrangeGrob(gg_pearson_power, gg_spearman_power, gg_quadratic_power, nrow=1)
+
+ggsave("power.pdf", gg_comb, width=12, height=6)
 
 sumdf <- simdf %>%
     group_by(data, test, sites, samples) %>%

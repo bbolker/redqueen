@@ -166,60 +166,82 @@ vergara <- vergara %>%
         pinf=mean(Microphallus),
         psex=mean(Ploidy=="sexual")
     ) %>%
-    group_by() %>%
+    group_by() 
+
+vergara_obs <- vergara %>%
     select(pinf, psex)
+
+vergara_mean <- vergara %>%
+    group_by(Site) %>%
+    summarize(
+        pinf=mean(pinf),
+        psex=mean(psex)
+    ) %>%
+    group_by() %>%
+    select(pinf, psex) %>%
+    mutate(data=paste(data_name[3]))
 
 dagan <- dagan %>%
     mutate(psex=2*Males) %>%
     rename(pinf=Infected) %>%
     select(pinf, psex)
 
-aggr <- list(mckone=mckone, vergara=vergara, dagan=dagan) %>%
+aggr <- list(mckone=mckone, vergara=vergara_obs, dagan=dagan) %>%
     bind_rows(.id="data") %>%
-    mutate(data=factor(data, labels=data_name))
+    mutate(data=factor(data, labels=data_name), sim=NA) 
 
 comb_sim <- dflist %>%
     lapply(bind_rows, .id="sim") %>%
     bind_rows(.id="data") %>%
     rename(pinf=infected, psex=sexual) %>%
-    mutate(data=factor(data, labels=data_name))
+    mutate(data=factor(data, labels=data_name)) %>%
+    bind_rows(aggr, .id="type") %>%
+    mutate(type= factor(type, labels=c("simulated data", "observed data"))) %>%
+    as.tbl
 
-gsim <- ggplot(comb_sim, aes(pinf, psex, col=data, fill=data)) +
-    geom_point(alpha=0.1) + 
+gsim <- ggplot(comb_sim, aes(pinf, psex, col=data)) +
+    geom_point(aes(shape=type, alpha=type)) + 
     geom_point(data=aggr, pch=2, size=2.5, col="black") +
-    scale_x_continuous(name="Proportion infected", breaks=seq(0,1,0.2), expand=c(0, 0.07)) +
-    scale_y_continuous(name="Proportion sexual", breaks=seq(0,1,0.2)) +
+    scale_x_continuous(name="proportion infected", breaks=seq(0,1,0.2), expand=c(0, 0.07)) +
+    scale_y_continuous(name="proportion sexual", breaks=seq(0,1,0.2)) +
     facet_grid(~data, labeller = label_parsed) +
+    scale_shape_manual(values=c(16, 2)) +
+    scale_alpha_discrete(range=c(0.1, 0), guide=FALSE) +
+    scale_color_discrete(guide=FALSE) +
     theme(
         panel.spacing=grid::unit(0,"lines"),
         strip.background = element_blank(),
         panel.border = element_rect(colour = "black"),
-        panel.grid = element_blank(),
-        legend.position="none"
+        panel.grid=element_blank(),
+        legend.position=c(0.105, 0.83),
+        legend.title = element_blank()
     )
 
-pround <- 0.05
-
-comb_sim2 <- comb_sim %>%
-    mutate(pinf=round(pinf/pround)*pround, psex=round(psex/pround)*pround) %>%
-    group_by(data, pinf, psex) %>%
-    tally %>%
-    group_by(data) %>%
-    mutate(intensity=2*plogis(n/max(n), location=0, scale=0.1)-1)
-
-gsim_tally <- ggplot(comb_sim2, aes(pinf, psex, fill=data)) +
-    geom_raster(aes(alpha=intensity)) +
-    geom_point(data=aggr, pch=2, size=2.5, col="black") +
-    scale_x_continuous(name="Proportion infected", breaks=seq(0,1,0.2), expand=c(0, 0.07)) +
-    scale_y_continuous(name="Proportion sexual", breaks=seq(0,1,0.2)) +
-    facet_grid(~data, labeller = label_parsed) +
-    theme(
-        panel.spacing=grid::unit(0,"lines"),
-        strip.background = element_blank(),
-        panel.border = element_rect(colour = "black"),
-        panel.grid = element_blank(),
-        legend.position="none"
-    )
+## experimental but probably deprecated and not necessary
+if (FALSE) {
+    pround <- 0.05
+    
+    comb_sim2 <- comb_sim %>%
+        mutate(pinf=round(pinf/pround)*pround, psex=round(psex/pround)*pround) %>%
+        group_by(data, pinf, psex) %>%
+        tally %>%
+        group_by(data) %>%
+        mutate(intensity=2*plogis(n/max(n), location=0, scale=0.1)-1)
+    
+    gsim_tally <- ggplot(comb_sim2, aes(pinf, psex, fill=data)) +
+        geom_raster(aes(alpha=intensity)) +
+        geom_point(data=aggr, pch=2, size=2.5, col="black") +
+        scale_x_continuous(name="Proportion infected", breaks=seq(0,1,0.2), expand=c(0, 0.07)) +
+        scale_y_continuous(name="Proportion sexual", breaks=seq(0,1,0.2)) +
+        facet_grid(~data, labeller = label_parsed) +
+        theme(
+            panel.spacing=grid::unit(0,"lines"),
+            strip.background = element_blank(),
+            panel.border = element_rect(colour = "black"),
+            panel.grid = element_blank(),
+            legend.position="none"
+        )
+}
 
 if (save) ggsave("simulated_data.pdf", gsim, width=7, height=3)
 

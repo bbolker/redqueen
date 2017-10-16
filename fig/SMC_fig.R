@@ -74,7 +74,8 @@ gpar <- ggplot(NULL, aes(col=run, group=run)) +
         axis.text.y=element_blank(),
         axis.ticks.y=element_blank(),
         panel.grid=element_blank(),
-        panel.spacing=grid::unit(0,"lines")
+        panel.spacing=grid::unit(0,"lines"),
+        plot.margin=unit(c(1,0.1,1,0.1), "cm")
     )
 
 parlist_factor <- clean_list$parlist %>%
@@ -165,15 +166,27 @@ ghist <- parlist_factor %>%
             strip.background = element_blank(),
             panel.border = element_rect(colour = "black"),
             panel.grid=element_blank(),
-            panel.spacing=grid::unit(0,"lines"))
+            panel.spacing=grid::unit(0,"lines"),
+            plot.margin=unit(c(1,0.3,1,0.1), "cm"))
 
 glist$plot <- lapply(glist$plot, function(x) {x$layers <- rev(x$layers); x})
 
 gg <- append(glist$plot, list(`asex[genotype]`=ghist))
 
-gg_smc_param <- do.call(arrangeGrob, list(grobs=gg, nrow=1))
+gg_smc_param <- do.call(arrangeGrob, list(grobs=gg, nrow=1, widths=c(0.9, 0.9, 0.9, 0.9, 0.9, 1.1)))
 
 if (save) ggsave("smc_param.pdf", gg_smc_param, width=8, height=5)
+
+gg_reduced <- gg[c("beta[meanlog]", "beta[sdlog]", "c[b]", "V")] %>%
+    lapply(function(g) g +  theme(plot.margin=unit(c(1,0.05,1,0.05), "cm")))
+
+gg_reduced$V <- gg_reduced$V +
+    theme(plot.margin=unit(c(1,0.5,1,0.05),"cm"),
+          strip.text.y=element_text(angle=-90, hjust=1))
+
+gg_smc_param_reduced <- do.call(arrangeGrob, list(grobs=gg_reduced, nrow=1, widths=c(0.9, 0.9, 0.9, 1)))
+
+if (save) ggsave("smc_param_red.pdf", gg_smc_param_reduced, width=8, height=5)
 
 summ_df <- comb_summ  %>%
     lapply(function(x) as.list(x[[1]])) %>%

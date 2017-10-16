@@ -10,7 +10,7 @@ test_quad <- function(sample) {
     fit <- lm(sexual~I(infected)+I(infected^2), data=sample)
     ss <- summary(fit)
     data.frame(
-        effect.size=ss$coefficients[3,3],
+        effect.size=fit$coefficients[3],
         p.value=ifelse(is.na(fit$coefficients[3]), NA, summary(fit)$coefficients[3,'Pr(>|t|)']) 
     )
 }
@@ -121,7 +121,6 @@ powerfun <- function(simlist,
         testlist <- vector("list", nsim)
         for (j in 1:nsim) {
             sample <- sample_sim(sim, nsample, nsite, transform, target.gen)
-            save("sample", file="bug2.rda")
             suppressWarnings(testres <- lapply(test, function(test) test(sample)))
             tt <- do.call("rbind", testres)
             tt$test <- names(testres)
