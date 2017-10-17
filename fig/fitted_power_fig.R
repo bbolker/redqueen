@@ -1,6 +1,6 @@
 library(tidyr)
 library(dplyr)
-library(ggplot2); theme_set(theme_bw(base_size = 12,
+library(ggplot2); theme_set(theme_bw(base_size = 14,
                                      base_family = "Times"))
 library(gridExtra)
 load("../data/fitted_power.rda")
@@ -12,6 +12,8 @@ scale_fill_discrete <- function(...,palette="Set1") scale_fill_brewer(...,palett
 if (.Platform$OS.type=="windows") {
     windowsFonts(Times=windowsFont("Times"))
 } 
+
+save <- FALSE
 
 data_name <- c(expression(Dagan~italic(et~al.)~"(2005)"), 
                expression(McKone~italic(et~al.)~"(2016)"), 
@@ -69,14 +71,14 @@ gg_spearman_power <- ggplot(spearman_power, aes(samples, value, group=sites, col
 
 gg_pearson_power <- gg_spearman_power %+% pearson_power +
     ggtitle("Pearson correlation") +
-    theme(legend.position = c(0.2, 0.88))
+    theme(legend.position = c(0.24, 0.88))
 
 gg_quadratic_power <- gg_spearman_power %+% quadratic_power +
     ggtitle("Quadratic regression")
 
 gg_comb <- arrangeGrob(gg_pearson_power, gg_spearman_power, gg_quadratic_power, nrow=1)
 
-ggsave("power.pdf", gg_comb, width=12, height=6)
+if (save) ggsave("power.pdf", gg_comb, width=12, height=6)
 
 sumdf <- simdf %>%
     group_by(data, test, sites, samples) %>%

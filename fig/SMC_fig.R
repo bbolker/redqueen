@@ -2,7 +2,7 @@ library(emdbook)
 library(readxl)
 library(dplyr)
 library(tidyr)
-library(ggplot2); theme_set(theme_bw(base_size = 12,
+library(ggplot2); theme_set(theme_bw(base_size = 14,
                                      base_family = "Times"))
 library(grid)
 library(gridExtra)
@@ -178,10 +178,10 @@ gg_smc_param <- do.call(arrangeGrob, list(grobs=gg, nrow=1, widths=c(0.9, 0.9, 0
 if (save) ggsave("smc_param.pdf", gg_smc_param, width=8, height=5)
 
 gg_reduced <- gg[c("beta[meanlog]", "beta[sdlog]", "c[b]", "V")] %>%
-    lapply(function(g) g +  theme(plot.margin=unit(c(1,0.05,1,0.05), "cm")))
+    lapply(function(g) g +  theme(plot.margin=unit(c(0.2,0.05,0.2,0.05), "cm")))
 
 gg_reduced$V <- gg_reduced$V +
-    theme(plot.margin=unit(c(1,0.5,1,0.05),"cm"),
+    theme(plot.margin=unit(c(0.2,0.5,0.2,0.05),"cm"),
           strip.text.y=element_text(angle=-90, hjust=1))
 
 gg_smc_param_reduced <- do.call(arrangeGrob, list(grobs=gg_reduced, nrow=1, widths=c(0.9, 0.9, 0.9, 1)))

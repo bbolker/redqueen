@@ -1,7 +1,7 @@
 library(dplyr)
 library(tidyr)
 library(gridExtra)
-library(ggplot2); theme_set(theme_bw(base_size = 12,
+library(ggplot2); theme_set(theme_bw(base_size = 14,
                                      base_family = "Times"))
 library(readxl)
 source("../R/powerfun.R")
@@ -213,7 +213,7 @@ gsim <- ggplot(comb_sim, aes(pinf, psex, col=data)) +
         strip.background = element_blank(),
         panel.border = element_rect(colour = "black"),
         panel.grid=element_blank(),
-        legend.position=c(0.105, 0.83),
+        legend.position=c(0.11, 0.82),
         legend.title = element_blank()
     )
 

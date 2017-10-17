@@ -68,7 +68,7 @@
 \begin{column}{\onecolwid} % The first column
 
 \begin{alertblock}{Summary}
-Why must \textbf{sexual reproduction} persist in nature given its \textbf{twofold cost}? The \textbf{Red Queen Hypothesis} predicts sexually reproducing individuals to overcome the cost of sex by escaping infection more easily under strong parasite selection. Here, we tried to quantify the effect of the Red Queen and perform a power analysis.
+Why must \textbf{sexual reproduction} persist in nature given its \textbf{two-fold cost}? The \textbf{Red Queen Hypothesis} predicts sexually reproducing individuals to overcome the cost of sex by escaping infection more easily under strong parasite selection. Here, we tried to quantify the effect of the Red Queen and perform a power analysis.
 \end{alertblock}
 
 %----------------------------------------------------------------------------------------
@@ -77,8 +77,8 @@ Why must \textbf{sexual reproduction} persist in nature given its \textbf{twofol
 
 \begin{block}{Evolution of sex}
 \begin{itemize}
-    \item \textbf{Two fold cost of sex}: (1) cost of producing males and (2) cost of meiosis
-    \item the two fold cost of cost of sex asumes that \textbf{all else is equal}
+    \item \textbf{Two-fold cost of sex}: (1) cost of producing males and (2) cost of meiosis
+    \item the two-fold cost of cost of sex asumes that \textbf{all else is equal}
     \item only 0.01\% eukaryotes conform to purely asexual reproduction. How?
 \end{itemize}
 \end{block}
@@ -93,7 +93,7 @@ Why must \textbf{sexual reproduction} persist in nature given its \textbf{twofol
     \item sexual reproduction creates rare genotypes that can escape infection (\textbf{negative frequncy dependence})
     \item snail population in New Zealand (host for sterilizing trematode infection) is believed to support the hypothesis \cite{vergara2014infection}
     \item prevalence of sex should be \textbf{positively correlated} with prevalence of infection \cite{lively2001trematode}
-    \item unable to detect any correlation in a similar snail-trematode system \cite{dagan2013clonal}
+    \item unable to detect any correlation in a similar snail-trematode system. Why? \cite{dagan2013clonal}
 \end{itemize}
 \end{block}
 
@@ -123,12 +123,13 @@ Why must \textbf{sexual reproduction} persist in nature given its \textbf{twofol
 \begin{block}{Mathematical model}
 \begin{figure}
 \includegraphics[width=0.9\textwidth]{../fig/model_diagram.pdf}
-\caption{Graphical representation of simulated events that occur in a habitat at each time step. Double lined arrows represent dynamics that are affected by mixing betwee habitats.}
+\caption{Graphical representation of the model. Double lined arrows represent dynamics that are affected by mixing betwee habitats.}
 \vspace{-1em}
 \end{figure}
 \begin{itemize}
     \item competition between obligate sexual ($S$) and clonal ($A$) population under parasite selection is represented by a mathematical model \cite{lively2010epidemiological}
     \item hosts stay within their habitats and can mix with hosts in different habitats
+    \item varying transmission rates across habitats
     \item relies on stochastic computer simulations
 \end{itemize}
 \end{block}
@@ -146,10 +147,14 @@ Why must \textbf{sexual reproduction} persist in nature given its \textbf{twofol
 \begin{block}{Approximate Bayesian Computation (ABC)}
 \begin{itemize}
     \item a random sample of parameters is drawn
-    \item a data simulated from the sample parameter is compared to the actual data using summary statistics (mean proportion of sex and infected and variation in mean across time/space)
+    \item simulated data is compared to the observed data
     \item if the difference is small enough, the parameter sample that generated the data is \emph{accepted}
-    \item the process is repeated but parameters are sampled from deviates of the aceepted parameters and lower acceptance rate is used
+    \item repeated until enough sample is obtained
 \end{itemize}
+\begin{figure}
+\includegraphics[width=1\textwidth]{../fig/smc_param_red.pdf}
+\caption{(black) prior distributions where parameters sampled from and (red) posterior distributions obtained from ABC}
+\end{figure}
 \end{block}
 
 %----------------------------------------------------------------------------------------
@@ -171,17 +176,17 @@ Why must \textbf{sexual reproduction} persist in nature given its \textbf{twofol
 \end{minipage}
 \begin{minipage}[c]{0.5\textwidth}
 \begin{itemize}
-    \item fitted result does not appear to match Dagan \etal\ \cite{dagan2013clonal}
+    \item fitted result does not match Dagan \etal\ \cite{dagan2013clonal}
     \item overestimates proportion infected when fitted to McKone \etal\ \cite{mckone2016fine}
-    \item spatial structure allow shigh level of infection to be maintained even at high virulence (middle panel)
+    \item spatial structure allows high level of infection to be maintained even at high virulence (middle panel)
     \item initially increasing prevalence of sexual reproduction pulls back infection (consistent with \cite{lively2001trematode}) and causes prevalence of infection to decrease; quadratic overall?
 \end{itemize}
 \end{minipage}
 \begin{minipage}[c]{0.35\textwidth}
 \begin{itemize}
     \item better to increase number of sites than number of samples
-    \item spearman's rank correlation has higher power for detecting a positive correlation than Pearson correlation
-    \item a negative correlation is observed from simulated data fitted to vergara \etal\
+    \item Spearman's rank correlation has higher power for detecting a positive correlation than Pearson correlation
+    \item a negative correlation is observed from simulated data fitted to Vergara \etal\
     \item very low power for detecting a negative quadratic curvature
 \end{itemize}
 \vfill
@@ -205,18 +210,24 @@ Why must \textbf{sexual reproduction} persist in nature given its \textbf{twofol
 %	CONCLUSION
 %----------------------------------------------------------------------------------------
 
-\begin{block}{Cycles and spatial structure}
+\begin{block}{Discussion}
+\begin{figure}
+\includegraphics[width=\textwidth]{../fig/cycle_example.pdf}
+\caption{A sample data from a posterior sample. (left) type of cycles present in a simulated data (right) observed relationship v.s. expected relationship. (dashed line) quadratic regression.}
+\vspace{-1em}
+\end{figure}
 \begin{itemize}
-    \item Insert a figure
+    \item "expected effect" is masked by different cycles (explains low power)
+    \item high asexual diversity \cite{dagan2013clonal} and different environment (e.g., seasonal flood \cite{ben2007temporal} and highly interconnected but diverse \cite{dagan2013clonal}) may not be appropriate for the Red Queen Hypothesis?
+    \item unusual sampling problems in nature (\cite{vergara2014infection} v.s. \cite{vergara2013geographic})
 \end{itemize}
 \end{block}
 
-\begin{alertblock}{Discussion and further questions}
+\begin{alertblock}{Conclusion and further questions}
 \begin{itemize}
-    \item High asexual diversity \cite{dagan2013clonal} and different environment (e.g., seasonal flood \cite{ben2007temporal} and highly interconnected sites \cite{dagan2013clonal}) may not be appropriate for the Red Queen Hypothesis?
-    \item Detecting a positive correlation is not easy; [CITE] used a simple model. What about [CITE]?
-    \item expected relationship may be masked by different cycles but may be recovered with high spatial mixing
-    \item try test for risk rather than looking at prevalence?
+    \item spatial data provides limited information; only Vergara \etal\ \cite{vergara2014infection} had spatiotemporal data
+    \item is there a way to detect the Red Queen cycles from a spatiotemporal data?
+    \item consider pluralistic approach (Red Queen hypothesis + other mechanisms for maintaining sex)
 \end{itemize}
 \end{alertblock}
 
