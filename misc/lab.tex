@@ -214,9 +214,9 @@ $G_{\textrm{asex}}$ & $\mathrm{BetaBinom}(\textrm{size}=9, \textrm{prob}=5/9, \t
     \item perform ABC with high tolerance; perform ABC again but draw a weighted sample from the accepted values instead and "jump"
     \item modified Population Monte Carlo suggested by \cite{turner2012tutorial}. Parameters were transformed to an unconstrained scale (possible for all except $G_{\textrm{asex}}$) and jump through gaussian kernel independently for each parameter:
     $$
-    q(\cdot | \theta_i^\ast) \sim \mathrm{Normal}(\mu = \theta_i^\ast, \sigma^2 = 2\mathrm{Var}(\theta_{i, t-1, \textrm{unconstrained}})),
+    q(\cdot | \theta_i^\ast) \sim \mathrm{Normal}(\mu = \theta_i^\ast, \sigma^2 = 2\mathrm{Var}(\theta_{i, t-1})),
     $$
-    where $\theta_i^\ast$ is the $i$-th parameter of an accepted parameter sample, $\theta^\ast$, from the last run (a sample we're jumping from) and $\theta_{\textrm{unconstrained}, t-1}$ is the marginal set of accepted $i$-th parameters from the last run,
+    where $\theta_i^\ast$ is the $i$-th parameter of a transformed accepted parameter sample, $\theta^\ast$, from the last run (a sample we're jumping from) and $\theta_{t-1}$ is the marginal set of accepted $i$-th parameters from the last run,
     \item binomial jump for $G_{\textrm{asex}}$ but prevent it from fixing:
     $$
     q(\cdot | G_{\textrm{asex}}^\ast) \sim \mathrm{Binomial}(\textrm{size}=9, p=(G_{\textrm{asex}}^\ast-0.5)/10)) + 1
@@ -260,6 +260,14 @@ $G_{\textrm{asex}}$ & $\mathrm{BetaBinom}(\textrm{size}=9, \textrm{prob}=5/9, \t
 \includegraphics[width=0.8\textwidth]{../fig/cycle_example.pdf}
 \caption{A sample data from a posterior sample. (left) type of cycles present in a simulated data (right) observed relationship v.s. expected relationship. (dashed line) quadratic regression.}
 \vspace{-1em}
+\end{figure}
+\end{frame}
+
+\begin{frame}{Discussion - Why low power?}
+\begin{figure}
+\includegraphics[width=0.8\textwidth]{../fig/sensitivity.pdf}
+\vspace{-1em}
+\caption{sensisivity plot of observed relationship v.s. expected relationship.}
 \end{figure}
 \end{frame}
 

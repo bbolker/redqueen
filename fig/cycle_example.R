@@ -5,6 +5,13 @@ library(ggplot2); theme_set(theme_bw(base_size = 14,
 library(gridExtra)
 load("../data/SMC_summary.rda")
 
+cbPalette <- c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
+
+if (.Platform$OS.type=="windows") {
+    windowsFonts(Times=windowsFont("Times"))
+} 
+
+
 save <- FALSE
 
 gen <- 1001:1100
@@ -52,7 +59,8 @@ cclass <- list(
     bind_rows(.id="cycle")
 
 sitedf <- df1 %>%
-    filter(site %in% c(1, 11, 16, 18), gen < 1025) %>%
+    filter(site %in% c(1, 11, 16, 18)) %>%
+    filter(gen < 1025) %>%
     merge(cclass) %>%
     mutate(cycle=factor(cycle, levels=c("t1", "t2", "t3", "t4"))) %>%
     arrange(cycle)
@@ -71,7 +79,7 @@ gcycle <- ggplot(sitedf, aes(gen, value, col=cycle, pch=key, linetype=key)) +
     geom_line() +
     scale_y_continuous("proportion", limits=c(0,1), expand=c(0, 0.1)) +
     scale_x_continuous("generation", expand=c(0,0)) +
-    scale_color_discrete(guide=FALSE) +
+    scale_colour_manual(values=cbPalette, guide=FALSE) +
     facet_grid(cycle~.) +
     theme(
         strip.background = element_blank(),
@@ -96,6 +104,7 @@ gcomb <- ggplot(combdf, aes(infected, sexual)) +
     geom_smooth(method="lm", formula=y~poly(x, 2), se=FALSE, col=1, lty=2, fullrange=TRUE) +
     scale_x_continuous("proportion infected", limits=c(0, 1), expand=c(0,0)) +
     scale_y_continuous("proportion sexual", limits=c(0, 1)) +
+    scale_colour_manual(values=cbPalette, guide=FALSE) +
     scale_alpha_discrete(range=c(0.1, 1)) +
     scale_size_discrete(range=c(1, 2.5)) +
     facet_grid(type~.) +

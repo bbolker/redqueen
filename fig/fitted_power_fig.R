@@ -54,14 +54,16 @@ quadratic_power <- sig_simdf %>%
     filter(test=="quadratic") %>%
     mutate(data=factor(data, labels=data_name))
 
-gg_spearman_power <- ggplot(spearman_power, aes(samples, value, group=sites, col=sites)) +
+gg_spearman_power <- ggplot(spearman_power, aes(samples, value, group=sites, col=data, shape=sites, linetype=sites)) +
     ggtitle("Spearman's rank correlation") +
     geom_point() +
     geom_line() +
     scale_y_continuous(name="power", limits=c(0,1)) +
     scale_x_continuous(name="number of samples per site") +
     facet_grid(data~key, labeller=label_parsed) +
-    scale_color_discrete(name="number of sites") +
+    scale_color_discrete(guide=FALSE) +
+    scale_shape_discrete(name="number of sites") +
+    scale_linetype_discrete(name="number of sites") +
     theme(plot.title = element_text(hjust = 0.5),
           strip.background = element_blank(),
           panel.border = element_rect(colour = "black"),

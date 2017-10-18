@@ -1,6 +1,6 @@
 library(dplyr)
 library(tidyr)
-library(ggplot2); theme_set(theme_bw(base_size = 12,
+library(ggplot2); theme_set(theme_bw(base_size = 14,
                                      base_family = "Times"))
 
 scale_colour_discrete <- function(...,palette="Set1") scale_colour_brewer(...,palette=palette)
@@ -25,7 +25,7 @@ temporal_effect <- effect_list %>%
     rename(test=key)
      
 true_effect <- resdf %>%
-    filter(test %in% c("spearman", "quantile_quad"), transformation=="raw")  %>%
+    filter(test %in% c("spearman", "quad"), transformation=="raw")  %>%
     mutate(test=factor(test, labels=c("quad", "spearman"))) %>%
     as.tbl %>%
     select(-c(transformation, tgroup)) %>%
@@ -45,37 +45,33 @@ sensitivity <- clean_list$parlist %>%
     as.tbl %>%
     merge(relative_effect)
 
-sensitivity_epsilon <- sensitivity %>%
+gsens <- sensitivity %>%
     as.tbl %>%
-    filter(param=="epsilon.site") %>%
+    select(-relative.effect) %>%
+    gather(key, value, -data, -param, -param.value,-test, -sim) %>%
+    filter(param %in% c("beta.meanlog", "beta.sdlog")) %>%
+    filter(test=="spearman") %>%
     mutate(data=factor(data, labels=data_name),
-           test=factor(test, labels=c(
-               expression("Spearman's"~rho),
-               "Quantile~regression~(tau==0.9)"
-           )))
+           param=factor(param, labels=c("beta[meanlog]", "beta[sdlog]")),
+           key=factor(key, labels=c("observed~effect", "expected~effect")))
 
-ggplot(sensitivity_epsilon, aes(param.value, relative.effect, col=data)) +
-    geom_point() +
-    geom_hline(yintercept=1, lty=2) +
-    geom_hline(yintercept=0, lty=1) +
-    facet_grid(test~param, scale="free", labeller=label_parsed)
-
-ggplot(sensitivity, aes(param.value, temporal.effect, col=data)) +
-    geom_point() +
-    geom_smooth(method="lm") +
-    geom_hline(yintercept=0, lty=1) +
-    facet_grid(test~param, scale="free") 
-
-ggplot(sensitivity, aes(param.value, true.effect, col=data)) +
-    geom_point() +
-    geom_smooth(method="lm") +
-    geom_hline(yintercept=0, lty=1) +
-    facet_grid(test~param, scale="free") 
-
-ggplot(sensitivity, aes(true.effect, temporal.effect)) +
-    geom_point() +
+ggsens <- ggplot(gsens, aes(param.value, value)) +
+    geom_point(aes(col=data)) +
+    geom_smooth(span=0.9, col="black", lty=1) +
     geom_hline(yintercept=0, lty=2) +
-    geom_vline(xintercept=0, lty=2) +
-    geom_abline(lty=1) +
-    facet_wrap(test~data, scale="free", nrow=2)
+    scale_colour_manual(name="data source", 
+                        labels=data_name,
+                        values=c("#E41A1C", "#4DAF4A", "#377EB8")) +
+    scale_x_continuous("parameter value", expand=c(0, 0)) +
+    scale_y_continuous("spearman rank correlation") +
+    facet_grid(key~param, scale="free", labeller=label_parsed) +
+    theme(
+        strip.background = element_blank(),
+        panel.border = element_rect(colour = "black"),
+        panel.grid=element_blank(),
+        panel.spacing=grid::unit(0,"lines"),
+        legend.position="top"
+    )
+
+if (save) ggsave("sensitivity.pdf", ggsens, width=8, height=6)
 
