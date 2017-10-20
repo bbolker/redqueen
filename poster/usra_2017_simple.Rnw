@@ -127,28 +127,23 @@
 %----------------------------------------------------------------------------------------
 
 \begin{block}{Methods}
-\begin{minipage}[c]{0.48\textwidth}
+\begin{minipage}[c]{0.4\textwidth}
 \begin{enumerate}
 \setlength\itemsep{0.3em}
     \item \ developed a mathematical model that represent the evolution of the snail population
-    \begin{itemize} 
-        \item each population is composed of both asexual ($A$) and sexual ($S$) hosts
-        \item infected hosts can infect others
-        \item hosts reproduce within their population but some can move to other populations
-    \end{itemize}
     \item \ the model can be simulated to generate data
     \item \ found parameters of the model that made simulated data similar to the observed data
+    \item \ compared our model to three different snail-trematode systems; one from Israel \cite{dagan2013clonal} and two from New Zealand \cite{mckone2016fine, vergara2014infection}
 \end{enumerate}
 \end{minipage}
 \begin{minipage}[c]{0.04\textwidth}
 \end{minipage}
-\begin{minipage}[c]{0.48\textwidth}
+\begin{minipage}[c]{0.56\textwidth}
 \begin{figure}
-\includegraphics[width=1\textwidth]{../fig/model_diagram.pdf}
-\caption{Graphical representation of the model.}
+\includegraphics[width=0.9\textwidth]{../fig/model_diagram.pdf}
+\caption{\textbf{Graphical representation of the model}. Each population is composed of both asexual ($A$) and sexual ($S$) hosts. An infected host can infect susceptible hosts if it carries a matching parasite. Hosts can move to other populations.}
 \vspace{-1em}
 \end{figure}
-\vfill
 \end{minipage}
 \vspace{-1em}
 \end{block}
@@ -162,12 +157,12 @@
 
 \begin{block}{Results}
 \begin{figure}
-\includegraphics[width=0.9\textwidth]{../fig/simulated_data.pdf}
+\includegraphics[width=\textwidth]{../fig/simulated_data.pdf}
 \caption{\textbf{Simulated data v.s. observed data}. (triangle) each point represents an observation from a study site in one year (circle) proportion of sexual hosts and proportion of infected hosts in a simulated population averaged over 100 generations. 50 simulations are plotted and each simulation consists of 30 populations.}
 \end{figure}
 \vspace{-1em}
 \begin{itemize}
-    \item this model is not appropriate for studying the snail population in Israel (left panel; Dagan \etal\ \cite{dagan2013clonal}); need to consider other hypotheses for the maintenance of sex?
+    \item this model is not appropriate for studying the snail population in Israel (left panel: Dagan \etal\ \cite{dagan2013clonal}); need to consider other hypotheses for the maintenance of sex?
     \item when a population is dominated by asexual reproduction, stronger parasite infection leads to increase in sexual reproduction but decrease in proportion infected; opposite to Lively's prediction \cite{lively2001trematode}
     \item even stronger infection leads to balance between sexual and asexual reproduction (hump in the intermediate zone) and eventually decrease in advantage of sexual reproduction
 \end{itemize}
@@ -198,7 +193,7 @@
 \begin{alertblock}{Conclusion and further questions}
 \vspace{0.05em}
 \begin{itemize}
-    \item sexual populations "run away" (to escape infection) from parasites but parasites "chase" (to infect more) sexual populations, creating an oscillation; depending on where the population is in the cycle, we can observe a wide range of trends
+    \item sexual population "runs away" (to escape infection) from parasites but parasites "chase" (to infect more) sexual populations, creating an oscillation; depending on where the population is in the cycle, we can observe a wide range of trends
     \item what kind of data and tests are needed to detect oscillation in the population?
 \end{itemize}
 \end{alertblock}
