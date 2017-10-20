@@ -1,7 +1,9 @@
 
 \documentclass[final]{beamer}
 
-\usepackage[scale=1.24]{beamerposter} % Use the beamerposter package for laying out the poster
+\usepackage[scale=1.4]{beamerposter} % Use the beamerposter package for laying out the poster
+
+\usepackage[labelfont=bf]{caption}
 
 \usetheme{confposter} % Use the confposter theme supplied with this template
 
@@ -26,8 +28,8 @@
 \setlength{\paperwidth}{48in} % A0 width: 46.8in
 \setlength{\paperheight}{36in} % A0 height: 33.1in
 \setlength{\sepwid}{0.024\paperwidth} % Separation width (white space) between columns
-\setlength{\onecolwid}{0.22\paperwidth} % Width of one column
-\setlength{\twocolwid}{0.464\paperwidth} % Width of two columns
+\setlength{\onecolwid}{0.25\paperwidth} % Width of one column
+\setlength{\twocolwid}{0.404\paperwidth} % Width of two columns
 \setlength{\threecolwid}{0.708\paperwidth} % Width of three columns
 \setlength{\topmargin}{-0.5in} % Reduce the top margin size
 %-----------------------------------------------------------
@@ -37,7 +39,6 @@
 \usepackage{booktabs} % Top and bottom rules for tables
 
 \newcommand{\etal}{\emph{et al.}}
-
 
 %----------------------------------------------------------------------------------------
 %	TITLE SECTION 
@@ -67,39 +68,42 @@
 
 \begin{column}{\onecolwid} % The first column
 
-\begin{alertblock}{Summary}
-Why must \textbf{sexual reproduction} persist in nature given its \textbf{two-fold cost}? The \textbf{Red Queen Hypothesis} predicts sexually reproducing individuals to overcome the cost of sex by escaping infection more easily under strong parasite selection. Here, we tried to quantify the effect of the Red Queen and perform a power analysis.
-\end{alertblock}
-
-%----------------------------------------------------------------------------------------
-%	QUICK REVISION
-%----------------------------------------------------------------------------------------
-
 \begin{block}{Evolution of sex}
+\begin{minipage}[c]{0.65\textwidth}
 \begin{itemize}
-    \item \textbf{two modes of reproduction}: sexual and asexual
+    \setlength\itemsep{0.5em}
+    \item \textbf{two modes of reproduction}:
     \begin{itemize}
-        \item an asexual organism can reproduce alone
-        \item a sexual organism female requires a partner (male and female) to reproduce
+        \setlength\itemsep{0.3em}
+        \item \textbf{asexual} organisms can produce an offspring alone
+        \item \textbf{sexual} organisms require a male partner to produce an offspring
     \end{itemize}
-    \item sexual  population grows slower than asexual population because males cannot give birth
-    \item if sexual reproduction is worse, why do so many organisms reproduce sexually?
+    \item sexual population grows slower than asexual population because males cannot give birth; why do organisms reproduce sexually?
 \end{itemize}
+\end{minipage}
+\begin{minipage}[c]{0.34\textwidth}
+\hfill
+\includegraphics[width=0.9\textwidth]{cost.png}
+
+{\tiny \hfill Gibson \etal\ \cite{gibson2017two}}
+\end{minipage}
 \end{block}
 
 \begin{block}{Red Queen Hypothesis}
-\begin{figure}
-\includegraphics[width=0.9\textwidth]{McKone.png}
-\caption{Parasitism rate is positively correlated with male frequency \cite{mckone2016fine}.}
 \vspace{-1em}
+\begin{center}
+\begin{figure}
+\includegraphics[width=0.8\textwidth]{McKone.png}
+\caption{The snail population in a New Zealand lake \cite{mckone2016fine} follows the prediction made by Lively \cite{lively2001trematode}. Proportion of male snails is used as a measure of proportion of sexual snails in a population.}
 \end{figure}
+\end{center}
+\vspace{-1em}
 \begin{itemize}
+\setlength\itemsep{0.4em}
     \item snail population living in lakes in New Zealand coexist in both sexual and asexual forms
-    \item many snails are infected by trematodes
-    \item it is hypothesized that sexual reproduction is maintained in the snail population to \cite{vergara2014infection}
-    \item sexual reproduction combines parent genes and can create new genes
-    \item prevalence of sex should be \textbf{positively correlated} with prevalence of infection \cite{lively2001trematode}
-    \item unable to detect any correlation in a similar snail-trematode system. Why? \cite{dagan2013clonal}
+    \item the snail population serve as an important host for parasites called trematodes
+    \item hypothesis: sexually reproducing snails can produce snails with rare genes that are resistant to trematode infection \cite{vergara2014infection} (\textbf{Red Queen Hypothesis})
+    \item Lively \cite{lively2001trematode} predicted that population with more infected snails will have higher proportion of sexual snails; \textbf{how likely is it to observe this trend in nature?}
 \end{itemize}
 \end{block}
 
@@ -118,93 +122,56 @@ Why must \textbf{sexual reproduction} persist in nature given its \textbf{two-fo
 
 \begin{column}{\twocolwid} % Begin a column which is two columns wide (column 2)
 
-\begin{columns}[t,totalwidth=\twocolwid] % Split up the two columns wide column
-
-\begin{column}{\onecolwid}\vspace{-.6in} % The first column within column 2 (column 2.1)
-
 %----------------------------------------------------------------------------------------
 %	MATERIALS
 %----------------------------------------------------------------------------------------
 
-\begin{block}{Mathematical model}
+\begin{block}{Methods}
+\begin{minipage}[c]{0.48\textwidth}
+\begin{enumerate}
+\setlength\itemsep{0.3em}
+    \item \ developed a mathematical model that represent the evolution of the snail population
+    \begin{itemize} 
+        \item each population is composed of both asexual ($A$) and sexual ($S$) hosts
+        \item infected hosts can infect others
+        \item hosts reproduce within their population but some can move to other populations
+    \end{itemize}
+    \item \ the model can be simulated to generate data
+    \item \ found parameters of the model that made simulated data similar to the observed data
+\end{enumerate}
+\end{minipage}
+\begin{minipage}[c]{0.04\textwidth}
+\end{minipage}
+\begin{minipage}[c]{0.48\textwidth}
 \begin{figure}
-\includegraphics[width=0.9\textwidth]{../fig/model_diagram.pdf}
-\caption{Graphical representation of the model. Double lined arrows represent dynamics that are affected by mixing betwee habitats.}
+\includegraphics[width=1\textwidth]{../fig/model_diagram.pdf}
+\caption{Graphical representation of the model.}
 \vspace{-1em}
 \end{figure}
-\begin{itemize}
-    \item competition between obligate sexual ($S$) and clonal ($A$) population under parasite selection is represented by a mathematical model \cite{lively2010epidemiological}
-    \item hosts stay within their habitats and can mix with hosts in different habitats
-    \item varying transmission rates across habitats
-    \item relies on stochastic computer simulations
-\end{itemize}
+\vfill
+\end{minipage}
+\vspace{-1em}
 \end{block}
 
 %----------------------------------------------------------------------------------------
-
-\end{column} % End of column 2.1
-
-\begin{column}{\onecolwid}\vspace{-.6in} % The second column within column 2 (column 2.2)
-
-%----------------------------------------------------------------------------------------
-%	
-%----------------------------------------------------------------------------------------
-
-\begin{block}{Approximate Bayesian Computation (ABC)}
-\begin{itemize}
-    \item a random sample of parameters is drawn
-    \item simulated data is compared to the observed data
-    \item if the difference is small enough, the parameter sample that generated the data is \emph{accepted}
-    \item repeated until enough sample is obtained
-\end{itemize}
-\begin{figure}
-\includegraphics[width=1\textwidth]{../fig/smc_param_red.pdf}
-\caption{(black) prior distributions where parameters sampled from and (red) posterior distributions obtained from ABC}
-\end{figure}
-\end{block}
-
-%----------------------------------------------------------------------------------------
-
-\end{column} % End of column 2.2
-
-\end{columns} % End of the split of column 2 - any content after this will now take up 2 columns width
-
 %----------------------------------------------------------------------------------------
 %	IMPORTANT To REMEMBER
 %----------------------------------------------------------------------------------------
 
+\vskip 1cm
+
 \begin{block}{Results}
-\begin{minipage}[c]{0.5\textwidth}
 \begin{figure}
 \includegraphics[width=0.9\textwidth]{../fig/simulated_data.pdf}
-\caption{Simulated data v.s. observed data. Each point represents mean proportion infected and sexual at each site.}
+\caption{\textbf{Simulated data v.s. observed data}. (triangle) each point represents an observation from a study site in one year (circle) proportion of sexual hosts and proportion of infected hosts in a simulated population averaged over 100 generations. 50 simulations are plotted and each simulation consists of 30 populations.}
 \end{figure}
-\end{minipage}
-\begin{minipage}[c]{0.5\textwidth}
+\vspace{-1em}
 \begin{itemize}
-    \item fitted result does not match Dagan \etal\ \cite{dagan2013clonal}
-    \item overestimates proportion infected when fitted to McKone \etal\ \cite{mckone2016fine}
-    \item spatial structure allows high level of infection to be maintained even at high virulence (middle panel)
-    \item initially increasing prevalence of sexual reproduction pulls back infection (consistent with \cite{lively2001trematode}) and causes prevalence of infection to decrease; quadratic overall?
+    \item this model is not appropriate for studying the snail population in Israel (left panel; Dagan \etal\ \cite{dagan2013clonal}); need to consider other hypotheses for the maintenance of sex?
+    \item when a population is dominated by asexual reproduction, stronger parasite infection leads to increase in sexual reproduction but decrease in proportion infected; opposite to Lively's prediction \cite{lively2001trematode}
+    \item even stronger infection leads to balance between sexual and asexual reproduction (hump in the intermediate zone) and eventually decrease in advantage of sexual reproduction
 \end{itemize}
-\end{minipage}
-\begin{minipage}[c]{0.35\textwidth}
-\begin{itemize}
-    \item better to increase number of sites than number of samples
-    \item Spearman's rank correlation has higher power for detecting a positive correlation than Pearson correlation
-    \item a negative correlation is observed from simulated data fitted to Vergara \etal\
-    \item very low power for detecting a negative quadratic curvature
-\end{itemize}
-\vfill
-\end{minipage}
-\begin{minipage}[c]{0.65\textwidth}
-\vspace*{20px}
-\begin{figure}
-\includegraphics[width=1\textwidth]{../fig/power.pdf}
-\caption{Power analysis for detecting a correlation and negative quadratic curvature.}
-\end{figure}
-\end{minipage}
-\end{block} 
+\end{block}
 
 \end{column} % End of the second column
 
@@ -218,22 +185,21 @@ Why must \textbf{sexual reproduction} persist in nature given its \textbf{two-fo
 
 \begin{block}{Discussion}
 \begin{figure}
-\includegraphics[width=\textwidth]{../fig/cycle_example.pdf}
-\caption{A sample data from a posterior sample. (left) type of cycles present in a simulated data (right) observed relationship v.s. expected relationship. (dashed line) quadratic regression.}
 \vspace{-1em}
+\includegraphics[width=0.9\textwidth]{../fig/cycle_example.pdf}
+\caption{\textbf{Closer look at Red Queen dynamics}. (left) interaction between parasites and sexual hosts can create various oscillations. (right) we expect to see a downward curved trend but accounting for oscillations in each population predicts an oppsite trend}
+\vspace{-1.5em}
 \end{figure}
 \begin{itemize}
-    \item "expected effect" is masked by different cycles (explains low power)
-    \item high asexual diversity \cite{dagan2013clonal} and different environment (e.g., seasonal flood \cite{ben2007temporal} and highly interconnected but diverse \cite{dagan2013clonal}) may not be appropriate for the Red Queen Hypothesis?
-    \item unusual sampling problems in nature (\cite{vergara2014infection} v.s. \cite{vergara2013geographic})
+    \item eventually parasites evolves to infect resistant snail and sexual reproduction decrease in the population; creates \textbf{oscillation between parasite and sexual population} (left panel)
 \end{itemize}
 \end{block}
 
 \begin{alertblock}{Conclusion and further questions}
+\vspace{0.05em}
 \begin{itemize}
-    \item spatial data provides limited information; only Vergara \etal\ \cite{vergara2014infection} had spatiotemporal data
-    \item is there a way to detect the Red Queen cycles from a spatiotemporal data?
-    \item consider pluralistic approach (Red Queen hypothesis + other mechanisms for maintaining sex)
+    \item sexual populations "run away" (to escape infection) from parasites but parasites "chase" (to infect more) sexual populations, creating an oscillation; depending on where the population is in the cycle, we can observe a wide range of trends
+    \item what kind of data and tests are needed to detect oscillation in the population?
 \end{itemize}
 \end{alertblock}
 
