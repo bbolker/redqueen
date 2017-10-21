@@ -95,8 +95,8 @@
 \begin{center}
 \begin{figure}
 \includegraphics[width=0.8\textwidth]{McKone.png}
-\caption{The snail population in a New Zealand lake \cite{mckone2016fine} supports Lively's \cite{lively2001trematode} prediction of positive correlation between proportion \mars,  representing proportion of sexual snails, and
-parasite prevalence.}
+\caption{The snail population in a New Zealand lake \cite{mckone2016fine} supports Lively's \cite{lively2001trematode} prediction of positive correlation between proportion male,  representing proportion of sexual snails, and
+parasite prevalence (proportion of infected snails).}
 \end{figure}
 \end{center}
 \vspace{-1em}
@@ -146,7 +146,7 @@ parasite prevalence.}
 \end{minipage}
 \begin{minipage}[c]{0.48\textwidth}
 \begin{figure}
-\includegraphics[width=1\textwidth]{../fig/model_diagram.pdf}
+\includegraphics[width=\textwidth]{../fig/model_diagram.pdf}
 \caption{Graphical representation of the model.}
 \vspace{-1em}
 \end{figure}
@@ -164,7 +164,7 @@ parasite prevalence.}
 
 \begin{block}{Results}
 \begin{figure}
-\includegraphics[width=0.9\textwidth]{../fig/simulated_data.pdf}
+\includegraphics[width=\textwidth]{../fig/simulated_data.pdf}
 \caption{\textbf{Simulated ``data'' vs. observed data}. ($\triangle$) observations from a study site in one year ($\bigcirc$) proportion of sexual hosts and infected hosts in a simulated population averaged over 100 generations. 50 simulations are plotted; each simulation consists of 30 populations.}
 \end{figure}
 \vspace{-1em}
