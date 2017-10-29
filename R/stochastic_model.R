@@ -24,12 +24,12 @@ stochastic_spatial_discrete_lim_model <- function(start,
                                                   epsilon.site=0.01,
                                                   c_b=1,
                                                   s=0.5, 
-                                                  r.host=0.1,
+                                                  r.host=0.2,
                                                   beta=c(5, 5, 5, 5),
                                                   aU=0.001, aI=0.001,
                                                   bU=20, bI=3,
-                                                  migrate.host=0.04, migrate.pathogen=0.02,
-                                                  epsilon=0.05,
+                                                  migrate.host=0.1, migrate.parasite=0.02,
+                                                  r.parasite=0.05,
                                                   seed=NULL, simplify=TRUE,
                                                   tmax=1100, tburnin=500) {
     if(!is.null(seed)) set.seed(seed)
@@ -66,7 +66,7 @@ stochastic_spatial_discrete_lim_model <- function(start,
     
     sex.migrate <- 1-(1-migrate.host)^(1/10)
     asex.migrate <- 1-(1-migrate.host * asex.mat)^(1/n.genotype)
-    pathogen.migrate <- 1-(1-migrate.pathogen)^(1/4)
+    parasite.migrate <- 1-(1-migrate.parasite)^(1/4)
     
     for(t in 1:tmax){
         
@@ -106,7 +106,6 @@ stochastic_spatial_discrete_lim_model <- function(start,
                 A[t+1,,,i] <- A[t+1,,,i] + migratefun(asex.migrate)
             }
             
-            
             A.count[t+1,i] <- scaled_sum(A[t+1,,,i])
             
             N.count[t+1,i] <- S.count[t+1,i] + A.count[t+1,i]
@@ -114,8 +113,8 @@ stochastic_spatial_discrete_lim_model <- function(start,
             tmp[,,i] <- SI[t,,,i] + AI[t,,,i]
             
             I.nomut <- rowSums(tmp[,,i] * ratio[,,i])
-            I[t,,i] <- (1-epsilon) * I.nomut + epsilon/2 * (sum(I.nomut) - (I.nomut + rev(I.nomut))) + 
-                as.numeric(runif(4) < pathogen.migrate)
+            I[t,,i] <- (1-r.parasite) * I.nomut + r.parasite/2 * (sum(I.nomut) - (I.nomut + rev(I.nomut))) + 
+                as.numeric(runif(4) < parasite.migrate)
             
             lambda[t,,i] <- beta[i] * I[t,,i]/(2 * N.count[t+1,i])
             lambda[t,,i][which(is.nan(lambda[t,,i]))] <- 0
