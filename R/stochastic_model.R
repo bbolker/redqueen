@@ -117,7 +117,7 @@ stochastic_spatial_discrete_lim_model <- function(start,
                 as.numeric(runif(4) < parasite.migrate)
             
             lambda[t,,i] <- beta[i] * I[t,,i]/(2 * N.count[t+1,i])
-            lambda[t,,i][which(is.nan(lambda[t,,i]))] <- 0
+            lambda[t,,i][which(N.count[t+1,i] == 0)] <- 0
         }
         
         lambda.tot <- array(0, dim=c(4, n.site))
@@ -132,7 +132,7 @@ stochastic_spatial_discrete_lim_model <- function(start,
             
             P[,,i] <- 1 - exp(-FOI)
             ratio[,,i] <- lambda.tot[,i]/FOI
-            ratio[,,i][which(is.nan(ratio[,,i]))] <- 0
+            ratio[,,i][which(FOI==0)] <- 0
             diag(ratio[,,i]) <- 1
             
             SI[t+1,,,i] <- binom_matrix(S[t+1,,,i], P[,,i])

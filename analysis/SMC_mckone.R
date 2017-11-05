@@ -6,17 +6,19 @@ source("../R/ABC_funs.R")
 
 load("../data/mckone_summ.rda")
 
-Nmax <- c(25, 50, 100)
-tmax <- 3
-tolerance <- c(1.2, 0.6, 0.4)
+Nmax <- c(50, 50, 50, 100)
+tmax <- 4
+tolerance <- c(1.6, 0.8, 0.6, 0.4)
 
-ww <- vector('list', 3)
+ww <- vector('list', tmax)
 sumlist <- simlist <- parlist <- vector("list", tmax)
 
 mckone_var <- names(mckone_summ)
 
 subyear <- c(1001:1100)
 sitesample <- 18
+
+cc <- 1
 
 for(t in 1:tmax) {
     ww[[t]] <- rep(NA, Nmax[t])
@@ -32,7 +34,7 @@ for(t in 1:tmax) {
     N <- 1
     if (t== 1) {
         while(N <= Nmax[t]) {
-            cat(t, N, "\n")
+            cat(t, cc, N, "\n")
             pp <- rprior()
             
             sim <- try(do.call(simfun, c(pp, summarize=FALSE)))
@@ -49,6 +51,7 @@ for(t in 1:tmax) {
                     save("ww", "sumlist", "simlist", "parlist", file="SMC_mckone.rda")
                 }
             }
+            cc <- cc+1
         }
     } else {
         sigma <- with(as.list(parlist[[t-1]]),{
@@ -61,7 +64,7 @@ for(t in 1:tmax) {
             ))
         })
         while(N <= Nmax[t]) {
-            cat(t, N, "\n")
+            cat(t, cc, N, "\n")
             pindex <- sample(1:Nmax[t-1], 1, prob=ww[[t-1]])
             pp.sample <- parlist[[t-1]][pindex,]
             
@@ -86,6 +89,7 @@ for(t in 1:tmax) {
                     save("ww", "sumlist", "simlist", "parlist", file="SMC_mckone.rda")
                 }
             }
+            cc <- cc+1
         }
         ww[[t]] <- ww[[t]]/sum(ww[[t]])
     }
