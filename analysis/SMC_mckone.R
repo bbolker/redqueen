@@ -45,7 +45,7 @@ for(t in 1:tmax) {
                 accept <- dist < tolerance[t]
                 if (accept) {
                     parlist[[t]][N,] <- unlist(pp)
-                    sumlist[[t]][N,] <- summ
+                    sumlist[[t]][N,] <- summ[mckone_var]
                     ww[[t]][N] <- 1/Nmax[t]
                     N <- N+1
                     save("ww", "sumlist", "simlist", "parlist", file="SMC_mckone.rda")
@@ -78,7 +78,7 @@ for(t in 1:tmax) {
                 accept <- dist < tolerance[t]
                 if (accept) {
                     parlist[[t]][N,] <- unlist(pp)
-                    sumlist[[t]][N,] <- summ
+                    sumlist[[t]][N,] <- summ[mckone_var]
                     
                     if (t == tmax) simlist[[t]][[N]] <- sim
                     
