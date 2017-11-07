@@ -19,7 +19,7 @@ binom_matrix <- function(mat, p) {
 }
 
 stochastic_spatial_discrete_lim_model <- function(start,
-                                                  n.site=4,
+                                                  n.site=40,
                                                   n.genotype=1,
                                                   epsilon.site=0.01,
                                                   c_b=1,
@@ -116,8 +116,8 @@ stochastic_spatial_discrete_lim_model <- function(start,
             I[t,,i] <- (1-r.parasite) * I.nomut + r.parasite/2 * (sum(I.nomut) - (I.nomut + rev(I.nomut))) + 
                 as.numeric(runif(4) < parasite.migrate)
             
-            lambda[t,,i] <- beta[i] * I[t,,i]/(2 * N.count[t+1,i])
-            lambda[t,,i][which(N.count[t+1,i] == 0)] <- 0
+            lambda[t,,i] <- beta[i] * I[t,,i]
+            
         }
         
         lambda.tot <- array(0, dim=c(4, n.site))
@@ -128,18 +128,21 @@ stochastic_spatial_discrete_lim_model <- function(start,
                 lambda.tot[,i] <- lambda.tot[,i] + ifelse(i==j, 1-epsilon.site, epsilon.site/(n.site-1)) * lambda[t,,j]
             }
             
-            FOI <- outer(lambda.tot[,i], lambda.tot[,i], "+")
+            lambda.mat <- outer(lambda.tot[,i], lambda.tot[,i], "+")
             
-            P[,,i] <- 1 - exp(-FOI)
-            ratio[,,i] <- lambda.tot[,i]/FOI
-            ratio[,,i][which(FOI==0)] <- 0
-            diag(ratio[,,i]) <- 1
-            
-            SI[t+1,,,i] <- binom_matrix(S[t+1,,,i], P[,,i])
-            SI.count[t+1,i] <- scaled_sum(SI[t+1,,,i])
-            
-            AI[t+1,,,i] <- binom_matrix(A[t+1,,,i], P[,,i])
-            AI.count[t+1,i] <- scaled_sum(AI[t+1,,,i])
+            FOI <- lambda.mat/(2 * N.count[t+1,i])
+            if (N.count[t+1,i] != 0) {
+                P[,,i] <- 1 - exp(-FOI)
+                ratio[,,i] <- lambda.tot[,i]/lambda.mat
+                ratio[,,i][which(lambda.mat==0)] <- 0
+                diag(ratio[,,i]) <- 1
+                
+                SI[t+1,,,i] <- binom_matrix(S[t+1,,,i], P[,,i])
+                SI.count[t+1,i] <- scaled_sum(SI[t+1,,,i])
+                
+                AI[t+1,,,i] <- binom_matrix(A[t+1,,,i], P[,,i])
+                AI.count[t+1,i] <- scaled_sum(AI[t+1,,,i])
+            }
         }
         
     }

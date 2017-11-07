@@ -43,3 +43,4 @@ outcross <- function(genotype, r) {
     
     new.genotype
 }
+
