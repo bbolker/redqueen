@@ -1,5 +1,6 @@
 \documentclass{article}
-\title{Quantifying the effects of the Red Queen}
+\title{Quantifying the effects of parasites on the maintenance of sex}
+\author{Sang Woo Park, Benjamin M Bolker}
 
 \usepackage{tabularx}
 
@@ -15,9 +16,10 @@
 
 \section{Introduction}
 
-Sexually reproducing organisms suffer from inevitable costs \citep{lehtonen2012many}.
-These costs are often attributed to cost of producing males \citep{smith1978evolution}.
-As males cannot produce offspring, a sexually reproducing population should be outgrown by an asexually reproducing population growing twice as fast (given that the sexual population produces 50\% males and 50\% females); hence the infamous \emph{two-fold cost of sex} \citep{smith1978evolution}.
+Sexually reproduction is followed by numerous costs \citep{lehtonen2012many},
+and these costs are often attributed to cost of producing males \citep{smith1978evolution}.
+As males cannot produce offspring, a sexually reproducing population should be outgrown by an asexually reproducing population growing twice as fast (given that the sexual population produces 50\% males and 50\% females); 
+hence the infamous \emph{two-fold cost of sex} \citep{smith1978evolution}.
 However, the two-fold cost of sex relies on the assumption that all else is equal, and this is not necessarily true in nature.
 In fact, sexual reproduction is much more common in nature \citep{vrijenhoek1998animal}.
 So what drives sex to persist?
@@ -30,19 +32,16 @@ and negative frequeny dependnece drives an oscillation in genotypic frequencies 
 
 Since the advent of the Red Queen Hypothesis, much of theoretical work has focused on figuring out conditions under which parasites can maintain sexual reproduction.
 
-On the other hand, empiricists have tried to quantify the Red Queen. 
+On the other hand, empiricists have tried to quantify the Red Queen.
 
-While the Red Queen Hypothesis is well supported both empirically [CITE] and theoretially [CITE], there still remains a gap between the evolutionary theory and the ecological data [CITE?]. Many models for Red Queen Hypothesis rely on simple assumption that are not applicable to natural populations \citep{ashby2015diversity}.
+While the Red Queen Hypothesis is well supported both empirically and theoretically, there still remains a gap between theory and data. 
+Many models for Red Queen Hypothesis rely on strong assumption that are not applicable to natural populations \citep{ashby2015diversity}.
 
-Recently, growing number of studies have noted the importance of ecological feedbacks on maintenance of sex [CITE].
+Recent studies have shown that ecological feedbacks can allow sex to be maintained more easily [CITE].
 
-\cite{lively2001trematode} successfully applied ???. Using a mathematical model, he predicted that prevalence of infection should be positively correlated with prevalence of sex given large variaton among population \citep{lively2001trematode} and was able to confirm empirically [CITE]. However, such correlation was not observed in a similar snail-trematode system [CITE] and Lively's original model rather relies on simple assumption.
+Here, we try to bridge this gap further.
 
-Here, we try to bridge the gap between theory and data further by fitting a dynamical model to data. 
-
-
-
-In this study, we show that . Then, we perform power analysis to test how likely it is to detect the positive correlation predicted by \cite{lively2001trematode}. We show that testing for positive correlation under(?)s the effect of oscillation and lack biological interpretation.
+% \cite{lively2001trematode} successfully applied ???. Using a mathematical model, he predicted that prevalence of infection should be positively correlated with prevalence of sex given large variaton among population \citep{lively2001trematode} and was able to confirm empirically [CITE]. However, such correlation was not observed in a similar snail-trematode system [CITE] and Lively's original model rather relies on simple assumption.
 
 \section{Methods}
 
@@ -68,7 +67,6 @@ S_{ij}' = c_b (1-s) \left(W_U S_{ij,U} (t) + W_I S_{ij,I} (t)\right),
 where $s$ is the proportion of males produced, $S_{ij, U}$ and $S_{ij,I}$ are the number of uninfected and infected sexual hosts in a population, and $W_U$ and $W_I$ are their corresponding fitnesses.
 We allow for cost of sex to vary by multiplying $c_b$ to the growth term ($2/c_b$ corresponds to two fold cost of sex) \citep{ashby2015diversity}.
 Equivalently, $S_{ij}'$ is the amount of genotypic contribution by sexual hosts to the next generation.
-We denote the expected number of offspring produced by a sexual population after accounting for recombintation and outcrossing by $S_{ij}''$.
 
 Asexual hosts are assumed to be strictly clonal. Then, the expected number of offsprings produced by an asexual population is given by
 \begin{equation}
@@ -80,72 +78,97 @@ We assume that there is mixing between population, determined by rate $\epsilon_
 Then, the expected number of offspring in the next generation (accounting for contributions from all populations) is given by
 \begin{equation}
 \begin{aligned}
-\mathrm{E}\left(S_{ij}^k(t+1)\right) &= (1 - \epsilon_{\textrm{mix}}) \left(S_{ij}^k\right)'' + \frac{\epsilon_{\textrm{mix}}}{n_{\textrm{population}}-1} \sum_{l \neq k} \left(S_{ij}^l\right)'',\\
+\mathrm{E}\left(S_{ij}^k(t+1)\right) &= \mathrm{Sex} \left((1 - \epsilon_{\textrm{mix}}) \left(S_{ij}^k\right)' + \frac{\epsilon_{\textrm{mix}}}{n_{\textrm{population}}-1} \sum_{l \neq k} \left(S_{ij}^l\right)'\right),\\
 \mathrm{E}\left(A_{ij}^k(t+1)\right) &= (1 - \epsilon_{\textrm{mix}}) \left(A_{ij}^k\right)' + \frac{\epsilon_{\textrm{mix}}}{n_{\textrm{population}}-1} \sum_{l \neq k} \left(A_{ij}^l\right)',\\
 \end{aligned}
 \end{equation}
-where $n_{\textrm{population}}$ is the number of populations present in the system.
+where $\mathrm{Sex}$ is a function defined by recombination at a rate $r_{\textrm{host}}$ and outcrossing, and $n_{\textrm{population}}$ is the number of populations present in the system.
 We then take a poisson random variable to simulate process error and allow for stochastic migration to avoid fixation:
 \begin{equation}
 \begin{aligned}
-S_{ij}^k(t+1) &\sim \mathrm{Poisson}\left(\lambda=\mathrm{E}\left(S_{ij}^k(t+1)\right)\right) + \mathrm{Bernoulli}\left(p=p_{\textrm{sex}}\right),\\
-A_{ij}^k(t+1) &\sim \mathrm{Poisson}\left(\lambda=\mathrm{E}\left(A_{ij}^k(t+1)\right)\right) + \mathrm{Bernoulli}\left(p=p_{\textrm{asex}}\right),
+S_{ij}^k(t+1) &\sim \mathrm{Poisson}\left(\lambda=\mathrm{E}\left(S_{ij}^k(t+1)\right)\right) + \mathrm{Bernoulli}\left(p=p_{ij,\textrm{sex}}\right),\\
+A_{ij}^k(t+1) &\sim \mathrm{Poisson}\left(\lambda=\mathrm{E}\left(A_{ij}^k(t+1)\right)\right) + \mathrm{Bernoulli}\left(p=p_{ij, \textrm{asex}}\right),
 \end{aligned}
 \end{equation}
-where $p_\textrm{sex}$ and $p_\textrm{asex}$ are the probability of sexual and asexual host entering the popualation.
+where $p_{ij,\textrm{sex}}$ and $p_{ij, \textrm{asex}}$ are the probability of a sexual and an asexual host with genotype $ij$ entering the popualation.
 
-Infection is modeled using a matching alleles model \citep{otto1998evolution}. 
-Using different genetic models can lead to various dynamics \citep{agrawal2002infection},
-but 
+Infection is modeled using the matching alleles model \citep{otto1998evolution}.
+We assume that heterozygous individuals are equally susceptible to parasites that match either genotypes 
 
-
-We assume that heterozygous individuals are 
-
-To model infection, we combine the approaches by \cite{lively2010epidemiological} and \cite{ashby2015diversity}.
 The expected number of infected hosts that carry parasite with genotype $i$ at generation $t$ is given by:
 \begin{equation}
 I_{i}(t) = \sum_{p} 2^{\delta_{ij}} \left( S_{ip,i,I}(t) + A_{ip,i,I}(t)\right),
 \end{equation}
 where $S_{ip,i,I}$ and $A_{ip,i,I}$ are the expected number of sexual and asexual hosts infected with genotype $i$ parasite. 
-Following \cite{ashby2015diversity}, we assume that mutation can occur in one locus with probability $\epsilon$. 
-We also allow for external migration with probability $p_\textrm{parasite}$ to avoid fixation.
+Following \cite{ashby2015diversity}, we assume that mutation can occur in one locus with probability $r_{\textrm{parasite}}$. 
+We also allow for external migration of an infected host carrying parasite $i$ with probability $p_{i, \textrm{parasite}}$ to avoid fixation.
 
-Let $\lambda_i$ be the poisson mean number of exposures caused by infected hosts from a population in next generation \cite{lively2010epidemiological}:
-\begin{equation}
-\lambda_i = \frac{\beta}{2 N(t+1)} I_i',
-\end{equation}
-where $\beta^k$ represents parasite fecundity at site $k$ \cite{lively2010epidemiological}.
-Assuming that infected hosts can also mix with hosts in other sites, the mean number of exposures to parasites with genotype $i$ that a susceptible host in site $k$ receives is
-\begin{equation}
-\lambda_{i, \textrm{total}}^k = (1 - \epsilon_{\textrm{site}}) \lambda_i^k  + \frac{\epsilon_{\textrm{site}}}{n_\textrm{site}-1} \sum_{l \neq k} \lambda_i^l. 
-\end{equation}
-Then, a force of infection from parasite $i$ that a susceptible host with genotype $ij$ in site $k$ experiences is
-\begin{equation}
-\mathrm{FOI}_{ij}^k = \lambda_{i, \textrm{total}}^k + \lambda_{j, \textrm{total}}^k.
-\end{equation}
+The amount of infectious contacts made by infected hosts from a population is given by $\lambda_i^k = \beta^k {I_i'}^k(t)$, where $\beta^K$ is the transmission rate at each population, and $I_i'(t)$ is the number of infected hosts accounting for mutation. 
+Since we allow for mixing between population, infected hosts in a population can make contact to susceptible hosts in other populations as well.
+Then, all infectious contacts made by infected hosts that applies to a host in a single population is
+$$
+\lambda_{i, \textrm{total}} = (1 - \epsilon_{\textrm{site}}) \lambda_i + \frac{\epsilon_{\textrm{site}}}{n_\textrm{site}-1} \sum_{l \neq k} \lambda_i^l
+$$
+Then, the force of infection that a susceptible host experiences is
+$$
+\mathrm{FOI}_{ij}^k = \frac{\lambda_{i, \textrm{total}}  + \lambda_{j, \textrm{total}}  }{2 N(t+1)}
+$$
 The probability of infection for a host with genotype $ij$ at site $k$ in the next generation is
 \begin{equation}
 P_{ij}^k(t+1) = 1 - \exp\left(\mathrm{FOI}_{ij}^k\right).
 \end{equation}
 
-Finally, the number of infected individuals in the next generation follows a binomial distribution:
+Finally, number of infected hosts in the next generation is determined by a binomial process:
 \begin{equation}
 \begin{aligned}
-S_{ij,I}^k (t+1) &\sim \mathrm{Binom}(S_{ij}^k (t+1), P_{ij}^k),\\
-A_{ij,I}^k (t+1) &\sim \mathrm{Binom}(A_{ij}^k (t+1), P_{ij}^k).
+S_{ij,I} (t+1) &\sim \mathrm{Binom}(S_{ij} (t+1), P_{ij}),\\
+A_{ij,I} (t+1) &\sim \mathrm{Binom}(A_{ij} (t+1), P_{ij}).
 \end{aligned}
 \end{equation}
 Expected number of individuals infected with haplotype $i$ in the next generation is given by a ratio of $\lambda$:
 \begin{equation}
 \begin{aligned}
-S_{ij,i,I}^k(t+1) &= \frac{\lambda_{i, \textrm{total}}^k}{\lambda_{i, \textrm{total}}^k + \lambda_{j, \textrm{total}}^k} S_{ij,I}^k(t+1)\\
-A_{ij,i,I}^k(t+1) &= \frac{\lambda_{i, \textrm{total}}^k}{\lambda_{i, \textrm{total}}^k + \lambda_{j, \textrm{total}}^k} A_{ij,I}^k(t+1)
+S_{ij,i,I}(t+1) &= \frac{\lambda_{i, \textrm{total}}}{\lambda_{i, \textrm{total}} + \lambda_{j, \textrm{total}}} S_{ij,I}(t+1)\\
+A_{ij,i,I}(t+1) &= \frac{\lambda_{i, \textrm{total}}}{\lambda_{i, \textrm{total}} + \lambda_{j, \textrm{total}}} A_{ij,I}(t+1)
 \end{aligned}
 \end{equation}
 
+\subsection{Simulation design and parameterization}
+
+Most Red Queen models have studied a competition between a single asexual genotype and sexual genotypes or have assumed equal genetic diversity of asexual and sexual hosts (see \citep{ashby2015diversity}) but neither of these assumptions are realistic.
+Instead, \cite{ashby2015diversity} adopted a more realistic approach by allowing for stochastic migration of an asexual genotype to a population.
+Here, we combine these methods.
+We allow for stochastic migration of migration of asexual hosts with genotypes genotypes but fix number of asexual genotypes (denoted by $G_{\textrm{asex}}$) that can be present in the population, 
+while the number of sexual genotypes ($G_{\textrm{sex}}$) that can be present in the population is equal to size of the genotypic space ($=10$ in diploid hosts with two biallelic loci).
+
+%% justification here or in the discussion?
+
+In the beginning of every simlation, $G_{\textrm{asex}}$ is randomly chosen between 1 and 10 and asexual genotypes that can be introduced to the population are uniformly sampled from the entire genotypic space.
+To account for differing number of sexual and asexual genotypes, we let 
+$$
+\begin{aligned}
+p_{ij, \textrm{sex}} &= 1-(1-p_{\textrm{host}})^{1/G_\textrm{sex}},\\
+p_{ij, \textrm{asex}} &=
+\begin{cases}
+1-(1-p_{\textrm{host}})^{1/G_\textrm{asex}} & \text{if } ij \in \{\text{asexual genotypes}\} \\
+0 & \text{otherwise}
+\end{cases},
+\end{aligned}
+$$
+where $p_{\textrm{host}}$ is the probability that at least one sexual and asexual host enters the population in a generation. We scale the probability of infected host carrying parsite genotype $i$ in a similar way for interpretability:
+$$
+p_{i, \textrm{parasite}} &= 1 - (1-p_{\textrm{infected}})^{1/4},
+$$
+where $p_{\textrm{infected}}$ is the probability that at least one infected host enters the population in a generation.
+
+Something about prior distribution...
+
+Each simulation consists of 40 populations. Every population consists of 2000 sexual hosts where 80 of them are infected. They are assumed to be in Hardy-Weinberg equilibrium with ratio between alleles being exactly half. Simulation runs for 500 generations without introduction of asexuals. At generation 501, 10 asexual hosts of a single genotype are introduced to each population (note that asexual genotype introduced can vary across population) and simulation runs for 600 generations while allowing for stochastic migration of asexuals.
 
 
 \subsection{Approximate Bayesian Computation}
+
+To fit the model, we use Approximate Bayesian Computation (ABC) with Sequential Monte Carlo (SMC). 
 
 
 \section{Results}

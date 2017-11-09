@@ -46,7 +46,7 @@ stochastic_spatial_discrete_lim_model <- function(start,
     asex.mat <- scaled_matrix(asex.mat)
     
     for(i in 1:n.site) {
-        S[1,,,i] <- 0.96 * start
+        S[1,,,i] <- start
         SI[1,,,i] <- 0.04 * start
         S.count[1,i] <- scaled_sum(S[1,,,i])
         SI.count[1,i] <- scaled_sum(SI[1,,,i])
