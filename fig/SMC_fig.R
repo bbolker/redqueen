@@ -28,9 +28,11 @@ get_all <- function(x) {
     return(r)
 }
 
-data_name <- c(expression(Dagan~italic(et~al.)~"(2005)"), 
+data_name <- c(expression(Dagan~italic(et~al.)~"(2013)"), 
                expression(McKone~italic(et~al.)~"(2016)"), 
                expression(Vergara~italic(et~al.)~"(2014)"))
+
+data_name_simple <- c("D", "M", "V")
 
 comb_smc <- comb_summ <- vector('list', 2)
 
@@ -197,7 +199,7 @@ summ_df <- comb_summ  %>%
     mutate(gvar=ifelse(grepl("pinf", key), "proportion~infected", "proportion~sexual")) %>%
     mutate(key=factor(key,
                       levels=c("pinf.mean", "pinf.siteCV", "pinf.timeCV", "psex.mean", "psex.siteCV", "psex.timeCV"),
-                      labels=rep(c("mean", "across~site~CV", "across~generation~CV"),2)))
+                      labels=rep(c("mean~proportion", "across~population~CV", "across~generation~CV"),2)))
 
 gg_summary_df <- clean_list$sumlist %>% 
     filter(run==3) %>%
@@ -206,7 +208,7 @@ gg_summary_df <- clean_list$sumlist %>%
     mutate(gvar=ifelse(grepl("pinf", key), "proportion~infected", "proportion~sexual")) %>%
     mutate(key=factor(key,
                       levels=c("pinf.mean", "pinf.siteCV", "pinf.timeCV", "psex.mean", "psex.siteCV", "psex.timeCV"),
-                      labels=rep(c("mean", "across~site~CV", "across~generation~CV"),2)))
+                      labels=rep(c("mean~proportion", "across~population~CV", "across~generation~CV"),2)))
 
 gg_summary_mean <- SMC_summary$sumlist %>% 
     group_by() %>%
@@ -216,25 +218,21 @@ gg_summary_mean <- SMC_summary$sumlist %>%
     mutate(gvar=ifelse(grepl("pinf", key), "proportion~infected", "proportion~sexual")) %>%
     mutate(key=factor(key,
                       levels=c("pinf.mean", "pinf.siteCV", "pinf.timeCV", "psex.mean", "psex.siteCV", "psex.timeCV"),
-                      labels=rep(c("mean", "across~site~CV", "across~generation~CV"),2)))
+                      labels=rep(c("mean~proportion", "across~population~CV", "across~generation~CV"),2)))
 
-blank_df <- data.frame(
-    fit=gg_summary_mean$fit[1],
-    key="mean",
-    value=0,
-    gvar="proportion~infected"
-)
-
-gg_smc_summ <- ggplot(gg_summary_df) +
-    geom_blank(data=blank_df, aes(value)) +
-    geom_line(stat="density", aes(value, col=run, group=run)) +
-    geom_vline(data=gg_summary_mean, aes(xintercept=value, col=run, group=run)) +
-    geom_vline(data=summ_df, aes(xintercept=value)) +
-    facet_grid(fit~gvar+key, scale="free", labeller = label_parsed) +
-    scale_x_continuous(name="") +
+gg_smc_summ <- ggplot(gg_summary_df, aes(fit, value)) +
+    geom_violin(aes(fill=fit), alpha=0.5) +
+    geom_point(data=summ_df, shape=0, size=2.5) +
+    facet_grid(key~gvar, scale="free", labeller = label_parsed) +
+    scale_color_discrete(label=data_name, name="fitted data") +
+    scale_fill_discrete(label=data_name, name="fitted data") +
     theme(
-        legend.position = "none"
+        panel.grid.minor.y = element_blank(),
+        axis.text.x=element_blank(),
+        axis.title=element_blank(),
+        axis.ticks.x=element_blank(),
+        panel.spacing=grid::unit(0,"lines"),
+        legend.position="bottom"
     )
 
 if (save) ggsave("smc_summary.pdf", gg_smc_summ, width=8, height=6)
-
