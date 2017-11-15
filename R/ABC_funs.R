@@ -1,3 +1,7 @@
+logit <- function(x,eps=1e-10) {
+    qlogis(pmax(eps,pmin(1-eps,x)))
+}
+
 rprior <- function() {
     list(
         beta.meanlog=rcauchy(1, location=1, scale=2),
@@ -23,8 +27,8 @@ dprior <- function(x) {
 ## assuming that all parameters are independent
 rjump <- function(x, sigma) {
     with(as.list(x),{
-        logit.V <- car::logit(V, adjust=1e-10)
-        logit.epsilon <- car::logit(epsilon.site, adjust=1e-10)
+        logit.V <- logit(V)
+        logit.epsilon <- logit(epsilon.site)
         
         list(
             beta.meanlog=rnorm(1, mean=beta.meanlog, sd=sigma[1]), 
@@ -40,8 +44,8 @@ rjump <- function(x, sigma) {
 djump <- function(x, theta, sigma) {
     dnorm(x[[1]], mean=theta[[1]], sd=sigma[1]) *
         dnorm(log(x[[2]]), mean=log(theta[[2]]), sd=sigma[2]) *
-        dnorm(car::logit(x[[3]], adjust=1e-10), mean=car::logit(theta[[3]], adjust=1e-10), sigma[3]) *
-        dnorm(car::logit(x[[4]], adjust=1e-10), mean=car::logit(theta[[4]], adjust=1e-10), sigma[4]) *
+        dnorm(logit(x[[3]]), logit(theta[[3]]), sigma[3]) *
+        dnorm(logit(x[[4]]), mean=logit(theta[[4]]), sigma[4]) *
         dbinom(x[[5]]-1, size=9, prob=(theta[[5]]-0.5)/10) *
         dnorm(log(x[[6]]), mean=log(theta[[6]]), sd=sigma[[5]])
 }

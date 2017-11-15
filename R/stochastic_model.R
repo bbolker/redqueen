@@ -76,7 +76,7 @@ stochastic_spatial_discrete_lim_model <- function(start,
         A.tmp <- array(0, dim=c(4, 4, n.site))
         
         for(i in 1:n.site) {
-            if (t==tburnin) {
+            if (t==(tburnin+1)) {
                 A[t,,,i] <- 10 * asex.introduce()
                 A.count[t,i] <- 10
                 N.count[t,i] <- N.count[t,i] + 10
@@ -102,7 +102,7 @@ stochastic_spatial_discrete_lim_model <- function(start,
             S.count[t+1,i] <- scaled_sum(S[t+1,,,i])
             
             A[t+1,,,i] <- pois_matrix(A.tmp2)
-            if (t >= tburnin) {
+            if (t > tburnin) {
                 A[t+1,,,i] <- A[t+1,,,i] + migratefun(asex.migrate)
             }
             

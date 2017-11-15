@@ -10,6 +10,8 @@
 \bibliographystyle{chicago}
 \date{\today}
 
+\newcommand{\etal}{\textit{et al.}}
+
 \newcommand{\fref}[1]{Fig.~\ref{fig:#1}}
 
 \begin{document}
@@ -172,7 +174,8 @@ Each simulation consists of 40 populations. Every population consists of 2000 se
 
 \subsection{Approximate Bayesian Computation}
 
-To fit the model, we use Approximate Bayesian Computation (ABC) with Sequential Monte Carlo (SMC). 
+We use Approximate Bayesian Computation (ABC) to fit the model.
+
 
 \subsection{Data}
 
@@ -180,6 +183,28 @@ We consider two snail-trematode population in New Zealand \citep{mckone2016fine,
 Data for \cite{vergara2014infection} and \cite{dagan2013clonal} were obtained from their Dryad repository [CITE] and data for \cite{mckone2016fine} was extracted from their figure.
 
 \section{Results}
+
+\subsection{Parameter estimation}
+
+Our model estimates wide ranges of parameters across data sets (\fref{smcparam}).
+The most surprising result is the wide posterior of the scale parameter, $c_b$, for cost of sex (\fref{smcparam}). 
+\cite{ashby2015diversity} defined $c_b$ as additional costs and benefits of sex, where $c_b=1$ corresponds the two fold cost.
+Under their interpretation, our estimate corresponds to the following 95\% credible intervals for cost of sex: [???].
+However, the meaning of the parameter changes from an inferential point of view.
+
+\begin{figure}[!ht]
+\includegraphics[width=\textwidth]{../fig/smc_param.pdf}
+\caption{{\bf Need caption.}
+Need caption}
+\label{fig:smcparam}
+\end{figure}
+
+In the absence of the parameter $c_b$ (i.e, when $c_b$ = 1), our model assumes two fold cost of sex in growth rate.
+Then, an estimate of $c_b > 1$ can be interpreted as the amount of additional compensation required in order to overcome the two fold cost of sex.
+Additional compensation may imply other mechanisms that maintains, reduced cost of sex, or higher genetic diversity, a point to which we will come back later.
+Likewise, an estimate of $c_b < 1$ implies that the model can sufficiently produce observed data.
+
+We also find that the model estimates high virulence and 
 
 \subsection{Model fit}
 
@@ -189,8 +214,6 @@ The difference between model prediction and observed data can tell us about our 
 This discrepancy is likely to be caused by the most obvious limitation of the model: two biallelic loci is not sufficient to capture the genetic diversity of the snail-trematode system.
 Other theoretical studies have shown that higher genetic diversity can reduce prevalence of infection and lead to better maintenance of sexual reproduction \citep{lively2010effect, king2012does, ashby2015diversity}.
 
-We also compared mean 
-
 \begin{figure}[!ht]
 \includegraphics[width=\textwidth]{../fig/smc_summary.pdf}
 \caption{{\bf Need caption.}
@@ -198,25 +221,17 @@ Need caption}
 \label{fig:smcsumm}
 \end{figure}
 
+We also compared mean infection prevalence and mean proportion of sexually reproducing hosts of each simulated population against observed data (\fref{ivs}).
+Although simulated data could match the chosen summary statistics of the snail population in Israel (\cite{dagan2013clonal} in \fref{smcsumm}), 
+we find that our model does not capture the observed trend (\cite{dagan2013clonal} in \fref{ivs}).
+
+
+
 \begin{figure}[!ht]
 \includegraphics[width=\textwidth]{../fig/simulated_data.pdf}
 \caption{{\bf Need caption.}
 Need caption}
 \label{fig:ivs}
-\end{figure}
-
-\subsection{Parameter estimation}
-
-The most surprising result of the parameter estimates is the wide posterior of the scaling parameter, $c_b$, of cost of sex (\fref{smcparam}). 
-\cite{ashby2015diversity} defined $c_b$ as additional costs and benefits of sex, where $c_b=1$ corresponds the two fold cost.
-Here, we offer a different interpretation of the parameter.
-$c_b$
-
-\begin{figure}[!ht]
-\includegraphics[width=\textwidth]{../fig/smc_param.pdf}
-\caption{{\bf Need caption.}
-Need caption}
-\label{fig:smcparam}
 \end{figure}
 
 \subsection{Power analysis}

@@ -1,5 +1,4 @@
 library(emdbook)
-library(car)
 source("../R/util.R")
 source("../R/stochastic_model.R")
 source("../R/ABC_funs.R")
