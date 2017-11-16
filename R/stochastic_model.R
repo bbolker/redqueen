@@ -56,7 +56,10 @@ stochastic_spatial_discrete_lim_model <- function(start,
     inf <- array(0, dim=c(4, 4, n.site))
     P <- array(0, dim=c(4, 4, n.site))
     
-    ratio <- array(0, dim=c(4, 4, n.site))
+    ratio <- array(1/2, dim=c(4, 4, n.site))
+    for (i in 1:n.site) {
+        diag(ratio[,,i]) <- 1
+     }
     
     asex.introduce <- function() {
         asex <- matrix(0, 4, 4)
@@ -120,6 +123,7 @@ stochastic_spatial_discrete_lim_model <- function(start,
             
         }
         
+        P <- array(0, dim=c(4, 4, n.site))
         lambda.tot <- array(0, dim=c(4, n.site))
         ratio <- array(0, dim=c(4, 4, n.site))
         
