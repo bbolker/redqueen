@@ -17,6 +17,7 @@ sitesample <- 4
 
 cc <- 1
 
+set.seed(101)
 for(t in 1:tmax) {
     ww[[t]] <- rep(NA, Nmax[t])
     

@@ -204,7 +204,6 @@ Likewise, an estimate of $c_b < 1$ implies that the model can sufficiently produ
 
 We also find that the model estimates high virulence overall and almost 100\% virulence for the system observed by \cite{mckone2016fine}.
 
-
 \subsection{Model fit}
 
 We find that a simple Red Queen model with spatial structure can match observed mean and variation in proportion infected and sexually reproducting well (\fref{smcsumm}). 
