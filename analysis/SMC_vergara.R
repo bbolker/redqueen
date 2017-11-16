@@ -55,8 +55,8 @@ for(t in 1:tmax) {
             sqrt(2*c(
                 var(beta.meanlog),
                 var(log(beta.sdlog)),
-                var(car::logit(V, adjust=1e-10)),
-                var(car::logit(epsilon.site, adjust=1e-10)),
+                var(logit(V)),
+                var(logit(epsilon.site)),
                 var(log(c_b))
             ))
         })
