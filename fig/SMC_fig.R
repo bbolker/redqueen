@@ -199,7 +199,7 @@ summ_df <- comb_summ  %>%
     mutate(gvar=ifelse(grepl("pinf", key), "proportion~infected", "proportion~sexual")) %>%
     mutate(key=factor(key,
                       levels=c("pinf.mean", "pinf.siteCV", "pinf.timeCV", "psex.mean", "psex.siteCV", "psex.timeCV"),
-                      labels=rep(c("mean~proportion", "across~population~CV", "across~generation~CV"),2)))
+                      labels=rep(c("mean~proportion", "CV~across~population", "CV~across~generation"),2)))
 
 gg_summary_df <- clean_list$sumlist %>% 
     filter(run==3) %>%
@@ -208,7 +208,7 @@ gg_summary_df <- clean_list$sumlist %>%
     mutate(gvar=ifelse(grepl("pinf", key), "proportion~infected", "proportion~sexual")) %>%
     mutate(key=factor(key,
                       levels=c("pinf.mean", "pinf.siteCV", "pinf.timeCV", "psex.mean", "psex.siteCV", "psex.timeCV"),
-                      labels=rep(c("mean~proportion", "across~population~CV", "across~generation~CV"),2)))
+                      labels=rep(c("mean~proportion", "CV~across~population", "CV~across~generation"),2)))
 
 gg_summary_mean <- SMC_summary$sumlist %>% 
     group_by() %>%
@@ -218,21 +218,21 @@ gg_summary_mean <- SMC_summary$sumlist %>%
     mutate(gvar=ifelse(grepl("pinf", key), "proportion~infected", "proportion~sexual")) %>%
     mutate(key=factor(key,
                       levels=c("pinf.mean", "pinf.siteCV", "pinf.timeCV", "psex.mean", "psex.siteCV", "psex.timeCV"),
-                      labels=rep(c("mean~proportion", "across~population~CV", "across~generation~CV"),2)))
+                      labels=rep(c("mean~proportion", "CV~across~population", "CV~across~generation"),2)))
 
 gg_smc_summ <- ggplot(gg_summary_df, aes(fit, value)) +
-    geom_violin(aes(fill=fit), alpha=0.5) +
+    geom_violin(aes(fill=fit), alpha=0.5, width=0.5) +
     geom_point(data=summ_df, shape=0, size=2.5) +
     facet_grid(key~gvar, scale="free", labeller = label_parsed) +
-    scale_color_discrete(label=data_name, name="fitted data") +
-    scale_fill_discrete(label=data_name, name="fitted data") +
+    scale_fill_discrete(label=data_name) +
     theme(
         panel.grid.minor.y = element_blank(),
         axis.text.x=element_blank(),
         axis.title=element_blank(),
         axis.ticks.x=element_blank(),
         panel.spacing=grid::unit(0,"lines"),
-        legend.position="bottom"
+        legend.position="bottom",
+        legend.title = element_blank()
     )
 
-if (save) ggsave("smc_summary.pdf", gg_smc_summ, width=8, height=6)
+if (save) ggsave("smc_summary.pdf", gg_smc_summ, width=6, height=6)

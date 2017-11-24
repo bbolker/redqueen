@@ -17,7 +17,7 @@ if (.Platform$OS.type=="windows") {
 
 save <- FALSE
 
-data_name <- c(expression(Dagan~italic(et~al.)~"(2005)"), 
+data_name <- c(expression(Dagan~italic(et~al.)~"(2013)"), 
                expression(McKone~italic(et~al.)~"(2016)"), 
                expression(Vergara~italic(et~al.)~"(2014)"))
 
@@ -207,7 +207,7 @@ gsim <- ggplot(comb_sim, aes(pinf, psex, col=data)) +
     facet_grid(~data, labeller = label_parsed) +
     scale_shape_manual(values=c(16, 2)) +
     scale_alpha_discrete(range=c(0.1, 0), guide=FALSE) +
-    scale_color_discrete(guide=FALSE) +
+    scale_colour_discrete(guide=FALSE) +
     theme(
         panel.spacing=grid::unit(0,"lines"),
         strip.background = element_blank(),
@@ -216,32 +216,6 @@ gsim <- ggplot(comb_sim, aes(pinf, psex, col=data)) +
         legend.position=c(0.11, 0.82),
         legend.title = element_blank()
     )
-
-## experimental but probably deprecated and not necessary
-if (FALSE) {
-    pround <- 0.05
-    
-    comb_sim2 <- comb_sim %>%
-        mutate(pinf=round(pinf/pround)*pround, psex=round(psex/pround)*pround) %>%
-        group_by(data, pinf, psex) %>%
-        tally %>%
-        group_by(data) %>%
-        mutate(intensity=2*plogis(n/max(n), location=0, scale=0.1)-1)
-    
-    gsim_tally <- ggplot(comb_sim2, aes(pinf, psex, fill=data)) +
-        geom_raster(aes(alpha=intensity)) +
-        geom_point(data=aggr, pch=2, size=2.5, col="black") +
-        scale_x_continuous(name="Proportion infected", breaks=seq(0,1,0.2), expand=c(0, 0.07)) +
-        scale_y_continuous(name="Proportion sexual", breaks=seq(0,1,0.2)) +
-        facet_grid(~data, labeller = label_parsed) +
-        theme(
-            panel.spacing=grid::unit(0,"lines"),
-            strip.background = element_blank(),
-            panel.border = element_rect(colour = "black"),
-            panel.grid = element_blank(),
-            legend.position="none"
-        )
-}
 
 if (save) ggsave("simulated_data.pdf", gsim, width=7, height=3)
 
