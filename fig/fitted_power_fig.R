@@ -11,7 +11,7 @@ scale_fill_discrete <- function(...,palette="Set1") scale_fill_brewer(...,palett
 
 if (.Platform$OS.type=="windows") {
     windowsFonts(Times=windowsFont("Times"))
-} 
+}
 
 save <- FALSE
 
