@@ -71,7 +71,7 @@ transfun <- function(transform=c("logit", "arcsin", "raw")) {
 sample_sim <- function(sim,
                   nsample,
                   nsite,
-                  transform=c("logit", "arcsin", "raw"),
+                  transform=c("raw", "arcsin", "logit"),
                   target.gen,
                   target.sites) {
     transfun <- transfun(transform)
@@ -85,8 +85,24 @@ sample_sim <- function(sim,
     A <- sim$A.count[target.gen, target.sites]
     AI <- sim$AI.count[target.gen, target.sites]
     N <- S+A
-    prob <- matrix(c(S-SI, SI, A-AI, AI)/N, nrow=length(S))
     
+    if (length(target.gen) == 1) {
+        prob <- matrix(
+            c(S-SI,SI,A-AI,AI)/N, 
+            nrow=length(S)
+        )
+    } else {
+        prob <- matrix(
+            c(
+                colMeans((S-SI)/N),
+                colMeans(SI/N),
+                colMeans((A-AI)/N),
+                colMeans(AI/N)
+            ), 
+            nrow=ncol(S)
+        )
+    }
+
     multisample <- {
         df <- as.data.frame(t(apply(prob, 1, function(p) rmultinom(1, size=nsample, prob=p))))
         names(df) <- c("SU", "SI", "AU", "AI")
@@ -109,7 +125,7 @@ powerfun <- function(simlist,
                      nsim=50,
                      nsample=50,
                      nsite=20,
-                     transform=c("logit", "arcsin", "raw"),
+                     transform=c("raw", "arcsin", "logit"),
                      test=list(spearman=test_spearman),
                      target.gen=1001,
                      verbose=FALSE) {

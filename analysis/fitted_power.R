@@ -7,25 +7,23 @@ gens <- 1001
 sites <- seq(10, 30, by=10)
 samples <- seq(25, 150, by=25)
 nsim <- 100
+ngen <- c(1, 2, 5, 10, 20)
 
-simlist <- list(
-    dagan=simlist$dagan[[3]],
+simlist2 <- list(
     vergara=simlist$vergara[[3]],
     mckone=simlist$mckone[[3]]
 )
 
 test_list <- list(
-    pearson=test_lm,
-    spearman=test_spearman,
-    quadratic=test_quad
+    spearman=test_spearman
 )
 
-reslist <- list()
+reslist <- vector('list', length(simlist2))
+names(reslist) <- names(simlist2)
 
-for(sim_name in names(simlist)) {
+for(sim_name in names(simlist2)) {
     print(sim_name)
-    sim <- simlist[[sim_name]]
-    sub_reslist <- list()
+    sim <- simlist2[[sim_name]]
     
     sample_reslist <- vector('list', length=length(samples))
     for(i in 1:length(samples)) {
