@@ -21,35 +21,28 @@ data_name <- c(expression(Dagan~italic(et~al.)~"(2013)"),
                expression(McKone~italic(et~al.)~"(2016)"), 
                expression(Vergara~italic(et~al.)~"(2014)"))
 
-logit <- transfun("logit")
-arcsin <- transfun("arcsin")
-
 transfun2 <- function(data) {
     list(
-        raw=data,
-        logit=logit(data),
-        arcsin=arcsin(data)
+        raw=data
     )
 }
 
 test_all <- function(data) {
     data.frame(
-        linear=test_lm(data)$effect.size,
-        spearman=test_spearman(data)$effect.size,
-        quad=test_quad(data)$effect.size,
-        quantile_quad=test_quad_rq(data)$effect.size
+        spearman=test_spearman(data)$effect.size
     )
 }
 
 gen <- 1001:1100
 
 simlist <- list(
-    dagan=simlist$dagan[[3]],
-    vergara=simlist$vergara[[3]],
-    mckone=simlist$mckone[[3]]
+    dagan=simlist$dagan[[4]],
+    vergara=simlist$vergara[[4]],
+    mckone=simlist$mckone[[4]]
 )
 
-nsim <- length(simlist$dagan)
+## TODO: change this to 100 later...
+nsim <- 40
 
 reslist <- dflist <- vector('list', length(simlist))
 names(dflist) <- names(reslist) <- names(simlist)
@@ -86,8 +79,7 @@ resdf <-  reslist %>%
     bind_rows(.id="data") %>%
     gather(key, value, -data, -sim, -transformation) %>%
     rename(test=key, effect=value) %>%
-    as.tbl %>%
-    mutate(tgroup=ifelse(test %in% c("linear", "spearman"), "cor", "quad"))
+    as.tbl
 
 corres <- resdf %>% 
     filter(tgroup=="cor") %>%
@@ -206,7 +198,7 @@ gsim <- ggplot(comb_sim, aes(pinf, psex, col=data)) +
     scale_y_continuous(name="proportion sexual", breaks=seq(0,1,0.2)) +
     facet_grid(~data, labeller = label_parsed) +
     scale_shape_manual(values=c(16, 2)) +
-    scale_alpha_discrete(range=c(0.1, 0), guide=FALSE) +
+    scale_alpha_discrete(range=c(0.2, 0), guide=FALSE) +
     scale_colour_discrete(guide=FALSE) +
     theme(
         panel.spacing=grid::unit(0,"lines"),

@@ -169,7 +169,7 @@ p_{i, \textrm{parasite}} = 1 - (1-p_{\textrm{infected}})^{1/4},
 \end{equation}
 where $p_{\textrm{infected}}$ is the probability that at least one infected host enters the population in a generation.
 
-Each simulation consists of 40 populations. Every population consists of 2000 sexual hosts where 80 of them are infected. They are assumed to be in Hardy-Weinberg equilibrium with ratio between alleles being exactly half. Simulation runs for 500 generations without introduction of asexuals. At generation 501, 10 asexual hosts of a single genotype are introduced to each population (note that asexual genotype introduced can vary across population) and simulation runs for 600 generations while allowing for stochastic migration of asexuals as well.
+Each simulation consists of 40 populations. Every population consists of 2000 sexual hosts where 80 of them are infected. They are assumed to be in Hardy-Weinberg equilibrium with ratio between alleles being exactly half. Transmission rate parameter, $\beta$, is randomly drawn from a lognormal distribution with parameters $\beta_{\textrm{meanlog}}$ and $\beta_{\textrm{sdlog}}$ for each population. Simulation runs for 500 generations without introduction of asexuals. At generation 501, 10 asexual hosts of a single genotype are introduced to each population (note that asexual genotype introduced can vary across population) and simulation runs for 600 generations while allowing for stochastic migration of asexuals as well.
 
 \subsection{Approximate Bayesian Computation}
 
@@ -189,14 +189,14 @@ To allow for more efficient estimation of the posterior distribution, we use Seq
 
 \section{Results}
 
-\subsection{Model fit}
+Our model can reproduce summary statistics observed across different systems reasonably well (\fref{smcsumm}).
+Across all systems, most of the observed summary statistics lie within the range of those predicted by the model.
+However, our model tends to overestimate mean infection prevalence across all three systems.
+In particular, \cite{mckone2016fine} reported mean infection prevalence of approximately 5\% but the model predicts mean infection prevalence of approximately 24\%. %% TODO: change this value once the simulations are over
+Mean infection prevalence reported by \cite{mckone2016fine} almost lies outside the range of mean prevalence predicted by the model.
+The model also overestimates mean proportion of sexual hosts across population for \cite{vergara2014infection} by 10\% but observed mean proportion still lies within a reasonable range of predicted values.
 
-Before we present the parameter estimates, we first discuss the resulting fits of the model and their goodness of fits.
-When we compare the summary statistics of the observed data and those estimated by the model, it appears that our simple Red Queen model can reproduce observed data reasonably well (\fref{smcsumm}).
-The only discrepancy is that the model overestimates prevalence of infection, given similar level of sexual reproduction.
-In particular, the data presented by \cite{mckone2016fine} has mean infection prevalence of approximately 5\% but the model predicts prevalence of approximately [TODO].
-
-\begin{figure}[!ht]
+\begin{figure}[htbp]
 \includegraphics[width=\textwidth]{../fig/smc_summary.pdf}
 \caption{{\bf Summary statistics of the observed data v.s. simulated data from the posterior samples.}
 Violin plots show distribution of summary statistics from each simulated set. For each simulated data set accepted along with the posterior parameter. a set of simulated populations are sampled at random 100 times and summary statistics are calculated for each bootstrap sample by considering last 100 generations. Squares represnt observed summary statistics.
@@ -204,58 +204,85 @@ Violin plots show distribution of summary statistics from each simulated set. Fo
 \label{fig:smcsumm}
 \end{figure}
 
-High estimate of infection prevalence can be explained by limited genetic diversity of the model.
-Previous studies have shown that moderately high genetic diversity can allow sexual hosts to escape infection more easily and therefore reduces prevalence of infection while maintaining sexual reproduction \citep{lively2010effect, king2012does, ashby2015diversity}.
-However, our model assumes that infection is deteremined two biallelic loci.
-Although not much is known about exact loci that determine trematode infecion in snails, it is not likely that a two loci model is sufficient to capture the genetic diversity of snails [CITE].
-Therefore, we expect a model with limited genetic diversity to have higher infection prevalence than observed prevalence.
+We also compare mean proportion of sexual hosts against mean proportion of infected hosts (averaged over last 100 generations) of each simulated population along with the observed proportions (\fref{ivs}).
+\fref{ivs} may seem to suggest the model fits are much worse overall than what we expected by looking at \fref{smcsumm}.
+It is important to note that we are plotting the mean proportions (suppressing the effects of the cycle) whereas observed data is more likely to be traces of the Red Queen cycles.
 
-As comparing summary statistics only present marginal fits of the model, we also compare mean infection prevalence and mean proportion of sexually reproducing hosts (averaged over last 100 generations) of each simulated population along with the observed proportions (\fref{ivs}).
-The most striking result from \fref{ivs} is the negative correlation between prevalence of infection and frequency of sexually reproducing hosts in the intermediate range of infection prevalence (most clearly seen from the fits to \cite{vergara2014infection}).
-As infection rate increases, frequency of sexual reproducing hosts increases but increasing number sexual hosts in the population decreases prevalence of infection as more hosts are escaping infection.
-Our result contrasts with the work by \cite{lively2001trematode} who predicted positive correlation in prevalence of infection and frequency of sexually reproducing hosts.
-
-\begin{figure}[!ht]
+\begin{figure}[htbp]
 \includegraphics[width=\textwidth]{../fig/simulated_data.pdf}
 \caption{{\bf Comparison in trends of the observed data v.s. simulated data from the posterior samples.}
 Solid circles represent a population within a simulation. Triangles represent observed data.}
 \label{fig:ivs}
 \end{figure}
 
-We also find that frequency of sexual hosts decrease when prevalence of infection is very high (near 100\%).
-When genetic diversity is limited and infection rate is high, sexually reproducing hosts fail to escape infection and sexual reproduction cannot be maintained \cite{ashby2015diversity}.
-This trend was also observed in \cite{lively2010epidemiological}, which we used as a basis of our model, but was not discussed.
+The most striking result from \fref{ivs} is that mean proportion of infected hosts decreases or does not change very much while mean proportion of sexual hosts increases in the intermediate range of infection prevalence (most clearly seen from the fits to \cite{vergara2014infection}). %% TODO: add circle around it??
+As infection rate increases, selection for sexual hosts increases but increasing number of resistant offsprings prevents further infection from happening.
+Our finding contrasts with the work by \cite{lively2001trematode} who predicted positive correlation in prevalence of infection and frequency of sexually reproducing hosts.
+We find that proportion of sexual hosts decrease when infection prevalence is very high.
+Decrease in fitness of sexual hosts with increase in prevalence was predicted by \cite{ashby2015diversity} but was also observed in an earlier work by \cite{lively2010epidemiological} (although not discussed).
 
-\fref{ivs} may seem to suggest the model fits are much worse overall than what we expected by looking at \fref{smcsumm}.
-It is important to note that we are plotting the mean proportions (suppressing the effects of the cycle) whereas observed data is more likely to be traces of the Red Queen cycles.
+Despite being able to reproduce summary statistics reported by \cite{dagan2013clonal}, 
+\fref{ivs} shows that our model cannot capture qualitative relationship bewteen proportion of sexual hosts and proportion of infected hosts.
+While both simulated data and observed data mostly consist of asexual populations,
+our model predicts some amount of sexual reproduction to be maintained at intermediate infection prevalence. 
+However, the data presented by \cite{dagan2013clonal} show that sexual reproduction is only maintained at a low level of infection prevalence and is barely maintained otherwise.
+Due to such badness of fit, we exclude fits to \cite{dagan2013clonal} from further discussion.
 
-Yet, we conclude that our model does not fit to \cite{dagan2013clonal}.
-Simulated data from the model is able to reproduce summary statistics of the data observed by \cite{dagan2013clonal} (\fref{smcsumm}) but shows a completely different trend in the maintanence of sexual reproduction across infection prevalence (\fref{ivs}).
-Our model predicts sexual reproduction to be maintained at intermediate infection prevalence,
-but the data presented by \cite{dagan2013clonal} show that sexual reproduction is only maintained at a low level of infection prevalence and is barely maintained otherwise.
+The model estimates similar parameters for both snail-trematode systems studied by \cite{mckone2016fine} and \cite{vergara2014infection} (\fref{smcparam}).
+The most surprising result is that the posterior distribution of the scale parameter, $c_b$, estimated by the model is much wider than the prior distribution.
+In particular, the posterior distribution is spread towards the right side of prior distribution and has noticeably higher mean: (mean (95\% credible interval)) 1.18 (0.73-1.79) and 1.24 (0.77-1.80) for \cite{mckone2016fine} and \cite{vergara2014infection}, repsectively. %% TODO: change these once simulations are over! Do we need to consider HPD region? does it matter? 
+\cite{ashby2015diversity} defined $c_b$ as additional costs and benefits of sex, where $c_b=1$ corresponds the two fold cost.
+Under their interpretation, our estimate corresponds to the following mean and 95\% CIs for cost of sex: 1.81 (1.12-2.74) and 1.68 (1.11-2.59), respectively.
+
+\begin{figure}[htbp]
+\includegraphics[width=\textwidth]{../fig/smc_param.pdf}
+\caption{{\bf Parameter estimates.}
+(dashed lines) prior distribution (solid lines) posterior distribution.
+}
+\label{fig:smcparam}
+\end{figure}
+
+The model estimates high virulence overall and almost 100\% virulence for the system studied by \cite{mckone2016fine}: (mean (95\% CI)) 89\% (75\%-100\%) and 95\% (72\%-100\%) for \cite{mckone2016fine} and \cite{vergara2014infection}, repsectively.
+This is consistent with the fact that trematodes are sterilising parasites [CITE].
+In contrast to \cite{lively2010epidemiological}, who modeled 1 asexual genotype competing with 9 sexual genotypes, our model estimate shows that higher asexual to sexual genotypic ratio can be supported ($G_{\textrm{asex}}$ panel in \fref{ivs}).
+
+Finally, a power analysis reveals that the power for detecting a positive correlation in proportion of sexual hosts and proportion of infected hosts within each population is not very high (\fref{power}).
+Given that \cite{mckone2016fine} collected about 100 snails from each of the 18 sites, they would have had 44\% power to detect the positive correlation. %% TODO: check this value after the simulations are over
+Surprisingly, the power to detect positive correlation in the system studied by \cite{vergara2014infection} is extremely low (less than 10\%) and there is much higher power in detecting a negative correlation.
+Increasing number of samples per site has small effect on power once the sample size greater than 50.
+Increasing number of sites leads to greater increase in power but power appears to saturate.
+
+\begin{figure}[htbp]
+\includegraphics[width=\textwidth]{../fig/power.pdf}
+\caption{{\bf Power to detect positive correlation.}
+Spearman's rank correlation was used.}
+\label{fig:power}
+\end{figure}
+
+\section{Discussion}
+
+We demonstrated that a simple Red Queen model with population structure is able to produce similar dynamics as those observed in nature and can be used to make inference about natural systems.
+Power analysis based on simulated data 
+
+Our study contrasts with the prediction made by \cite{lively2001trematode} and empirical studies that have confirmed their prediction (Table ?). 
+In particular, an earlier work by \cite{vergara2013geographic} that studied the same population as \cite{vergara2014infection} reported a positive correlation between between infection prevalence and male frequency, contradicting the results from power analysis (\fref{power}).
+
+
+
+Discrepancies between the model and the world can ??
+
+High estimate of infection prevalence can be explained by limited genetic diversity of the model.
+Previous studies have shown that moderately high genetic diversity can allow sexual hosts to escape infection more easily and therefore reduces prevalence of infection while maintaining sexual reproduction \citep{lively2010effect, king2012does, ashby2015diversity}.
+However, our model assumes that infection is deteremined two biallelic loci.
+Although not much is known about exact loci that determine trematode infecion in snails, it is not likely that a two loci model is sufficient to capture the genetic diversity of snails [CITE].
+Therefore, we expect a model with limited genetic diversity to have higher infection prevalence than observed prevalence.
+
+
 
 While all three studies \citep{dagan2013clonal, mckone2016fine, vergara2014infection} look at snail-trematode systems, the system studied by \cite{dagan2013clonal} live in intrinsically different environments.
 [TODO: add details]
 Our model not take any environmental factors into consideration and only depends on parasite mediated selection for sex.
 It is not expected that our model should fit well.
-Due to such badness of fit, we exclude fits to \cite{dagan2013clonal} from further analyses.
-
-\subsection{Parameter estimation}
-
-Our model estimates wide ranges of parameters across data sets (\fref{smcparam}).
-The most surprising result is that the posterior distribution of the scale parameter, $c_b$, estimated by the model is much wider than the prior distribution.
-In most cases, posterior distribution is expected to be narrower than prior distribution or at most similar to prior distribution when data provides minimal or no information about a parameter of interest [CITE?].
-
-\begin{figure}[!ht]
-\includegraphics[width=\textwidth]{../fig/smc_param.pdf}
-\caption{{\bf Need caption.}
-Need caption}
-\label{fig:smcparam}
-\end{figure}
-
-\cite{ashby2015diversity} defined $c_b$ as additional costs and benefits of sex, where $c_b=1$ corresponds the two fold cost.
-Under their interpretation, our estimate corresponds to the following 95\% credible intervals for cost of sex: [???].
-However, the meaning of the parameter changes from an inferential point of view.
 
 In the absence of the parameter $c_b$ (i.e, when $c_b$ = 1), our model assumes two fold cost of sex in growth rate.
 Then, an estimate of $c_b > 1$ can be interpreted as the amount of compensation required in order to overcome the two fold cost of sex.
@@ -263,22 +290,6 @@ Additional compensation may include other mechanisms that helps maintenance of s
 
 Similarly, an estimate of $c_b < 1$ implies that the model can sufficiently produce observed data without any compensation.
 
-We also find that the model estimates high virulence overall and almost 100\% virulence for the system studied by \cite{mckone2016fine}.
-
-\subsection{Power analysis}
-
-Power analysis reveals that detecting a posi
-
-\begin{figure}[!ht]
-\includegraphics[width=\textwidth]{../fig/true_effect.pdf}
-\caption{{\bf Need caption.}
-Need caption}
-\label{fig:teff}
-\end{figure}
-
-\section{Discussion}
-
-Here, we find that a simple Red Queen 
 
 
 \bibliography{redqueen}

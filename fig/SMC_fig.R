@@ -105,18 +105,9 @@ glist <- parlist_factor %>%
 
 names(glist$plot) <- glist$key
 
-beta_x <- seq(-3, 5, 0.01)
-
-beta_prior <- data.frame(vergara=dcauchy(beta_x, location=2, scale=1),
-                         mckone=dcauchy(beta_x, location=0, scale=2),
-                         x=beta_x) %>%
-    gather(key,value, -x) %>%
-    rename(fit=key) %>%
-    mutate(key="beta[meanlog]", run="1", fit=factor(fit, labels=data_name[2:3]))
-
 glist$plot$`beta[meanlog]` <- glist$plot$`beta[meanlog]` +
-    geom_line(data=beta_prior, aes(x, value), col=1, lty=2) +
-    xlim(c(-2, 4))
+    stat_function(fun=function(x) dcauchy(x, location=1, scale=2), col="black", lty=2) +
+    xlim(c(-1, 4))
 
 glist$plot$`beta[sdlog]` <- glist$plot$`beta[sdlog]` +
     scale_x_log10(limits=c(1e-3, 10)) +
@@ -124,27 +115,18 @@ glist$plot$`beta[sdlog]` <- glist$plot$`beta[sdlog]` +
 
 glist$plot$`c[b]` <- glist$plot$`c[b]` +
     xlim(c(0.3,1.8)) +
-    stat_function(fun=function(x) dlnorm(x, meanlog=-0.1, sdlog=0.1), col="black", lty=2)
+    stat_function(fun=function(x) dlnorm(x, meanlog=-0.07, sdlog=0.09), col="black", lty=2)
 
 glist$plot$V <- glist$plot$V +
     scale_x_continuous(limits=c(0, 1), breaks=seq(0, 1, 0.2)) +
     stat_function(fun=function(x) dbeta(x, shape1=6, shape2=2), col="black", lty=2)
 
-epsilon_x <- exp(seq(log(1e-5), 1, 0.01))
-
-epsilon_prior <- data.frame(vergara=dbeta(epsilon_x, shape1=1, shape2=9),
-                         mckone=dbeta(epsilon_x, shape1=2, shape2=8),
-                         x=epsilon_x) %>%
-    gather(key,value, -x) %>%
-    rename(fit=key) %>%
-    mutate(key="epsilon[site]", run="1", fit=factor(fit, labels=data_name[2:3]))
-
 glist$plot$`epsilon[site]` <- glist$plot$`epsilon[site]`+
-    geom_line(data=epsilon_prior, aes(x, value), col=1, lty=2) +
-    scale_x_continuous(limits=c(0,0.2), breaks=c(0, 0.1))
+    scale_x_continuous(limits=c(0,0.2), breaks=c(0, 0.1)) +
+    stat_function(fun=function(x) dbeta(x, shape1=1, shape2=9), col="black", lty=2)
 
-geno_prior <- data.frame(vergara=dbetabinom(0:9, prob=2/9, size=9, theta=5),
-           mckone=dbetabinom(0:9, prob=2/9, size=9, theta=5),
+geno_prior <- data.frame(vergara=dbetabinom(0:9, prob=3/9, size=9, theta=5),
+           mckone=dbetabinom(0:9, prob=3/9, size=9, theta=5),
            n.genotype=1:10) %>%
     gather(key,value, -n.genotype) %>%
     rename(fit=key) %>%

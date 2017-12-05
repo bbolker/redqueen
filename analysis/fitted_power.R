@@ -2,16 +2,16 @@ library(dplyr)
 source("../R/powerfun.R")
 load("../data/SMC_summary.rda")
 
-gens <- 1001
+gens <- 1001:1002
 
-sites <- seq(10, 30, by=10)
+sites <- seq(10, 40, by=10)
 samples <- seq(25, 150, by=25)
 nsim <- 100
 ngen <- c(1, 2, 5, 10, 20)
 
 simlist2 <- list(
-    vergara=simlist$vergara[[3]],
-    mckone=simlist$mckone[[3]]
+    vergara=simlist$vergara[[4]],
+    mckone=simlist$mckone[[4]]
 )
 
 test_list <- list(
@@ -23,7 +23,7 @@ names(reslist) <- names(simlist2)
 
 for(sim_name in names(simlist2)) {
     print(sim_name)
-    sim <- simlist2[[sim_name]]
+    sim <- simlist2[[sim_name]][1:40] ## TODO: Change this once simulations are over!!!
     
     sample_reslist <- vector('list', length=length(samples))
     for(i in 1:length(samples)) {
@@ -46,7 +46,7 @@ for(sim_name in names(simlist2)) {
         rres <- res %>%
             bind_rows(.id="sites")
         
-        rres$sim <- rep(rep(1:50, each=length(test_list)*nsim), length(sites))
+        rres$sim <- rep(rep(1:40, each=length(test_list)*nsim), length(sites))
         
         rres$samples <- samples[i]
         sample_reslist[[i]] <- rres
