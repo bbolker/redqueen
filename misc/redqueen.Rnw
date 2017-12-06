@@ -262,10 +262,23 @@ Spearman's rank correlation was used.}
 \section{Discussion}
 
 We demonstrated that a simple Red Queen model with population structure is able to produce similar dynamics as those observed in nature and can be used to make inference about natural systems.
-Power analysis based on simulated data 
+Power analysis based on simulated data shows that detecting a positive correlation between infection prevalence and frequency of sexual hosts is difficult.
 
-Our study contrasts with the prediction made by \cite{lively2001trematode} and empirical studies that have confirmed their prediction (Table ?). 
-In particular, an earlier work by \cite{vergara2013geographic} that studied the same population as \cite{vergara2014infection} reported a positive correlation between between infection prevalence and male frequency, contradicting the results from power analysis (\fref{power}).
+Our results dramatically differ from the prediction made by \cite{lively2001trematode} and those of many empirical studies that have confirmed the prediction [CITE]. 
+An earlier work by \cite{vergara2013geographic} that studied the same population as \cite{vergara2014infection} reported a positive correlation between between infection prevalence and male frequency, contradicting the results from power analysis that predicted almost no power for detecting the positive correlation (\fref{power}).
+The difference can easily be explained and call for change in perspective from which Red Queen Hypothesis is studied.
+
+The key premise behind the prediction by \cite{lively2001trematode} is that there must large variation in infection prevalence.
+Comparing \cite{vergara2013geographic} and \cite{vergara2014infection} shows that the positive correlation in the population is driven by populations that have low infection prevalence and low frequency of sexual hosts.
+It is even clearer in \cite{kumpulainen2004parasites} that positive correlation will not be detected .
+Hence, a positive correlation between prevalence of infection and frequency of sexual hosts carries information not about populations that support the Red Queen Hypothesis (goes under parasite mediated selection for sex) but about populations that do not support the Red Queen Hypothesis (does not involve parasites).
+
+
+While predicting a positive correlation between prevalence of infection and frequency of sexual hosts, \cite{lively2001trematode} also noted that there is a region at which expected infection prevalence overlaps between sexual and asexual populations. 
+Within this region lies the association between increase in sexual reproduction and decrease in infection prevalence observed in \fref{ivs}.
+Furthermore, the prediction was made by looking at expected mean prevalence of infection and frequency of sexual hosts but does not take temporal effects into account.
+A main component of the Red Queen Hypothesis is the cycling between parasite and host populations driven by negative frequency dependence.
+When temporal variations are taken into account, association between infection prevalence and frequency of sexual hosts can change depending on where the population is on the cycle and differ from predictions made by looking at mean proportions. %%% make a figure!!!
 
 
 
@@ -277,7 +290,11 @@ However, our model assumes that infection is deteremined two biallelic loci.
 Although not much is known about exact loci that determine trematode infecion in snails, it is not likely that a two loci model is sufficient to capture the genetic diversity of snails [CITE].
 Therefore, we expect a model with limited genetic diversity to have higher infection prevalence than observed prevalence.
 
-
+%% depressing power 
+%% way out
+%% (1) don't measure correlation look at time series
+%% (2) draw a curve?
+%% worth noting lively temporal geographic
 
 While all three studies \citep{dagan2013clonal, mckone2016fine, vergara2014infection} look at snail-trematode systems, the system studied by \cite{dagan2013clonal} live in intrinsically different environments.
 [TODO: add details]
