@@ -39,7 +39,7 @@ sig_simdf <- simdf %>%
               negative.power=mean(p.value<=level & effect.size < 0)) %>%
     gather(key, value, -data, -test, -sites, -samples) %>%
     group_by() %>%
-    mutate(key=factor(key, labels=c("negative~effect", "positive~effect")))
+    mutate(key=factor(key, labels=c("negative~correlation", "positive~correlation")))
 
 spearman_power <- sig_simdf %>%
     filter(test=="spearman") %>%
