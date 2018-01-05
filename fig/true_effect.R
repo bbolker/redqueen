@@ -41,8 +41,7 @@ simlist <- list(
     mckone=simlist$mckone[[4]]
 )
 
-## TODO: change this to 100 later...
-nsim <- 40
+nsim <- 100
 
 reslist <- dflist <- vector('list', length(simlist))
 names(dflist) <- names(reslist) <- names(simlist)
@@ -82,7 +81,7 @@ resdf <-  reslist %>%
     as.tbl
 
 corres <- resdf %>% 
-    filter(tgroup=="cor") %>%
+    filter(group=="cor") %>%
     mutate(test=factor(test, labels=c("Pearson correlation", "Spearman's rho")))
 
 ## is spearman better?

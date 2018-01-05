@@ -61,7 +61,7 @@ SMC_summary <- clean_list %>%
     lapply(summarize, value=mean(value, na.rm=TRUE)) %>%
     lapply(spread, key, value)
 
-if(save) save("comb_summ", "comb_smc", "clean_list", "simlist", "SMC_summary", file="SMC_summary.rda")
+if(save) save("comb_summ", "clean_list", "simlist", "SMC_summary", file="SMC_summary.rda")
 
 gpar <- ggplot(NULL, aes(col=fit, group=run)) +
     geom_line(stat="density", aes(value), lwd=0.9) +
@@ -110,7 +110,7 @@ glist$plot$`beta[meanlog]` <- glist$plot$`beta[meanlog]` +
     xlim(c(-1, 4))
 
 glist$plot$`beta[sdlog]` <- glist$plot$`beta[sdlog]` +
-    scale_x_log10(limits=c(1e-3, 10)) +
+    scale_x_log10(limits=c(0.01, 10)) +
     stat_function(fun=function(x) dlnorm(x, meanlog=0, sdlog=2), col="black", lty=2)
 
 glist$plot$`c[b]` <- glist$plot$`c[b]` +

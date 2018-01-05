@@ -23,7 +23,7 @@ names(reslist) <- names(simlist2)
 
 for(sim_name in names(simlist2)) {
     print(sim_name)
-    sim <- simlist2[[sim_name]][1:40] ## TODO: Change this once simulations are over!!!
+    sim <- simlist2[[sim_name]]
     
     sample_reslist <- vector('list', length=length(samples))
     for(i in 1:length(samples)) {
@@ -46,7 +46,7 @@ for(sim_name in names(simlist2)) {
         rres <- res %>%
             bind_rows(.id="sites")
         
-        rres$sim <- rep(rep(1:40, each=length(test_list)*nsim), length(sites))
+        rres$sim <- rep(rep(1:100, each=length(test_list)*nsim), length(sites))
         
         rres$samples <- samples[i]
         sample_reslist[[i]] <- rres

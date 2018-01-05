@@ -205,7 +205,7 @@ Violin plots show distribution of summary statistics from each simulated set. Fo
 \end{figure}
 
 We also compare mean proportion of sexual hosts against mean proportion of infected hosts (averaged over last 100 generations) of each simulated population along with the observed proportions (\fref{ivs}).
-\fref{ivs} may seem to suggest the model fits are much worse overall than what we expected by looking at \fref{smcsumm}.
+\fref{ivs} may appear to suggest that the model fits are worse overall than what we expected by looking at \fref{smcsumm}.
 It is important to note that we are plotting the mean proportions (suppressing the effects of the cycle) whereas observed data is more likely to be traces of the Red Queen cycles.
 
 \begin{figure}[htbp]
@@ -261,17 +261,41 @@ Spearman's rank correlation was used.}
 
 \section{Discussion}
 
-We demonstrated that a simple Red Queen model with population structure is able to produce similar dynamics as those observed in nature and can be used to make inference about natural systems.
-Power analysis based on simulated data shows that detecting a positive correlation between infection prevalence and frequency of sexual hosts is difficult.
+Our results challenge the way the Red Queen Hypothesis for sex is currently studied.
+We show that a simple Red Queen model with population structure can reproduce mean level and variation in infection prevalence and frequency of sexual reproduction observed across three different snail populations [REF].
+We also show that predicted relationships between infection prevalence and frequency of sexual reproduction can be different from those observed in nature even when the observed summary statistics are matched by the model [REF].
+Our approach contrasts with previous studies that have relied on assumed parameters to make inference about a system that goes through the Red Queen dynamics [CITE].
+However, discrepancies between the predicted and observed trends suggest that current Red Queen models may not be sufficient to explain effects of parasites on maintanence of sex observed in natural systems.
+We find that detecting a positive correlation between infection prevalence and frequency of sexual hosts is difficult.
+This finding calls for different methods to detect parasite mediated selection for sex.
 
-Our results dramatically differ from the prediction made by \cite{lively2001trematode} and those of many empirical studies that have confirmed the prediction [CITE]. 
-An earlier work by \cite{vergara2013geographic} that studied the same population as \cite{vergara2014infection} reported a positive correlation between between infection prevalence and male frequency, contradicting the results from power analysis that predicted almost no power for detecting the positive correlation (\fref{power}).
-The difference can easily be explained and call for change in perspective from which Red Queen Hypothesis is studied.
+A model that does not fit well can carry more information than a model that fits well.
+In order for our model to produce similar summary statistics as those observed in the snail-trematode systems, it requires the scale parameter ($c_b$) for cost of sex to be greater than 1 [REF].
+Although $c_b$ was initially defined as additional costs and benefits of sex by [CITE], it takes on a different meaning from an inferential point of view.
+In the absence of the parameter $c_b$ (i.e, when $c_b$ = 1), the model assumes two fold cost of sex in growth rate.
+Then, an estimate of $c_b > 1$ should be interpreted as the amount of compensation required to overcome the two fold cost of sex.
+A simpler model without the scaling parameter will not be able to reproduce observed summary statistics.
+Here, additional compensation may include other mechanisms that can help maintenance of sex, such as higher genetic diversity, and [TODO; CITE].
 
-The key premise behind the prediction by \cite{lively2001trematode} is that there must large variation in infection prevalence.
-Comparing \cite{vergara2013geographic} and \cite{vergara2014infection} shows that the positive correlation in the population is driven by populations that have low infection prevalence and low frequency of sexual hosts.
-It is even clearer in \cite{kumpulainen2004parasites} that positive correlation will not be detected .
-Hence, a positive correlation between prevalence of infection and frequency of sexual hosts carries information not about populations that support the Red Queen Hypothesis (goes under parasite mediated selection for sex) but about populations that do not support the Red Queen Hypothesis (does not involve parasites).
+The biggest limitation of our model is genetic diversity. 
+Here, we assume that infection is deteremined two biallelic loci.
+Although exact number loci that determine trematode infecion in snails is not known, it is not likely that a two loci model is sufficient given genetic diversity of snails [CITE].
+In addition, high estimate of infection prevalence compared to obseved prevalence [REF] can be explained by limited genetic diversity of the model.
+Previous studies have shown that moderately high genetic diversity can allow sexual hosts to escape infection more easily and therefore reduces prevalence of infection while maintaining sexual reproduction \citep{lively2010effect, king2012does, ashby2015diversity}.
+Therefore, a model with limited genetic diversity is expected to have higher infection prevalence given amount of sexually reproducing hosts.
+
+While all three studies \citep{dagan2013clonal, mckone2016fine, vergara2014infection} considered similar snail-trematode systems, the snail populations studied by \cite{dagan2013clonal} lives in intrinsically different environments.
+Some populations are subject to flash floods, which can disturb habitats and affect selection for sexual reproduction \citep{ben2007temporal}.
+Our simple model that does not take any environmental factors into account ends up fitting badly.
+Overall, our result indicates that more modeling effort is necessary to understand maintenance of sexual reproduction in nature.
+
+Our power analysis appears to contradict the positive correlation predicted by \cite{lively2001trematode} and findings of many empirical studies that have confirmed the prediction [CITE].
+Since parasitism is the only mechanism that drives sexual reproduction in our model, we expected the power to be high.
+However. the power analysis predicts almost no power for detecting a positive corrleation in the population studied by \cite{vergara2014infection} and higher power for detecting a negative correlation, contradicting an earlier finding by \cite{vergara2013geographic} that reported a positive correlation between between infection prevalence and male frequency in the same population.
+The key premise behind the postive correlation predicted by \cite{lively2001trematode} is that there must be large variation in infection prevalence.
+In particular, comparing \cite{vergara2013geographic} and \cite{vergara2014infection} shows that the positive correlation in the population is driven by populations that have low infection prevalence and low frequency of sexual hosts (i.e. cannot provide much support for the Red Queen Hypothesis) acting as leverage points.
+The leverage effect is even clearer in figure 3 of \cite{kumpulainen2004parasites}.
+Since both data sets provided by \cite{vergara2014infection} and \cite{mckone2016fine} only consists of populations with high and low infection prevalence respectively, there is not enough variance to observe the leverage effect.
 
 
 While predicting a positive correlation between prevalence of infection and frequency of sexual hosts, \cite{lively2001trematode} also noted that there is a region at which expected infection prevalence overlaps between sexual and asexual populations. 
@@ -282,32 +306,14 @@ When temporal variations are taken into account, association between infection p
 
 
 
-Discrepancies between the model and the world can ??
 
-High estimate of infection prevalence can be explained by limited genetic diversity of the model.
-Previous studies have shown that moderately high genetic diversity can allow sexual hosts to escape infection more easily and therefore reduces prevalence of infection while maintaining sexual reproduction \citep{lively2010effect, king2012does, ashby2015diversity}.
-However, our model assumes that infection is deteremined two biallelic loci.
-Although not much is known about exact loci that determine trematode infecion in snails, it is not likely that a two loci model is sufficient to capture the genetic diversity of snails [CITE].
-Therefore, we expect a model with limited genetic diversity to have higher infection prevalence than observed prevalence.
+
 
 %% depressing power 
 %% way out
 %% (1) don't measure correlation look at time series
 %% (2) draw a curve?
 %% worth noting lively temporal geographic
-
-While all three studies \citep{dagan2013clonal, mckone2016fine, vergara2014infection} look at snail-trematode systems, the system studied by \cite{dagan2013clonal} live in intrinsically different environments.
-[TODO: add details]
-Our model not take any environmental factors into consideration and only depends on parasite mediated selection for sex.
-It is not expected that our model should fit well.
-
-In the absence of the parameter $c_b$ (i.e, when $c_b$ = 1), our model assumes two fold cost of sex in growth rate.
-Then, an estimate of $c_b > 1$ can be interpreted as the amount of compensation required in order to overcome the two fold cost of sex.
-Additional compensation may include other mechanisms that helps maintenance of sex, such as higher genetic diversity.
-
-Similarly, an estimate of $c_b < 1$ implies that the model can sufficiently produce observed data without any compensation.
-
-
 
 \bibliography{redqueen}
 \end{document}
