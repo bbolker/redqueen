@@ -20,6 +20,7 @@
 
 \section{Introduction}
 
+It is still not clear why 
 Sexual reproduction is followed by numerous costs \citep{lehtonen2012many},
 and these costs are often attributed to cost of producing males \citep{smith1978evolution}.
 As males cannot produce offspring, a sexually reproducing population should be outgrown by an asexually reproducing population growing twice as fast (given that the sexual population produces 50\% males and 50\% females) --
@@ -317,8 +318,10 @@ A particular simulation is chosen from the posterior distributions to demonstrat
 \label{fig:cycle}
 \end{figure}
 
-As lack of variation explains low power, sampling sites with large variation in infection prevalence will increase power to detect the positive correlation. %% TODO? show this?
-
+Depressing power to detect positive correlation between infection prevalence and frequency of sexual hosts can be concerning.
+However, as lack of variation explains low power, sampling sites with large variation in infection prevalence will increase power to detect the positive correlation.
+In the Appendix, we show that doubling the log standard deviation of the transmission rates from the posterior distribution increases power. %% TODO: show this?
+Alternatively, %% TODO: write about other tests
 
 \bibliography{redqueen}
 \end{document}
