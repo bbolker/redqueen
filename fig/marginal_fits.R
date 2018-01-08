@@ -8,8 +8,8 @@ source("../R/ABC_funs.R")
 
 load("../data/SMC_summary.rda")
 
-scale_colour_discrete <- function(...,palette="Set1") scale_colour_brewer(...,palette=palette)
-scale_fill_discrete <- function(...,palette="Set1") scale_fill_brewer(...,palette=palette)
+scale_colour_discrete <- function(...,palette="Dark2") scale_colour_brewer(...,palette=palette)
+scale_fill_discrete <- function(...,palette="Dark2") scale_fill_brewer(...,palette=palette)
 
 if (.Platform$OS.type=="windows") {
     windowsFonts(Times=windowsFont("Times"))

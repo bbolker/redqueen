@@ -52,16 +52,17 @@ gg_spearman_power <- ggplot(spearman_power, aes(samples, value, group=sites, col
     scale_y_continuous(name="power", limits=c(0,1)) +
     scale_x_continuous(name="number of samples per site") +
     facet_grid(data~key, labeller=label_parsed) +
-    scale_color_manual(values=c("#619CFF", "#00BA38"), guide=FALSE) +
+    scale_color_manual(values=c("#D95F02", "#7570B3"), guide=FALSE) +
     scale_shape_discrete(name="number of sites") +
     scale_linetype_discrete(name="number of sites") +
     theme(plot.title = element_text(hjust = 0.5),
           strip.background = element_blank(),
           panel.border = element_rect(colour = "black"),
           panel.grid=element_blank(),
-          panel.spacing=grid::unit(0,"lines"))
+          panel.spacing=grid::unit(0,"lines"),
+          legend.position = c(0.1, 0.8))
 
-if (save) ggsave("power.pdf", gg_spearman_power, width=6, height=4)
+if (save) ggsave("power.pdf", gg_spearman_power, width=8, height=4.5)
 
 sumdf <- simdf %>%
     group_by(data, test, sites, samples) %>%

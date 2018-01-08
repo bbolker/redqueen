@@ -1,28 +1,23 @@
 library(tidyr)
 library(dplyr)
-library(ggplot2); theme_set(theme_bw(base_size = 14,
+library(ggplot2); theme_set(theme_bw(base_size = 12,
                                      base_family = "Times"))
 library(gridExtra)
 load("../data/SMC_summary.rda")
-
-cbPalette <- c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
 
 if (.Platform$OS.type=="windows") {
     windowsFonts(Times=windowsFont("Times"))
 } 
 
-
 save <- FALSE
 
 gen <- 1001:1100
-vergsim <- 2
-sim1 <- simlist$vergara[[3]][[vergsim]]
+vergsim <- 3
+sim1 <- simlist$vergara[[4]][[vergsim]]
 
-print(comb_smc$vergara$parlist[[3]][vergsim,])
+dflist <- vector('list', 40)
 
-dflist <- vector('list', 30)
-
-for (i in 1:30) {
+for (i in 1:40) {
     dflist[[i]] <- with(sim1,{
         N.count <- S.count + A.count
         S <- (S.count/N.count)[gen,i]
@@ -50,64 +45,46 @@ if (FALSE){
         facet_wrap(~site)
 }
 
-cclass <- list(
-    t1=data.frame(site=c(18, 19)),
-    t2=data.frame(site=c(11, 13, 14, 21, 23, 25, 26, 28, 4, 5, 7, 9)),
-    t3=data.frame(site=c(12, 16, 24, 27, 3, 30, 6, 8)),
-    t4=data.frame(site=c(1, 10, 15, 17, 2, 20, 22, 29))
-) %>%
-    bind_rows(.id="cycle")
-
 sitedf <- df1 %>%
-    filter(site %in% c(1, 11, 16, 18)) %>%
-    filter(gen < 1025) %>%
-    merge(cclass) %>%
-    mutate(cycle=factor(cycle, levels=c("t1", "t2", "t3", "t4"))) %>%
-    arrange(cycle)
+    filter(site==1) %>%
+    filter(gen < 1025) 
 
 meandf <- df1 %>%
     group_by(site, key) %>%
     summarize(value=mean(value)) %>%
     spread(key, value)
 
-sampledf <- df1 %>%
-    filter(gen==1001) %>%
-    spread(key, value)
-
-gcycle <- ggplot(sitedf, aes(gen, value, col=cycle, pch=key, linetype=key)) +
+gcycle <- ggplot(sitedf, aes(gen, value, pch=key, linetype=key)) +
     geom_point() +
     geom_line() +
     scale_y_continuous("proportion", limits=c(0,1), expand=c(0, 0.1)) +
     scale_x_continuous("generation", expand=c(0,0)) +
     scale_colour_manual(values=cbPalette, guide=FALSE) +
-    facet_grid(cycle~.) +
     theme(
         strip.background = element_blank(),
         strip.text = element_blank(),
         panel.border = element_rect(colour = "black"),
         panel.grid=element_blank(),
         panel.spacing=grid::unit(0,"lines"),
-        legend.position=c(0.42,0.9395),
+        legend.position=c(0.8,0.15),
         legend.title = element_blank(),
         legend.direction = "horizontal"
     )
 
-combdf <- rawdf %>%
-    select(-gen) %>%
+combdf <- rawdf %>% 
     bind_rows(meandf, .id="type") %>%
     as.tbl %>%
-    mutate(type=factor(type, labels=c("observed effect", "expected effect"))) %>%
-    merge(cclass)
+    mutate(type=factor(type, labels=c("accounting temporal variation", "suppressing temporal variation")))
 
 gcomb <- ggplot(combdf, aes(infected, sexual)) +
-    geom_point(aes(col=cycle, alpha=type, size=type)) +
-    geom_smooth(method="lm", formula=y~poly(x, 2), se=FALSE, col=1, lty=2, fullrange=TRUE) +
-    scale_x_continuous("proportion infected", limits=c(0, 1), expand=c(0,0)) +
+    geom_point(aes(alpha=type, size=type), col="#7570B3") +
+    geom_smooth(method="lm", se=FALSE, col=1, lty=2, fullrange=TRUE) +
+    scale_x_continuous("proportion infected", limits=c(0, 1)) +
     scale_y_continuous("proportion sexual", limits=c(0, 1)) +
     scale_colour_manual(values=cbPalette, guide=FALSE) +
-    scale_alpha_discrete(range=c(0.1, 1)) +
-    scale_size_discrete(range=c(1, 2.5)) +
-    facet_grid(type~.) +
+    scale_alpha_discrete(range=c(0.025, 1)) +
+    scale_size_discrete(range=c(1, 2)) +
+    facet_grid(~type) +
     theme(
         strip.background = element_blank(),
         panel.border = element_rect(colour = "black"),
@@ -115,8 +92,8 @@ gcomb <- ggplot(combdf, aes(infected, sexual)) +
         panel.spacing=grid::unit(0,"lines"),
         legend.position="none"
     )
-    
-ggarranged <-arrangeGrob(gcycle, gcomb, nrow=1, widths=c(0.4,0.6))
 
-if (save) ggsave("cycle_example.pdf", ggarranged, width=7, height=4.3)
+ggarranged <- arrangeGrob(gcomb, gcycle, nrow=2)
+
+if (save) ggsave("cycle_example.pdf", ggarranged, width=6, height=4.3)
 

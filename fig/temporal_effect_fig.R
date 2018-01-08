@@ -1,6 +1,6 @@
 library(dplyr)
 library(tidyr)
-library(ggplot2); theme_set(theme_bw(base_size = 14,
+library(ggplot2); theme_set(theme_bw(base_size = 12,
                                      base_family = "Times"))
 
 scale_colour_discrete <- function(...,palette="Set1") scale_colour_brewer(...,palette=palette)

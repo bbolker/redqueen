@@ -1,15 +1,15 @@
 library(dplyr)
 library(tidyr)
 library(gridExtra)
-library(ggplot2); theme_set(theme_bw(base_size = 14,
+library(ggplot2); theme_set(theme_bw(base_size = 12,
                                      base_family = "Times"))
 library(readxl)
 source("../R/powerfun.R")
 
 load("../data/SMC_summary.rda")
 
-scale_colour_discrete <- function(...,palette="Set1") scale_colour_brewer(...,palette=palette)
-scale_fill_discrete <- function(...,palette="Set1") scale_fill_brewer(...,palette=palette)
+scale_colour_discrete <- function(...,palette="Dark2") scale_colour_brewer(...,palette=palette)
+scale_fill_discrete <- function(...,palette="Dark2") scale_fill_brewer(...,palette=palette)
 
 if (.Platform$OS.type=="windows") {
     windowsFonts(Times=windowsFont("Times"))
@@ -21,18 +21,6 @@ data_name <- c(expression(Dagan~italic(et~al.)~"(2013)"),
                expression(McKone~italic(et~al.)~"(2016)"), 
                expression(Vergara~italic(et~al.)~"(2014)"))
 
-transfun2 <- function(data) {
-    list(
-        raw=data
-    )
-}
-
-test_all <- function(data) {
-    data.frame(
-        spearman=test_spearman(data)$effect.size
-    )
-}
-
 gen <- 1001:1100
 
 simlist <- list(
@@ -43,14 +31,14 @@ simlist <- list(
 
 nsim <- 100
 
-reslist <- dflist <- vector('list', length(simlist))
-names(dflist) <- names(reslist) <- names(simlist)
+dflist <- vector('list', length(simlist))
+names(dflist) <- names(simlist)
 
 set.seed(101)
 for (sim_name in names(simlist)) {
     siml <- simlist[[sim_name]]
     
-    sub_dflist <- sub_reslist <- vector('list', nsim)
+    sub_dflist <- vector('list', nsim)
     
     for (i in 1:nsim) {
         sim <- siml[[i]]
@@ -64,82 +52,9 @@ for (sim_name in names(simlist)) {
                 sexual=colMeans(S)
             )
         })
-        
-        transdf <- transfun2(df)
-        
-        tres <- lapply(transdf, test_all)
-        sub_reslist[[i]] <- tres %>% bind_rows(.id="transformation")
     }
     dflist[[sim_name]] <- sub_dflist
-    reslist[[sim_name]] <- sub_reslist %>% bind_rows(.id="sim")
 }
-
-resdf <-  reslist %>% 
-    bind_rows(.id="data") %>%
-    gather(key, value, -data, -sim, -transformation) %>%
-    rename(test=key, effect=value) %>%
-    as.tbl
-
-corres <- resdf %>% 
-    filter(group=="cor") %>%
-    mutate(test=factor(test, labels=c("Pearson correlation", "Spearman's rho")))
-
-## is spearman better?
-corres %>%
-    mutate(test=factor(test, labels=c("Pearson", "Spearman"))) %>%
-    spread(test, effect) %>%
-    filter(transformation=="raw") %>%
-    group_by(data) %>%
-    summarize(prop=mean(Spearman > 0 & Pearson < 0),
-              prop2=mean(Spearman < 0 & Pearson > 0))
-
-g1 <- ggplot(corres) +
-    geom_boxplot(aes(transformation, effect, col=test)) +
-    geom_hline(yintercept = 0, lty=2) +
-    scale_y_continuous(name="correlation coefficient") +
-    xlab("") +
-    facet_grid(data~test, scale="free") +
-    theme(legend.position="none",
-          strip.background = element_blank(),
-          panel.border = element_rect(colour = "black"),
-          strip.text.y = element_blank())
-    
-quadres <- resdf %>%
-    filter(tgroup=="quad") %>%
-    mutate(test=factor(test, labels=c("Least~squares~regression", "Quantile~regression~(tau==0.9)"))) %>%
-    mutate(data=factor(data, labels=data_name))
-
-## is logit bad?
-quadres %>%
-    mutate(test=factor(test, labels=c("LS", "QR"))) %>%
-    spread(transformation, effect) %>%
-    group_by(data, test) %>%
-    summarize(prop.arc=mean(arcsin<0),
-              prop.logit=mean(logit<0),
-              prop.raw=mean(raw<0))
-
-## is quantile actually better?
-quadres %>%
-    mutate(test=factor(test, labels=c("LS", "QR"))) %>%
-    spread(test, effect) %>%
-    filter(transformation=="raw") %>%
-    group_by(data) %>%
-    summarize(prop=mean(QR<0 & LS >0),
-              prop2=mean(QR>0 & LS < 0))
-
-g2 <- ggplot(quadres) +
-    geom_boxplot(aes(transformation, effect, col=test)) +
-    geom_hline(yintercept = 0, lty=2) +
-    xlab("") +
-    ylab("standardized quadratic coefficient") +
-    facet_grid(data~test, scale="free", labeller = label_parsed) +
-    theme(legend.position="none",
-          strip.background = element_blank(),
-          panel.border = element_rect(colour = "black"))
-
-geffect <- arrangeGrob(g1, g2, nrow=1, widths=c(0.9, 1))
-
-if (save) ggsave("true_effect.pdf", geffect, width=8, height=6)
 
 mckone <- read.csv("../data/mckone2014.csv", header=FALSE)
 vergara <- read_excel("../data/vergara2014.xlsx")

@@ -2,13 +2,13 @@ library(emdbook)
 library(readxl)
 library(dplyr)
 library(tidyr)
-library(ggplot2); theme_set(theme_bw(base_size = 14,
+library(ggplot2); theme_set(theme_bw(base_size = 12,
                                      base_family = "Times"))
 library(grid)
 library(gridExtra)
 
-scale_colour_discrete <- function(...,palette="Set1") scale_colour_brewer(...,palette=palette)
-scale_fill_discrete <- function(...,palette="Set1") scale_fill_brewer(...,palette=palette)
+scale_colour_discrete <- function(...,palette="Dark2") scale_colour_brewer(...,palette=palette)
+scale_fill_discrete <- function(...,palette="Dakr2") scale_fill_brewer(...,palette=palette)
 
 if (.Platform$OS.type=="windows") {
     windowsFonts(Times=windowsFont("Times"))
@@ -67,7 +67,7 @@ gpar <- ggplot(NULL, aes(col=fit, group=run)) +
     geom_line(stat="density", aes(value), lwd=0.9) +
     facet_grid(fit~key, labeller=label_parsed) +
     scale_y_continuous(expand=c(0,0.05)) +
-    scale_color_manual(values=c("#619CFF", "#00BA38")) +
+    scale_color_manual(values=c("#D95F02", "#7570B3")) +
     theme(
         legend.position = "none",
         strip.background = element_blank(),
@@ -142,7 +142,7 @@ ghist <- parlist_factor %>%
         facet_grid(fit~key, labeller=label_parsed) +
         scale_x_continuous(breaks=1:10) +
         scale_y_continuous(expand=c(0,0.05)) +
-        scale_fill_manual(values=c("#619CFF", "#00BA38")) +
+        scale_fill_manual(values=c("#D95F02", "#7570B3")) +
         theme(axis.title=element_blank(),
             legend.position = "none",
             axis.text.y=element_blank(),
