@@ -192,24 +192,27 @@ To allow for more efficient estimation of the posterior distribution, we use Seq
 
 \section{Results}
 
-Our model can reproduce summary statistics observed across different systems reasonably well (\fref{smcsumm}).
-Across all systems, most of the observed summary statistics lie within the range of those predicted by the model.
+Our model can reproduce infection prevalence and frequency of sexual hosts observed acrosss three snail-trematode systems reasonably well (\fref{smcsumm}).
 However, our model tends to overestimate mean infection prevalence across all three systems.
-In particular, \cite{mckone2016fine} reported mean infection prevalence of approximately 5\% but the model predicts mean infection prevalence of approximately 24\%. %% TODO: change this value once the simulations are over
-Mean infection prevalence reported by \cite{mckone2016fine} almost lies outside the range of mean prevalence predicted by the model.
-The model also overestimates mean proportion of sexual hosts across population for \cite{vergara2014infection} by 10\% but observed mean proportion still lies within a reasonable range of predicted values.
+In particular, \cite{mckone2016fine} reported mean infection prevalence of 5.1\% but the mean (95\% quantile) estimate of the fitted model is 23.7\% (9.1\% - 40.3\%).
+The fitted model underestimates mean frequency of sexual hosts in \cite{vergara2014infection} population by almost 10\% when compared with the mean estimate but the observed mean frequency still lies within a reasonable range of estimated values.
+We also find that there is large variation in the estimates even though model fitting was performed based on these summary statistics.
 
 \begin{figure}[htbp]
 \includegraphics[width=\textwidth]{../fig/smc_summary.pdf}
-\caption{{\bf Summary statistics of the observed data v.s. simulated data from the posterior samples.}
-Violin plots show distribution of summary statistics from each simulated set. For each simulated data set accepted along with the posterior parameter. a set of simulated populations are sampled at random 100 times and summary statistics are calculated for each bootstrap sample by considering last 100 generations. Squares represnt observed summary statistics.
+\caption{{\bf Summary statistics of the observed data v.s. summary statistics of the simulated data from the posterior samples.}
+Violin plots show distribution of summary statistics from each simulated set. For each simulated data set accepted along with a posterior parameter sample, simulated populations are sampled at random 100 times so that each sample consists of equal number of populations as number of sites in fitted data. Then, summary statistics are calculated for each sample by taking last 100 generations. Squares represnt observed summary statistics.
 }
 \label{fig:smcsumm}
 \end{figure}
 
-We also compare mean proportion of sexual hosts against mean proportion of infected hosts (averaged over last 100 generations) of each simulated population along with the observed proportions (\fref{ivs}).
-\fref{ivs} may appear to suggest that the model fits are worse overall than what we expected by looking at \fref{smcsumm}.
-It is important to note that we are plotting the mean proportions (suppressing the effects of the cycle) whereas observed data is more likely to be traces of the Red Queen cycles.
+To further diagnose the fit, we compare the relationships between infection prevalence and frequency of sexual hosts predicted by the model with those observed across three systems (\fref{ivs}).
+Despite being able to reproduce summary statistics reported by \cite{dagan2013clonal} well, 
+our model cannot capture qualitative trend bewteen proportion of sexual hosts and proportion of infected hosts.
+While both simulated data and observed data mostly consist of asexual populations,
+our model predicts some amount of sexual reproduction to be maintained at intermediate infection prevalence. 
+On the other hand, the data provided by \cite{dagan2013clonal} shows that sexual reproduction is only maintained at low levels of infection prevalence and is barely maintained otherwise.
+Due to such badness of fit, we exclude fits to \cite{dagan2013clonal} from further discussion.
 
 \begin{figure}[htbp]
 \includegraphics[width=\textwidth]{../fig/simulated_data.pdf}
@@ -223,13 +226,6 @@ As infection rate increases, selection for sexual hosts increases but increasing
 Our finding contrasts with the work by \cite{lively2001trematode} who predicted positive correlation in prevalence of infection and frequency of sexually reproducing hosts.
 We find that proportion of sexual hosts decrease when infection prevalence is very high.
 Decrease in fitness of sexual hosts with increase in prevalence was predicted by \cite{ashby2015diversity} but was also observed in an earlier work by \cite{lively2010epidemiological} (although not discussed).
-
-Despite being able to reproduce summary statistics reported by \cite{dagan2013clonal}, 
-\fref{ivs} shows that our model cannot capture qualitative relationship bewteen proportion of sexual hosts and proportion of infected hosts.
-While both simulated data and observed data mostly consist of asexual populations,
-our model predicts some amount of sexual reproduction to be maintained at intermediate infection prevalence. 
-However, the data presented by \cite{dagan2013clonal} show that sexual reproduction is only maintained at a low level of infection prevalence and is barely maintained otherwise.
-Due to such badness of fit, we exclude fits to \cite{dagan2013clonal} from further discussion.
 
 The model estimates similar parameters for both snail-trematode systems studied by \cite{mckone2016fine} and \cite{vergara2014infection} (\fref{smcparam}).
 The most surprising result is that the posterior distribution of the scale parameter, $c_b$, estimated by the model is much wider than the prior distribution.
@@ -266,7 +262,7 @@ Spearman's rank correlation was used.}
 
 Our results challenge how the Red Queen Hypothesis for sex has been studied.
 Previous studies have relied on assumed parameters to understand how parasitism maintains sexual reproduction in host population [CITE].
-Here, we show that (1) model parameters are estimable and (2) a simple Red Queen model with population structure can reproduce key summary statistics of observed data from three different snail populations (\fref{smcsumm}).
+Here, we show that (1) model parameters are estimable and (2) a simple Red Queen model with population structure can reproduce key summary statistics observed across three different snail populations (\fref{smcsumm}).
 While our model is able to reprouce observed summary statistics, there still remain some discrepancies between model prediction and observed trends in the relationship between infection prevalence and frequency of sexual hosts (\fref{ivs}).
 These discrepancies suggest that existing theoretical framework for the Red Queen Hypothesis may not be sufficient to explain sexual reproduction observed in nature.
 We also find that detecting a positive correlation between infection prevalence and frequency of sexual hosts is difficult (\fref{power}) and hence not a good measure for measuring the effects of the Red Queen.

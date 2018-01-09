@@ -101,3 +101,14 @@ comb_summ %>%
     lapply(t) %>%
     lapply(as.data.frame) %>%
     bind_rows(.id="data")
+
+reslist$`McKone ~ italic(et ~ al.) ~ "(2016)"` %>%
+    lapply(bind_rows) %>%
+    bind_rows(.id="data") %>%
+    select(pinf.mean) %>%
+    summarize(mean=mean(pinf.mean, na.rm=TRUE),
+              lwr=quantile(pinf.mean, 0.025, na.rm=TRUE),
+              upr=quantile(pinf.mean, 0.975, na.rm=TRUE),
+              min=min(pinf.mean, na.rm=TRUE))
+
+
