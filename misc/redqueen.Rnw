@@ -20,7 +20,6 @@
 
 \section{Introduction}
 
-It is still not clear why 
 Sexual reproduction is followed by numerous costs \citep{lehtonen2012many},
 and these costs are often attributed to cost of producing males \citep{smith1978evolution}.
 As males cannot produce offspring, a sexually reproducing population should be outgrown by an asexually reproducing population growing twice as fast (given that the sexual population produces 50\% males and 50\% females) --
@@ -208,11 +207,11 @@ Violin plots show distribution of summary statistics from each simulated set. Fo
 
 To further diagnose the fit, we compare the relationships between infection prevalence and frequency of sexual hosts predicted by the model with those observed across three systems (\fref{ivs}).
 Despite being able to reproduce summary statistics reported by \cite{dagan2013clonal} well, 
-our model cannot capture qualitative trend bewteen proportion of sexual hosts and proportion of infected hosts.
+our model is unable to predict qualitative trend bewteen proportion of sexual hosts and proportion of infected hosts (\fref{ivs}; \cite{dagan2013clonal}).
 While both simulated data and observed data mostly consist of asexual populations,
-our model predicts some amount of sexual reproduction to be maintained at intermediate infection prevalence. 
+our model predicts some amount of sexual reproduction to be maintained when infection prevalence is greather than 20\%. 
 On the other hand, the data provided by \cite{dagan2013clonal} shows that sexual reproduction is only maintained at low levels of infection prevalence and is barely maintained otherwise.
-Due to such badness of fit, we exclude fits to \cite{dagan2013clonal} from further discussion.
+Due to such badness of fit, we exclude fits to \cite{dagan2013clonal} from further discussion (including parameter estimation and power analysis).
 
 \begin{figure}[htbp]
 \includegraphics[width=\textwidth]{../fig/simulated_data.pdf}
@@ -221,40 +220,39 @@ Solid circles represent a population within a simulation. Triangles represent ob
 \label{fig:ivs}
 \end{figure}
 
-The most striking result from \fref{ivs} is that mean proportion of infected hosts decreases or does not change very much while mean proportion of sexual hosts increases in the intermediate range of infection prevalence (most clearly seen from the fits to \cite{vergara2014infection}). %% TODO: add circle around it??
-As infection rate increases, selection for sexual hosts increases but increasing number of resistant offsprings prevents further infection from happening.
-Our finding contrasts with the work by \cite{lively2001trematode} who predicted positive correlation in prevalence of infection and frequency of sexually reproducing hosts.
-We find that proportion of sexual hosts decrease when infection prevalence is very high.
-Decrease in fitness of sexual hosts with increase in prevalence was predicted by \cite{ashby2015diversity} but was also observed in an earlier work by \cite{lively2010epidemiological} (although not discussed).
+The most striking result from \fref{ivs} is that there is a region in which proportion of infected hosts increases while proportion of sexual hosts increases (most clearly seen from the fits to \cite{mckone2016fine} and \cite{vergara2014infection}). %% TODO: add circles around it??
+As infection rate increases, selection for sexual hosts increases but increasing number of resistant offsprings prevents further infection from happening and hence decreases prevalence of infection.
+This region connects the overlap in prevalence between sexual and asexual populations noted by \cite{lively2001trematode}
+We also find that proportion of sexual hosts starts to decrease when infection prevalence is very high.
+Decrease in fitness of sexual hosts with increase in prevalence was predicted by \cite{ashby2015diversity} but can also be also observed in an earlier work by \cite{lively2010epidemiological} (not discussed in the paper).
 
 The model estimates similar parameters for both snail-trematode systems studied by \cite{mckone2016fine} and \cite{vergara2014infection} (\fref{smcparam}).
-The most surprising result is that the posterior distribution of the scale parameter, $c_b$, estimated by the model is much wider than the prior distribution.
-In particular, the posterior distribution is wider than the prior distribution and has noticeably higher mean: (mean (95\% credible interval)) 1.18 (0.73-1.79) and 1.24 (0.77-1.80) for \cite{mckone2016fine} and \cite{vergara2014infection}, repsectively. %% TODO: change these once simulations are over! Do we need to consider HPD region? does it matter? 
+The most surprising result is that the posterior distributions of the scale parameter, $c_b$, estimated by the model is much wider than the prior distribution and have noticeably higher mean: (mean (95\% credible interval)) 1.19 (0.73-1.79) and 1.29 (0.79-2.01) for \cite{mckone2016fine} and \cite{vergara2014infection}, repsectively. %% TODO: Do we need to consider HPD region? does it matter? 
 \cite{ashby2015diversity} defined $c_b$ as additional costs and benefits of sex, where $c_b=1$ corresponds the two fold cost.
-Under their interpretation, our estimate corresponds to the following mean and 95\% CIs for cost of sex: 1.81 (1.12-2.74) and 1.68 (1.11-2.59), respectively.
+Under their interpretation, our estimate corresponds to the following mean and 95\% CIs for cost of sex: 1.68 (1.12-2.73) and 1.55 (1.00-2.52), respectively.
 
 \begin{figure}[htbp]
 \includegraphics[width=\textwidth]{../fig/smc_param.pdf}
-\caption{{\bf Parameter estimates.}
-(dashed lines) prior distribution (solid lines) posterior distribution.
+\caption{{\bf Parameter estimates from Sequential Monte Carlo Approximate Bayesian Computation.}
+(dashed lines) prior distribution (solid lines) posterior distribution. 100 posterior samples were obtained from SMC ABC. Prior distributions are specified in [TODO]
 }
 \label{fig:smcparam}
 \end{figure}
 
-The model estimates high virulence overall and almost 100\% virulence for the system studied by \cite{mckone2016fine}: (mean (95\% CI)) 89\% (75\%-100\%) and 95\% (72\%-100\%) for \cite{mckone2016fine} and \cite{vergara2014infection}, repsectively.
-This is consistent with the fact that trematodes are sterilising parasites [CITE].
+The model estimates high virulence overall and almost 100\% virulence for the data from \cite{mckone2016fine}: (mean (95\% CI)) 88.8\% (75.0\%-99.2\%) and 95.0\% (73.4\%-100.0\%) for \cite{vergara2014infection} and \cite{mckone2016fine}, repsectively.
 In contrast to \cite{lively2010epidemiological}, who modeled 1 asexual genotype competing with 9 sexual genotypes, our model estimate shows that higher asexual to sexual genotypic ratio can be supported ($G_{\textrm{asex}}$ panel in \fref{ivs}).
+However, it is still necessary for sexual hosts to have higher genetic diversity than asexual hosts.
 
-Finally, a power analysis reveals that the power for detecting a positive correlation in proportion of sexual hosts and proportion of infected hosts within each population is not very high (\fref{power}).
-Given that \cite{mckone2016fine} collected about 100 snails from each of the 18 sites, they would have had 44\% power to detect the positive correlation. %% TODO: check this value after the simulations are over
-Surprisingly, the power to detect positive correlation in the system studied by \cite{vergara2014infection} is extremely low (less than 10\%) and there is much higher power in detecting a negative correlation.
+Finally, a power analysis show that the power for detecting a positive correlation between infection prevalence and frequency of sexual hosts is not very high (\fref{power}).
+Given that \cite{mckone2016fine} collected about 100 snails from each of the 18 sites, they would have had 45\% power to detect the positive correlation.
+Surprisingly, the power to detect positive correlation in the system studied by \cite{vergara2014infection} is extremely low (less than 10\%) and there is much higher (but still low) power to detect a negative correlation.
 Increasing number of samples per site has small effect on power once the sample size greater than 50.
-Increasing number of sites leads to greater increase in power but power appears to saturate.
+Increasing number of sites leads to greater increase in power but the power appears to saturate as number of sites increases.
 
 \begin{figure}[htbp]
 \includegraphics[width=\textwidth]{../fig/power.pdf}
-\caption{{\bf Power to detect positive correlation.}
-Spearman's rank correlation was used.}
+\caption{{\bf Power to detect a significant correlation between infection prevalence and frequency of sexual hosts.}
+Spearman's rank correlation was used to detect correlation between infection prevalence and frequency of sexual hosts in simulated data from the posterior distributions. Detecting the positive correlation predicted by \cite{lively2001trematode} is difficult. Increainsg number of samples and number of sites increases power but it is more efficient to increase number of sites.}
 \label{fig:power}
 \end{figure}
 
