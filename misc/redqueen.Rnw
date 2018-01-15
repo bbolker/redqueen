@@ -189,6 +189,15 @@ To allow for more efficient estimation of the posterior distribution, we use Seq
 
 \subsection{Power analysis}
 
+To calculate the power to detect positive correlation between infection prevalence and frequency of sexual hosts, we simulate an observed sample by drawing a random multinomial sample from simulated data.
+For simplicity, we assume that a year contains of two snail generations [CITE] and that samples are taken within a short period of time.
+For each simulation from the posterior distributions, we start by setting a reference generation to generatation 1001 and choosing $n$ populations at random from 40 simulated popoulations.
+For each selected population, hosts are divided into four categories based on their infection status (infected/uninfected) and reproductive mode (asexual/sexual),
+and mean proportion of hosts in each category is calculated by averaging over two consecutive generations.
+A multinomial sample of size $m$ is drawn from each selected population independently based on the four categories. 
+Positive correlation between proportion of infected hosts and proportion of sexual hosts is tested using Spearman's rank correlation at 5\% significance level.
+We repeat the process 100 times for each simulation from a posterior distribution.
+
 \section{Results}
 
 Our model can reproduce infection prevalence and frequency of sexual hosts observed acrosss three snail-trematode systems reasonably well (\fref{smcsumm}).
