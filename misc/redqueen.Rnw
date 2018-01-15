@@ -20,23 +20,27 @@
 
 \section{Introduction}
 
-The evolution of sexual reproduction still remains largely unsolved [CITE].
+The evolution of sexual reproduction still remains unsolved \citep{otto2009evolutionary}.
 Despite being the dominant mode of reproduction \citep{vrijenhoek1998animal}, sexual reproduction is followed by many costs \citep{lehtonen2012many}.
-The most often cited is perhaps the cost of producing males \citep{smith1978evolution}.
-As males cannot produce offspring, a sexually reproducing population is expected to be outgrown by an asexually reproducing counterpart that grows twice as fast (given that the sexual population produces 50\% males and 50\% females);
-hence, cost of sex is often referred to as the infamous \emph{two-fold cost of sex} \citep{smith1978evolution}.
+The most often cited is the cost of producing males \citep{smith1978evolution}.
+As males cannot produce offspring, a sexually reproducing population is expected to be outgrown by an asexually reproducing counterpart that grows twice as fast (given that the sexual population produces 50\% males and 50\% females) --
+hence the infamous \emph{two-fold cost of sex} \citep{smith1978evolution}.
 However, the two-fold cost of sex relies on the assumption that all else is equal, and this is not necessarily true in nature.
 So what drives sex to persist?
 
 One explanation for sex is the Red Queen Hypothesis \citep{bell1982masterpiece}.
 The Red Queen Hypothesis predicts sexually reproducing organisms to overcome the two-fold cost of sex under strong parasite selection by producing genetically diverse offspring that are resistant to infection \citep{jbs1949disease, jaenike1978hypothesis, hamilton1980sex}.
-Hosts with rare genotypes are expected to result in higher fitness and become common eventually.
-Furthermore, parasites coevolves with the host population to infect the common "rare" genotype [CITE],
-and negative frequeny dependnece drives an oscillation in genotypic frequencies in host and parasite populations \citep{clarke1976ecological, hamilton1980sex}.
+The negative frequency dependence can not only promote selection for sex but also drive an oscillation in genotypic frequencies in host and parasite populations \citep{clarke1976ecological, hamilton1980sex}.
 
-Since the Red Queen Hypothesis has been postulated, much of theoretical work has focused on figuring out conditions under which parasites can maintain sexual reproduction.
+Since the conception of Red Queen Hypothesis, much of the theoretical work has focused on figuring out conditions under which parasite selection can maintain sexual reproduction in the host population.
+\cite{may1983epidemiology} first noted that parasites must be extremely virulent to support sexual reproduction.
+Later models showed that virulence is an important factor but it is possible for sexual and asexual hosts to coexist at intermediate virulence \citep{howard1994parasitism}.
+\cite{agrawal2002infection} compared wide range of infection genetics that determine parasite resistance and the dynamics that arise from different genetic architecture.
+Some studies have 
+Recently, 
 
 On the other hand, empiricists have tried to quantify the Red Queen.
+
 
 While the Red Queen Hypothesis is well supported both empirically and theoretically, there still remains a gap between theory and data.
 Many models for Red Queen Hypothesis rely on simplifying assumption that are not applicable to natural populations \citep{ashby2015diversity}.
