@@ -39,13 +39,16 @@ Later models showed that virulence is an important factor but it is possible for
 Some studies took a departure from a typical population genetics framework and showed that incorporating ecological and epidemiological details can support sexual reproduction \citep{galvani2001antigenic, galvani2003maintenance, lively2009maintenance, lively2010epidemiological}.
 Recent studies showed that host genetic diversity plays an important role in determining the selection for sex [CITE].
 
-On the other hand, empiricists have mostly focused on indirectly tests that stem from the hypothesis.
-
+On the other hand, empiricists have mostly focused on indirect tests that stem from the hypothesis.
+Popular among them are local adaptation, time-lagged selection, and association between parsites and host reproductive mode (see \cite{tobler2008expanding} and \cite{vergara2014infection} for reviews).
+Recent works on experimental systems have provided more direct support for the hypohtesis \citep{auld2016sex, slowinski2016coevolutionary}.
+A notable example is a snail population in New Zealand that serve as an intermediate hosts for trematodes [CITE].
+Through several decades of work, Lively [CITE] demonstrated that the population appears to satisfy essential requirements and provide support for the hypothesis.
 
 While the Red Queen Hypothesis is well supported both theoretically and empirically, there still remains a gap between theory and data.
 Many models for Red Queen Hypothesis rely on simplifying assumption that are not applicable to natural populations and model parameters are often assumed \cite{ashby2015diversity}.
 % None of the Red Queen models reviewed by \cite{ashby2015diversity} use statistical tools to connect the model to data.
-An exception is work by \cite{lively1992parthenogenesis}.
+There are exceptions:
 \cite{lively1992parthenogenesis} initially postulated that infection prevalence should be positively correlated with frequency of sexual hosts. 
 \citep{lively2001trematode} then formalized the idea with a mathematical model and confirmed his prediction with a snail-trematode system.
 Many other emprical works have successfully demonstrated the positive correlation \citep{lively2002temporal, kumpulainen2004parasites, vergara2013geographic, mckone2016fine} but such correlation was not observed in a different snail-trematode system \citep{dagan2013clonal}.
@@ -56,21 +59,25 @@ Using posterior distributions obtained from the fits, we perform power analysis 
 
 \section{Methods}
 
-\subsection{Data}
+\subsection{Study systems}
 
-We consider two snail-trematode population in New Zealand \citep{mckone2016fine, vergara2014infection} and a similar snail-trematode population in Isral \citep{dagan2013clonal}. First, the snail-trematode system in New Zealand has been extensively studied under the Red Queen Hypothesis [CITE] so we expect a Red Queen model to fit well. Second, [Something about Israel snails being different]. Finally, by considering both spatial \citep{dagan2013clonal, mckone2016fine} and spatiotemporal data \citep{vergara2014infection}, we can compare how structure of the data may affect model fits. 
-Data for \cite{vergara2014infection} and \cite{dagan2013clonal} were obtained from their Dryad repository [CITE] and data for \cite{mckone2016fine} was extracted from their figure.
+We consider two snail-trematode populations in New Zealand \citep{vergara2014infection, mckone2016fine} and a similar snail-trematode population in Isral \citep{dagan2013clonal}. 
+The snail-trematode system has been extensively studied under the context of the Red Queen Hypothesis [CITE] so we expect a simple Red Queen model to fit well.
+Data collected by \cite{dagan2013clonal} and \cite{vergara2014infection} were obtained from their Dryad repositories \citep{dryad_f5t56, dryad_29nk3_2} and data by \cite{mckone2016fine} was extracted from their figure.
 
 \subsection{Model}
 
 We model obligate sexual hosts competing with obligate asexual hosts in multiple population by extending the model introduced by \cite{lively2010epidemiological}.
-A model that \cite{lively2010epidemiological} used is essentially an SI model on a discrete time scale with natural mortality and virulence (reduction in offspring production by infected hosts).
-It is a suitable canditate for this study as it captures essential structures that are present in basic epidemiological and population population dynamics models and is general enough to be applied to broad systems in nature.
-We do not consider mechanistic details of the snail-trematode system such as life history of trematodes \citep{vergara2014infection} as it would require us to estimate or make assumptions on parameters on mechanisms, both of which are unrealistic.
+A model that \cite{lively2010epidemiological} used is essentially an SI model on a discrete time scale with natural mortality and virulence (reduced offspring production by infected hosts).
+It is a suitable canditate for this study as it captures essential structures that are present in basic epidemiological and population biology models and is general enough to be applied to broad range of natural systems.
+We do not consider mechanistic details of the snail-trematode system such as life history of trematodes \citep{vergara2014infection}.
+We incorporate population structure and allow for mixing between populations.
+Each population can be considered as a sampling site in the observed populations.
 
 All hosts are assumed to be diploids with two biallelic loci, and parasites are assumed to be haploids.
 Let $S_{ij}^k(t)$ and $A_{ij}^k(t)$ be the number of sexual and asexual hosts with genotype $ij$ from population $k$ at generation $t$. 
-For simplicity, we drop the superscript representing population and write $S_{ij}(t)$ and $A_{ij}(t)$ unless necessary.
+For simplicity, we drop the superscript representing population and write $S_{ij}(t)$ and $A_{ij}(t)$;
+every population is modeled using the same equations unless noted otherwise.
 Following \cite{lively2010epidemiological}, the expected number of offsprings (without recombination or outcrossing) produced by a sexual population is given by
 \begin{equation}
 S_{ij}' = c_b (1-s) \left(W_U S_{ij,U} (t) + W_I S_{ij,I} (t)\right),
