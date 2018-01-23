@@ -1,15 +1,4 @@
 \documentclass{article}\usepackage[]{graphicx}\usepackage[]{color}
-%% maxwidth is the original width if it is less than linewidth
-%% otherwise use linewidth (to make sure the graphics do not exceed the margin)
-\makeatletter
-\def\maxwidth{ %
-  \ifdim\Gin@nat@width>\linewidth
-    \linewidth
-  \else
-    \Gin@nat@width
-  \fi
-}
-\makeatother
 
 \title{Needs a title}
 \author{Sang Woo Park, Benjamin M Bolker}
@@ -32,38 +21,37 @@
 
 \section{Introduction}
 
-The evolution of sexual reproduction still remains unsolved \citep{otto2009evolutionary}.
+The evolution of sexual reproduction still remains to be explained \citep{otto2009evolutionary}.
 Despite being the dominant mode of reproduction \citep{vrijenhoek1998animal}, sexual reproduction is followed by many costs \citep{lehtonen2012many}.
-The most often cited is the cost of producing males \citep{smith1978evolution}.
-As males cannot produce offspring, a sexually reproducing population is expected to be outgrown by an asexually reproducing counterpart that grows twice as fast (given that the sexual population produces 50\% males and 50\% females) --
-hence the infamous \emph{two-fold cost of sex} \citep{smith1978evolution}.
-However, the two-fold cost of sex relies on the assumption that all else is equal, and this is not necessarily true in nature.
+Perhaps the most often mentioned is the cost of producing males \citep{smith1978evolution}.
+As males cannot produce offspring, a sexually reproducing population is expected to be outgrown by an asexually reproducing counterpart that can grow twice as fast (given that the sexual population produces 50\% males and 50\% females).
+The infamous \emph{two-fold cost of sex} \citep{smith1978evolution} relies on the assumption that everything else is equal but this is not necessarily true.
 So what drives sex to persist?
 
 One explanation for sex is the Red Queen Hypothesis \citep{bell1982masterpiece}.
-The Red Queen Hypothesis predicts sexually reproducing organisms to overcome the two-fold cost of sex under strong parasite selection by producing genetically diverse offspring that are resistant to infection \citep{jbs1949disease, jaenike1978hypothesis, hamilton1980sex}.
-The negative frequency dependence can not only promote selection for sex but also drive an oscillation in genotypic frequencies in host and parasite populations \citep{clarke1976ecological, hamilton1980sex}.
+The Red Queen Hypothesis predicts sexually reproducing hosts to overcome the cost of sex under strong parasite selection by producing genetically diverse offspring that are resistant to infection \citep{jbs1949disease, jaenike1978hypothesis, hamilton1980sex}.
+Host parasite coevolution constantly creates selective advantage for rare genotypes (hence osccilation in genotypic frequencies) and allows for sexual reproduction to persist in the host population \citep{clarke1976ecological, hamilton1980sex}.
 
-Since the conception of Red Queen Hypothesis, much of the theoretical work has focused on figuring out conditions under which parasite selection can maintain sexual reproduction in the host population.
+Since the conception of the Red Queen Hypothesis, much of the theoretical work has focused on figuring out conditions under which parasite selection can maintain sexual reproduction in the host population.
 \cite{may1983epidemiology} first noted that parasites must be extremely virulent to maintain sexual reproduction.
 Later models showed that virulence is an important factor but it is possible for sexual and asexual hosts to coexist at intermediate virulence \citep{howard1994parasitism}.
 \cite{agrawal2002infection} compared wide range of infection genetics that determine parasite resistance and the dynamics that arise from different genetic architecture.
-Some studies took a departure from a typical population genetics framework and showed that incorporating ecological and epidemiological details can support sexual reproduction \citep{galvani2001antigenic, galvani2003maintenance, lively2009maintenance, lively2010epidemiological}.
+Some studies took a departure from a typical population genetics framework and showed that incorporating ecological and epidemiological details to the model can support sexual reproduction in the host population \citep{galvani2001antigenic, galvani2003maintenance, lively2009maintenance, lively2010epidemiological}.
 Recent studies showed that host genetic diversity plays an important role in determining the selection for sex [CITE].
 
 On the other hand, empiricists have mostly focused on indirect tests that stem from the hypothesis.
 Popular among them are local adaptation, time-lagged selection, and association between parsites and host reproductive mode (see \cite{tobler2008expanding} and \cite{vergara2014infection} for reviews).
-Recent works on experimental systems have provided more direct support for the hypohtesis \citep{auld2016sex, slowinski2016coevolutionary}.
+Recent works on experimental systems have provided more direct support for the hypothesis \citep{auld2016sex, slowinski2016coevolutionary}.
 A notable example is a snail population in New Zealand that serve as an intermediate hosts for trematodes [CITE].
 Through several decades of work, Lively [CITE] demonstrated that the population appears to satisfy essential requirements and provide support for the hypothesis.
 
-While the Red Queen Hypothesis is well supported both theoretically and empirically, there still remains a gap between theory and data.
-Many models for Red Queen Hypothesis rely on simplifying assumption that are not applicable to natural populations and model parameters are often assumed \cite{ashby2015diversity}.
-% None of the Red Queen models reviewed by \cite{ashby2015diversity} use statistical tools to connect the model to data.
-There are exceptions:
+While the Red Queen Hypothesis has gained reasponably support both theoretically and empirically, there still remains a gap between theory and data.
+Many models for Red Queen Hypothesis rely on simplifying assumption that are not applicable to natural populations and make predictions based on assumed parameters.
+In particular, none of the Red Queen models reviewed by \cite{ashby2015diversity} use statistical tools to relate the model to data.
+However, there are exceptions:
 \cite{lively1992parthenogenesis} initially postulated that infection prevalence should be positively correlated with frequency of sexual hosts. 
 \citep{lively2001trematode} then formalized the idea with a mathematical model and confirmed his prediction with a snail-trematode system.
-Many other emprical works have successfully demonstrated the positive correlation \citep{lively2002temporal, kumpulainen2004parasites, vergara2013geographic, mckone2016fine} but such correlation was not observed in a different snail-trematode system \citep{dagan2013clonal}.
+Many other emprical works have successfully demonstrated the positive correlation \citep{lively2002temporal, kumpulainen2004parasites, vergara2013geographic, mckone2016fine} but surprisingly such correlation was not observed in a different snail-trematode system \citep{dagan2013clonal}.
 
 Here, we try to bridge the gap further.
 We extend the model used by \cite{lively2010epidemiological} to include stochasticity and population structure and fit it the to data from \cite{dagan2013clonal, mckone2016fine, vergara2014infection} using Approximate Bayesian Computation (ABC).
