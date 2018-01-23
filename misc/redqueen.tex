@@ -1,4 +1,16 @@
-\documentclass{article}
+\documentclass{article}\usepackage[]{graphicx}\usepackage[]{color}
+%% maxwidth is the original width if it is less than linewidth
+%% otherwise use linewidth (to make sure the graphics do not exceed the margin)
+\makeatletter
+\def\maxwidth{ %
+  \ifdim\Gin@nat@width>\linewidth
+    \linewidth
+  \else
+    \Gin@nat@width
+  \fi
+}
+\makeatother
+
 \title{Needs a title}
 \author{Sang Woo Park, Benjamin M Bolker}
 
@@ -13,7 +25,7 @@
 \newcommand{\etal}{\textit{et al.}}
 
 \newcommand{\fref}[1]{Fig.~\ref{fig:#1}}
-
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
 \begin{document}
 
 \maketitle
@@ -215,7 +227,7 @@ In particular, \cite{mckone2016fine} reported mean infection prevalence of 5.1\%
 The fitted model underestimates mean frequency of sexual hosts in \cite{vergara2014infection} population by almost 10\% when compared with the mean estimate but the observed mean frequency still lies within a reasonable range of estimated values.
 We also find that there is large variation in the estimates even though model fitting was performed based on these summary statistics.
 
-\begin{figure}[htbp]
+\begin{figure}[!htp]
 \includegraphics[width=\textwidth]{../fig/smc_summary.pdf}
 \caption{{\bf Summary statistics of the observed data v.s. summary statistics of the simulated data from the posterior samples.}
 Violin plots show distribution of summary statistics from each simulated set. For each simulated data set accepted along with a posterior parameter sample, simulated populations are sampled at random 100 times so that each sample consists of equal number of populations as number of sites in fitted data. Then, summary statistics are calculated for each sample by taking last 100 generations. Squares represnt observed summary statistics.
@@ -231,7 +243,7 @@ our model predicts some amount of sexual reproduction to be maintained when infe
 On the other hand, the data provided by \cite{dagan2013clonal} shows that sexual reproduction is only maintained at low levels of infection prevalence and is barely maintained otherwise.
 Due to such badness of fit, we exclude fits to \cite{dagan2013clonal} from further discussion (including parameter estimation and power analysis).
 
-\begin{figure}[htbp]
+\begin{figure}[!htp]
 \includegraphics[width=\textwidth]{../fig/simulated_data.pdf}
 \caption{{\bf Comparison in trends of the observed data v.s. simulated data from the posterior samples.}
 Solid circles represent a population within a simulation. Triangles represent observed data.}
@@ -249,8 +261,8 @@ The most surprising result is that the posterior distributions of the scale para
 \cite{ashby2015diversity} defined $c_b$ as additional costs and benefits of sex, where $c_b=1$ corresponds the two fold cost.
 Under their interpretation, our estimate corresponds to the following mean and 95\% CIs for cost of sex: 1.68 (1.12-2.73) and 1.55 (1.00-2.52), respectively.
 
-\begin{figure}[htbp]
-\includegraphics[width=\textwidth]{../fig/smc_param.pdf}
+\begin{figure}[!htp]
+\includegraphics[width=\textwidth]{../fig/verg_post.pdf}
 \caption{{\bf Parameter estimates from Sequential Monte Carlo Approximate Bayesian Computation.}
 (dashed lines) prior distribution (solid lines) posterior distribution. 100 posterior samples were obtained from SMC ABC. Prior distributions are specified in [TODO]
 }
@@ -267,7 +279,7 @@ Surprisingly, the power to detect positive correlation in the system studied by 
 Increasing number of samples per site has small effect on power once the sample size greater than 50.
 Increasing number of sites leads to greater increase in power but the power appears to saturate as number of sites increases.
 
-\begin{figure}[htbp]
+\begin{figure}[!htp]
 \includegraphics[width=\textwidth]{../fig/power.pdf}
 \caption{{\bf Power to detect a significant correlation between infection prevalence and frequency of sexual hosts.}
 Spearman's rank correlation was used to detect correlation between infection prevalence and frequency of sexual hosts in simulated data from the posterior distributions. Detecting the positive correlation predicted by \cite{lively2001trematode} is difficult. Increainsg number of samples and number of sites increases power but it is more efficient to increase number of sites.}
@@ -322,7 +334,7 @@ A main component of the Red Queen Hypothesis is that negative frequency dependen
 When temporal variation is taken into account, association between infection prevalence and frequency of sexual hosts can change depending on what phase each population is going through in its cycle (\fref{cycle}).
 The negative correlation in the population does not contradict the positive correlation predicted by \cite{lively2001trematode} because their prediction did not take temporal variation into account.
 
-\begin{figure}[htbp]
+\begin{figure}[!htp]
 \includegraphics[width=\textwidth]{../fig/cycle_example.pdf}
 \caption{{\bf Simulated data from the posterior distribution fitted to \cite{vergara2014infection}.}
 A particular simulation is chosen from the posterior distributions to demonstrate that it is possible to predict opposite relationship when temporal variation is taken into account. (Top left) each point represents proportion of infected hosts and proportion of sexually reproducing hosts of each population at each generation. Last hundred generations are plotted. (Top right) each point represents mean proporiton of infected hosts and mean proportion of sexually reproducing hosts of each population averaged over the last hundred generations. Dashed lines represent least squares fit to all point. (Bottom) A typical host parasite cycle observed in a population from this simulated data. %% TODO: need to report parameter values?
