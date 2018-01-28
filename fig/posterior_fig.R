@@ -16,77 +16,84 @@ newname <- c("beta[meanlog]", "beta[sdlog]", "c[b]", "epsilon[site]", "V", "G[as
 
 vergara_post <- clean_list$parlist %>% filter(fit=="vergara", run==4)
 
-meanlog.x <- seq(0, 2.8, length=200)
-sdlog.x <- seq(0.05, 1.9, length=200)
-cb.x <- seq(0.4, 2.2, length=200)
-epsilon.x <- seq(0, 0.35, length=200)
-V.x <- seq(0.4, 1, length=200)
-G.x <- c(0:11)
+vergara_post_sum <- vergara_post %>%
+    summarize(
+        lwr=quantile(value, 0.025),
+        upr=quantile(value, 0.975),
+        mean=mean(value)
+    ) %>%
+    mutate(
+        type = "posterior"
+    )
+
+vergara_post_sum[5,4:6] <- NA
 
 prior <- rbind(
     data.frame(
         key="beta.meanlog",
-        x=meanlog.x,
-        y=dcauchy(meanlog.x, location=1, scale=2)
+        lwr=qcauchy(0.025, location=1, scale=2),
+        upr=qcauchy(0.975, location=1, scale=2)
     ),
     data.frame(
         key="beta.sdlog",
-        x=sdlog.x,
-        y=dlnorm(sdlog.x, meanlog=0, sdlog=2)
+        lwr=qlnorm(0.025, meanlog=0, sdlog=2),
+        upr=qlnorm(0.975, meanlog=0, sdlog=2)
     ),
     data.frame(
         key="c_b",
-        x=cb.x,
-        y=dlnorm(cb.x, meanlog=-0.07, sdlog=0.09)
+        lwr=qlnorm(0.025, meanlog=-0.07, sdlog=0.09),
+        upr=qlnorm(0.975, meanlog=-0.07, sdlog=0.09)
     ),
     data.frame(
         key="epsilon.site",
-        x=epsilon.x,
-        y=dbeta(epsilon.x, shape1=1, shape2=9)
+        lwr=qbeta(0.025, shape1=1, shape2=9),
+        upr=qbeta(0.975, shape1=1, shape2=9)
     ),
     data.frame(
         key="V",
-        x=V.x,
-        y=dbeta(V.x, shape1=6, shape2=2)
-    ),
-    data.frame(
-        key="n.genotype",
-        x=G.x,
-        y=dbetabinom(G.x-1, size=9, prob=3/9, theta=5)
+        lwr=qbeta(0.025, shape1=6, shape2=2),
+        upr=qbeta(0.975, shape1=6, shape2=2)
     )
 )
 
-prior <- prior %>% 
-    mutate(key=factor(key, levels=oldname, labels=newname)) %>%
-    group_by(key) %>%
-    mutate(y=y/max(y)*1)
+vergara_post_sum$key <- factor(vergara_post_sum$key, levels=oldname, labels=newname)
+prior$key <- factor(prior$key, levels=oldname, labels=newname)
+prior$type <- "prior"
 
-vergara_post$key <- factor(vergara_post$key, levels=oldname, labels=newname)
+pardf <- vergara_post_sum %>%
+    bind_rows(prior) %>%
+    mutate(type=factor(type, levels=c("prior", "posterior")))
 
 vergara_G <- vergara_post %>%
-    filter(key=="G[asex]") %>%
+    filter(key=="n.genotype") %>%
+    group_by() %>%
+    mutate(key="n.genotype") %>%
     group_by(fit, run, key, value) %>%
-    summarize(count=length(value))
+    summarize(count=length(value)) %>%
+    mutate(type="posterior")
 
-gg_post <- ggplot(prior) +
-    geom_line(aes(x, y), lty=2) +
-    geom_point(data=prior %>% filter(key=="G[asex]"), aes(x, y)) +
-    geom_hline(yintercept = 1.2, alpha=0.15) +
-    geom_hline(yintercept = 0, alpha=0.15) +
-    geom_boxploth(data=vergara_post %>% filter(key!="G[asex]"), aes(value, 1.2), width=0.2, fill= "#c6c5dd") +
-    geom_point(data=vergara_G, aes(value, 1.2, size=count)) +
-    scale_size_area(max_size=4) +
-    scale_y_discrete(limits=c(0, 1.9), expand=c(0,0.05)) +
-    facet_wrap(~key, scale="free_x", labeller=label_parsed, nrow=1) +
+vergara_G$key <- factor(vergara_G$key, levels=oldname, labels = newname)
+
+prior_G <- data.frame(
+    value=1:10,
+    count=dbetabinom(0:9,size=9,prob=3/9,theta=5)*100,
+    type="prior",
+    key="n.genotype") %>%
+    mutate(key=factor(key, levels=oldname, labels=newname))
+
+gg_post <- ggplot(pardf) +
+    geom_point(aes(mean, type)) +
+    geom_point(data=vergara_G, aes(value, type, size=count)) +
+    geom_point(data=prior_G, aes(value, type, size=count)) +
+    geom_errorbarh(aes(y=type, xmin=lwr, xmax=upr), width=0.2) +
+    scale_size_area() +
+    scale_x_continuous(expand=c(0.1,0)) +
+    facet_wrap(~key, scale="free_x", nrow=2, labeller=label_parsed) +
     theme(
         axis.title = element_blank(),
-        axis.ticks.y = element_blank(),
-        axis.text.y = element_blank(),
-        panel.grid.major.y = element_blank(),
-        panel.grid.minor.y = element_blank(),
         strip.background = element_blank(),
         panel.spacing = unit(0, units="cm"),
         legend.position = "none"
     )
 
-ggsave("verg_post.pdf", gg_post, width=7, height=3)
+ggsave("verg_post.pdf", gg_post, width=6, height=4)
