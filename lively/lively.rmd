@@ -1,0 +1,91 @@
+---
+title: "Snails"
+output: html_document
+---
+
+```{r pkgs}
+library(ggplot2); theme_set(theme_bw())
+library(dplyr)
+library(tidyr)
+library(readxl)
+library(lme4)
+```
+
+```{r}
+
+vergara2014 <- read_excel("vergara_2014.xlsx", sheet=1)
+vergara2013 <- read.csv("vergara_2013_15_lakes.txt", sep="\t")
+vergara2013a <- read.csv("vergara_2013_alexandrina.txt", sep="\t")
+
+vergara2013_lakes <- c("Grasmere",
+                       "Heron",
+                       "Ida",
+                       "Kaniere",
+                       "Mapourika",
+                       "Rotoiti",
+                       "Rotora",
+                       "Selfe")
+
+vergara2013 %>%
+    filter(lake %in% vergara2013_lakes)    
+
+
+v <- vergara2013 %>%
+    group_by(year, lake, sites, habitat) %>%
+    summarize(psex=mean(sex=="male"),
+              pinf=mean(Microphallus))
+
+ggplot(v, aes(pinf, psex)) +
+    geom_point() +
+    ylim(c(0, 1)) +
+    xlim(c(0, 1))
+
+vergara2013a %>% as.tbl %>% group_by(year, lake, sites, habitat) %>% summarize(psex=mean(sex=="male"), pinf=mean(as.numeric(as.character(Microphallus)), na.rm=TRUE)) -> vv
+```
+
+
+```{r}
+gibson <- read.csv("gibson_2016_b.csv") %>%
+    select(-X, -length) %>%
+    filter(!is.na(year))
+
+gibson2 <- gibson %>% 
+    group_by(year, site) %>%
+    summarize(pinf=mean(infected), psex=mean(ploidy==2))
+
+gibson2 %>%
+    gather(key, value, -year, -site) %>%
+    ggplot(aes(year, value, col=site)) +
+    geom_point() +
+    geom_line() +
+    facet_grid(~key)
+```
+
+
+```{r}
+gibson_a <- read.csv("gibson_2016_a.csv")
+
+gibson3 <- gibson_a %>%
+    group_by(year, sites) %>%
+    summarize(pinf=mean(mic))
+
+gibson3 %>%
+    group_by(sites) %>%
+    do(acf(.$pinf))
+
+gibson3 %>%
+    filter(sites=="wbay") %>%
+    group_by() %>%
+    select(pinf) %>% unlist %>% acf
+
+
+g <- gibson3 %>%
+    spread(sites, pinf)
+
+
+plot(g$wbay, type="l")
+
+matplot(g[2:14], type="l", ylim=c(0, 1))
+
+ccf(g[2:14], g[2:14])
+```

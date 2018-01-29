@@ -11,6 +11,8 @@ if (.Platform$OS.type=="windows") {
     windowsFonts(Times=windowsFont("Times"))
 } 
 
+save <- FALSE
+
 oldname <- c("beta.meanlog", "beta.sdlog", "c_b", "epsilon.site", "V", "n.genotype")
 newname <- c("beta[meanlog]", "beta[sdlog]", "c[b]", "epsilon[site]", "V", "G[asex]")
 
@@ -96,4 +98,4 @@ gg_post <- ggplot(pardf) +
         legend.position = "none"
     )
 
-ggsave("verg_post.pdf", gg_post, width=6, height=4)
+if (save) ggsave("verg_post.pdf", gg_post, width=6, height=3)
