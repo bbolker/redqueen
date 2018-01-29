@@ -42,83 +42,30 @@ sig_simdf <- simdf %>%
     mutate(key=factor(key, labels=c("negative~correlation", "positive~correlation")))
 
 spearman_power <- sig_simdf %>%
-    filter(test=="spearman") %>%
-    mutate(data=factor(data, labels=data_name))
+    filter(test=="spearman", data=="vergara") %>%
+    mutate(data=factor(data, labels=data_name[2]))
 
-gg_spearman_power <- ggplot(spearman_power, aes(samples, value, group=sites, col=data, shape=sites, linetype=sites)) +
-    ggtitle("Spearman's rank correlation") +
+
+
+g1 <- ggplot(spearman_power %>% filter(key=="positive~correlation"), 
+             aes(samples, value, group=sites, col=data, shape=sites, linetype=sites)) +
     geom_point() +
     geom_line() +
     scale_y_continuous(name="power", limits=c(0,1)) +
     scale_x_continuous(name="number of samples per site") +
-    facet_grid(data~key, labeller=label_parsed) +
-    scale_color_manual(values=c("#D95F02", "#7570B3"), guide=FALSE) +
+    scale_color_manual(values=c("#7570B3"), guide=FALSE) +
     scale_shape_discrete(name="number of sites") +
     scale_linetype_discrete(name="number of sites") +
-    theme(plot.title = element_text(hjust = 0.5),
-          strip.background = element_blank(),
+    theme(strip.background = element_blank(),
           panel.border = element_rect(colour = "black"),
           panel.grid=element_blank(),
           panel.spacing=grid::unit(0,"lines"),
           legend.position = c(0.1, 0.8))
 
+g2 <- g1 %+% (spearman_power %>% filter(key=="negative~correlation")) +
+    theme(legend.position = "none")
+
+
+
+
 if (save) ggsave("power.pdf", gg_spearman_power, width=8, height=4.5)
-
-sumdf <- simdf %>%
-    group_by(data, test, sites, samples) %>%
-    summarize(
-        median=median(effect.size, na.rm=TRUE),
-        lwr=quantile(effect.size, 0.025, na.rm=TRUE),
-        upr=quantile(effect.size, 0.975, na.rm=TRUE)
-    )
-
-sig_sumdf <- simdf %>%
-    filter(p.value < level) %>%
-    group_by(data, test, sites, samples) %>%
-    summarize(
-        median=median(effect.size, na.rm=TRUE),
-        lwr=quantile(effect.size, 0.025, na.rm=TRUE),
-        upr=quantile(effect.size, 0.975, na.rm=TRUE)
-    )
-
-(gg_sum <- ggplot(sumdf, aes(samples, median, fill=sites)) +
-        geom_ribbon(aes(ymax=upr, ymin=lwr), alpha=0.3) +
-        geom_point(aes(col=sites)) +
-        geom_line(aes(col=sites)) +
-        facet_grid(test~data, scale="free") +
-        geom_hline(yintercept=0, lty=2))
-
-gg_sum %+% sig_sumdf
-
-pardf <- clean_list$parlist %>%
-    filter(run==3) %>%
-    mutate(sim=1:50) %>%
-    rename(data=fit)
-
-alldf <- simdf %>% 
-    group_by(data,sim,sites,samples, test) %>%
-    summarize(
-        mean.effect=mean(effect.size, na.rm=TRUE),
-        positive.power=mean(p.value<level & effect.size > 0, na.rm=TRUE),
-        negative.power=mean(p.value<level & effect.size < 0, na.rm=TRUE)
-    ) %>%
-    gather(key, value, -data, -sim, -sites, -samples, -test, -mean.effect) %>%
-    rename(type=key, power=value) %>%
-    merge(pardf) %>%
-    filter(samples==100, sites==20)
-
-ggplot(alldf, aes(value, mean.effect)) +
-    geom_point(alpha=0.3, aes(col=data)) +
-    geom_smooth(method='lm') +
-    facet_grid(test~key, scale="free") +
-    geom_hline(yintercept=0, lty=2)
-
-pardf_mean <- pardf %>%
-    summarize(mean=mean(value))
-
-ggplot(alldf, aes(value, power, col=data)) +
-    geom_point(alpha=0.3) +
-    geom_smooth(method='lm', aes(fill=data), alpha=0.2) +
-    geom_vline(data=pardf_mean, aes(xintercept=mean, col=data), lty=2) + 
-    scale_y_continuous(limits=c(0, 1)) +
-    facet_grid(test+type~key, scale="free_x")
