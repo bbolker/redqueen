@@ -1,9 +1,10 @@
 ## options(repos=c(CRAN="http://probability.ca/cran/"))
-module unload intel; module load r/3.2.3
+module unload r intel gcc openmpi
+module load r/3.4.3
 BATCHVER=1
 BATCHSIZE=10
 for BATCHNUM in {0..29}; do
-    echo $BATCHNUM
-    fn=SMC_SHARCNET${BATCHNUM}
-    sqsub -q serial -o $fn.%J.out --mpp 8G -r 48h R CMD BATCH --vanilla "--args $BATCHNUM $BATCHSIZE" SMC_SHARCNET.R $fn.Rout
+     echo $BATCHNUM
+     fn=SMC_SHARCNET${BATCHNUM}
+     sqsub -q serial -o $fn.%J.out --mpp 8G -r 48h R CMD BATCH --vanilla "--args $BATCHNUM $BATCHSIZE" SMC_SHARCNET.R $fn.Rout
 done
