@@ -6,7 +6,18 @@ source("../R/ABC_funs.R")
 load("../data/vergara_summ.rda")
 load("../data/SMC_vergara.rda")
 
-Nmax <- 10
+BATCHTAG <- "_v1"
+
+t0 <- proc.time()
+argvals <- commandArgs(trailingOnly=TRUE) ## chunk number: full run is (20)x50
+## indexed from 0
+batch_num <- as.numeric(argvals[1])
+batch_size <- as.numeric(argvals[2])
+cat(batch_num,batch_size,"\n")
+
+fn <- paste0("SMC_SHARCNET_",batch_num,BATCHTAG,".rda")
+
+Nmax <- batch_size
 tolerance <- 0.6
 
 sumlist2 <- simlist2 <- parlist2 <- list()
@@ -27,7 +38,7 @@ sigma <- with(as.list(parlist[[4]]),{
 })
 
 N <- 1
-set.seed(101)
+set.seed(batch_num)
 while(N <= Nmax) {
     cat(cc, N, "\n")
     pindex <- sample(1:100, 1, prob=ww[[4]])
@@ -42,16 +53,16 @@ while(N <= Nmax) {
         print(dist <- sum(abs(vergara_summ - summ)))
         accept <- dist < tolerance
         if (accept) {
-            parlist2[N,] <- unlist(pp)
-            sumlist2[N,] <- summ
+            parlist2[[N]] <- unlist(pp)
+            sumlist2[[N]] <- summ
                     
             simlist2[[N]] <- sim
             
             N <- N+1
-            save("sumlist2", "simlist2", "parlist2", file="SMC_SHARCNET.rda")
+            save("sumlist2", "simlist2", "parlist2", file=fn)
         }
     }
     cc <- cc+1
 }
 
-save("sumlist2", "simlist2", "parlist2", file="SMC_SHARCNET.rda")
+save("sumlist2", "simlist2", "parlist2", file=fn)
