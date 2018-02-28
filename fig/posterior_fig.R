@@ -5,7 +5,7 @@ library(ggplot2); theme_set(theme_bw(base_size = 12,
                                      base_family = "Times"))
 library(ggstance)
 library(gridExtra)
-load("../data/SMC_summary.rda")
+load("../data/SMC_parlist.rda")
 
 if (.Platform$OS.type=="windows") {
     windowsFonts(Times=windowsFont("Times"))
@@ -16,7 +16,10 @@ save <- FALSE
 oldname <- c("beta.meanlog", "beta.sdlog", "c_b", "epsilon.site", "V", "n.genotype")
 newname <- c("beta[meanlog]", "beta[sdlog]", "c[b]", "epsilon[site]", "V", "G[asex]")
 
-vergara_post <- clean_list$parlist %>% filter(fit=="vergara", run==4)
+vergara_post <- do.call("rbind", parlist) %>%
+    as.data.frame %>%
+    gather(key, value) %>%
+    group_by(key)
 
 vergara_post_sum <- vergara_post %>%
     summarize(
@@ -28,7 +31,7 @@ vergara_post_sum <- vergara_post %>%
         type = "posterior"
     )
 
-vergara_post_sum[5,4:6] <- NA
+vergara_post_sum[5,c("lwr", "upr", "mean")] <- NA
 
 prior <- rbind(
     data.frame(
@@ -70,7 +73,7 @@ vergara_G <- vergara_post %>%
     filter(key=="n.genotype") %>%
     group_by() %>%
     mutate(key="n.genotype") %>%
-    group_by(fit, run, key, value) %>%
+    group_by(key, value) %>%
     summarize(count=length(value)) %>%
     mutate(type="posterior")
 

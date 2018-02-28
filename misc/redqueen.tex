@@ -195,8 +195,12 @@ The prior distribution for the scale parameter is chosen so that 95\% quantile o
 As \cite{dagan2013clonal} and \cite{mckone2016fine} report proportion of males, instead of proportion of sexual hosts, we double the proportion of males reported when we fit the model.
 
 To allow for more efficient estimation of the posterior distribution, we use Sequential Monte Carlo \cite{turner2012tutorial} (see Appendix for details).
+...
+%% TODO: say something about getting 300 more...  and complete/edit this section...
 
 \subsection{Power analysis}
+
+%% TODO: don't just take two consecutive generations...
 
 To calculate the power to detect positive correlation between infection prevalence and frequency of sexual hosts, we simulate an observed sample by drawing a random multinomial sample from simulated data.
 For simplicity, we assume that a year contains of two snail generations [CITE] and that samples are taken within a short period of time.
@@ -248,9 +252,9 @@ We find that proportion of sexual hosts decreases when infection prevalence is v
 Decrease in fitness of sexual hosts with increase in prevalence was predicted by \cite{ashby2015diversity} but is also observed in an earlier work by \cite{lively2010epidemiological} (not discussed in the paper).
 
 Parameter estimates for \cite{vergara2014infection} are presented in \fref{smcparam}.
-The most surprising result is that the posterior distributions of the scale parameter for cost of sex, $c_b$, is much wider than the prior distribution and have noticeably higher mean: (mean (95\% credible interval)) 1.29 (0.79-2.01).
+The most surprising result is that the posterior distributions of the scale parameter for cost of sex, $c_b$, is much wider than the prior distribution and have noticeably higher mean: (mean (95\% credible interval)) 1.30 (0.80-1.97).
 \cite{ashby2015diversity} defined $c_b$ as additional costs and benefits of sex, where $c_b=1$ corresponds the two fold cost.
-Under their interpretation, our estimate corresponds to the following mean and 95\% CIs for cost of sex: 1.55 (1.00-2.52).
+Under their interpretation, our estimate corresponds to the following mean and 95\% CIs for cost of sex: 1.54 (1.02-2.50).
 Note that some posterior samples range $c_b > 2$, corresponding to faster growth rate of sexual hosts than asexual hosts.
 Simulated data from these posterior samples mostly consist of populations with almost 100\% sexual hosts.
 While these estimates are not entirely impossible given that \cite{vergara2014infection} observed almost 100\% sexual snails in one of their sampling sites throughout 5 years, their observation is likely to be a sampling artifact since an earlier work sampled at the same site reported much lower frequency of sexual snails \citep{vergara2013geographic}. %% TODO: double check sources
@@ -263,9 +267,9 @@ Lines repreesnt 95\% quantile and points represent mean posterior estimates. 100
 \label{fig:smcparam}
 \end{figure}
 
-The model estimates high virulence overall: (mean (95\% CI)) 88.8\% (75.0\%-99.2\%).
+The model estimates high virulence overall: (mean (95\% CI)) 87.0\% (67.5\%-98.7\%).
 In contrast to \cite{lively2010epidemiological}, who modeled 1 asexual genotype competing with 9 sexual genotypes, our model estimate shows that higher asexual to sexual genotypic ratio can be supported ($G_{\textrm{asex}}$ panel in \fref{ivs}).
-90 out of 100 posterior samples estimate $G_{\textrm{asex}} = 1$; 9 samples estimate $G_{\textrm{asex}} = 2$; and 1 sample estimates $G_{\textrm{asex}} = 3$.
+274 out of 300 posterior samples estimate $G_{\textrm{asex}} = 1$; 25 samples estimate $G_{\textrm{asex}} = 2$; and 1 sample estimates $G_{\textrm{asex}} = 3$.
 However, we find that it is still necessary for sexual hosts to have higher genetic diversity than asexual hosts.
 
 Finally, a power analysis show that the power for detecting a positive correlation between infection prevalence and frequency of sexual hosts in \cite{vergara2014infection} population is almost 0 (\fref{power}).
