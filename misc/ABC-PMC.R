@@ -1,5 +1,5 @@
-n <- 1000
-tmax <- 20
+n <- 2000
+tmax <- 5
 
 samp <- rnorm(n)
 
@@ -31,7 +31,7 @@ for (i in 2:tmax) {
 plot(density(theta.list[[1]]))
 lines(density(theta.list[[2]], weight=weight.list[[2]]), col=2)
 lines(density(theta.list[[3]], weight=weight.list[[3]]), col=3)
-lines(density(theta.list[[20]], weight=weight.list[[20]]), col=4)
+lines(density(theta.list[[5]], weight=weight.list[[5]]), col=4)
 
-plot(density(theta.list[[20]], weight=weight.list[[20]]))
+plot(density(theta.list[[5]], weight=weight.list[[5]]))
 curve(dnorm(x), add=TRUE, col=2)
