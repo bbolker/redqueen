@@ -69,17 +69,17 @@ for(t in 1:tmax) {
                 
                 pp <-  mvrnorm(1, mu=unlist(pp.sample), Sigma=Sigma)
                 
-                get.sample <- dprior(pp) > 0
+                suppressWarnings(get.sample <- (dprior(pp) > 0) && !is.nan(dprior(pp)))
             }
             
-            sim <- try(do.call(simfun, c(pp, summarize=FALSE)))
+            sim <- try(do.call(simfun, c(as.list(pp), summarize=FALSE)))
             print(summ <- try(do.call(sumfun, list(sim=sim, subyear=subyear, sitesample=sitesample))))
             
             if (!any(is.nan(summ)) && !inherits(summ, "try-error") && !any(is.na(summ))) {
                 print(dist <- sum(abs(mckone_summ - summ[mckone_var])))
                 accept <- dist < tolerance[t]
                 if (accept) {
-                    parlist[[t]][N,] <- unlist(pp)
+                    parlist[[t]][N,] <- pp
                     sumlist[[t]][N,] <- summ[mckone_var]
                     
                     if (t == tmax) simlist[[t]][[N]] <- sim
