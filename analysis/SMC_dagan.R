@@ -1,4 +1,6 @@
 library(emdbook)
+library(MASS)
+library(Matrix)
 source("../R/util.R")
 source("../R/stochastic_model.R")
 source("../R/ABC_funs.R")
@@ -54,21 +56,21 @@ for(t in 1:tmax) {
             cc <- cc+1
         }
     } else {
-        sigma <- with(as.list(parlist[[t-1]]),{
-            sqrt(2*c(
-                var(beta.meanlog),
-                var(log(beta.sdlog)),
-                var(logit(V)),
-                var(logit(epsilon.site)),
-                var(log(c_b))
-            ))
-        })
+        Sigma <- as.matrix(nearPD(2 * cov.wt(parlist[[t-1]], wt=ww[[t-1]])$cov)[[1]])
+        
         while(N <= Nmax[t]) {
             cat(t, cc, N, "\n")
-            pindex <- sample(1:Nmax[t-1], 1, prob=ww[[t-1]])
-            pp.sample <- parlist[[t-1]][pindex,]
             
-            pp <- rjump(pp.sample, sigma)
+            get.sample <- FALSE
+            
+            while (!get.sample) {
+                pindex <- sample(1:Nmax[t-1], 1, prob=ww[[t-1]])
+                pp.sample <- parlist[[t-1]][pindex,]
+                
+                pp <-  mvrnorm(1, mu=unlist(pp.sample), Sigma=Sigma)
+                
+                get.sample <- dprior(pp) > 0
+            }
             
             sim <- try(do.call(simfun, c(pp, summarize=FALSE)))
             print(summ <- try(do.call(sumfun, list(sim=sim, subyear=subyear, sitesample=sitesample))))
@@ -83,7 +85,7 @@ for(t in 1:tmax) {
                     if (t == tmax) simlist[[t]][[N]] <- sim
                     
                     ww[[t]][N] <- dprior(pp)/
-                        sum(ww[[t-1]] * apply(parlist[[t-1]], 1, djump, theta=pp, sigma=sigma))
+                        sum(ww[[t-1]] * apply(parlist[[t-1]], 1, dmvnorm, mu=pp, Sigma=Sigma))
                     
                     N <- N+1
                     save("ww", "sumlist", "simlist", "parlist", file="SMC_dagan.rda")
