@@ -7,7 +7,7 @@ source("../R/ABC_funs.R")
 
 load("../data/vergara_summ.rda")
 
-Nmax <- c(50, 50, 50, 100)
+Nmax <- c(100, 100, 100, 100)
 tmax <- 4
 tolerance <- c(2.4, 1.2, 0.9, 0.6)
 

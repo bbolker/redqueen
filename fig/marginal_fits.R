@@ -23,10 +23,10 @@ data_name <- c(expression(Dagan~italic(et~al.)~"(2013)"),
                expression(McKone~italic(et~al.)~"(2016)"), 
                expression(Vergara~italic(et~al.)~"(2014)"))
 
-simlist <- list(
-    dagan=simlist$dagan[[4]],
-    mckone=simlist$mckone[[4]],
-    vergara=simlist$vergara[[4]]
+slist <- list(
+    dagan=simlist$dagan[[3]],
+    mckone=simlist$mckone[[3]],
+    vergara=simlist$vergara[[3]]
 )
 
 sites <- c(22, 18, 4)

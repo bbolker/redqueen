@@ -57,11 +57,22 @@ clean_list <- c("parlist", "sumlist") %>%
 simlist <- comb_smc %>%
     lapply("[[", "simlist")
 
-SMC_summary <- clean_list %>%
-    lapply(summarize, value=mean(value, na.rm=TRUE)) %>%
+SMC_weight <- comb_smc %>%
+    lapply("[[", "ww") %>%
+    lapply(function(x) lapply(x, function(y) {data.frame(weight=y) })) %>%
+    lapply(bind_rows, .id="run") %>%
+    bind_rows(.id="fit") %>%
+    as.tbl
+
+weighted_list <- clean_list %>%
+    lapply(merge, SMC_weight)
+
+SMC_summary <- weighted_list %>%
+    lapply(group_by, run, fit, key) %>%
+    lapply(summarize, value=weighted.mean(value, w=weight, na.rm=TRUE)) %>%
     lapply(spread, key, value)
 
-if(save) save("comb_summ", "clean_list", "simlist", "SMC_summary", file="SMC_summary.rda")
+if(save) save("comb_summ", "weighted_list", "simlist", "SMC_weight", "SMC_summary", file="SMC_summary.rda")
 
 gpar <- ggplot(NULL, aes(col=fit, group=run)) +
     geom_line(stat="density", aes(value), lwd=0.9) +

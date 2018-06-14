@@ -7,7 +7,7 @@ source("../R/ABC_funs.R")
 
 load("../data/mckone_summ.rda")
 
-Nmax <- c(50, 50, 50, 100)
+Nmax <- c(100, 100, 100, 100)
 tmax <- 4
 tolerance <- c(1.6, 0.8, 0.6, 0.4)
 
