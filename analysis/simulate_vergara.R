@@ -75,11 +75,11 @@ for (i in 1:nrow(param)) {
     
     simdata_reslist[[i]] <- tempdf2
     
-    save("sim_reslist", fil=fn_sim)
+    save("sim_reslist", file=fn_sim)
     save("summ_reslist", file=fn_summ)
     save("simdata_reslist", file=fn_data)
 }
 
-save("sim_reslist", fil=fn_sim)
+save("sim_reslist", file=fn_sim)
 save("summ_reslist", file=fn_summ)
 save("simdata_reslist", file=fn_data)
