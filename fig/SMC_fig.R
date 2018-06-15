@@ -73,6 +73,7 @@ SMC_summary <- weighted_list %>%
     lapply(spread, key, value)
 
 if(save) save("comb_summ", "weighted_list", "simlist", "SMC_weight", "SMC_summary", file="SMC_summary.rda")
+if(save) save("comb_summ", file="comb_summ.rda")
 
 gpar <- ggplot(NULL, aes(col=fit, group=run)) +
     geom_line(stat="density", aes(value), lwd=0.9) +
