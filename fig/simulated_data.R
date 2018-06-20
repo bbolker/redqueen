@@ -2,6 +2,7 @@ library(MASS)
 library(dplyr)
 library(tidyr)
 library(gridExtra)
+library(readxl)
 library(ggplot2); theme_set(theme_bw(base_size = 12,
                                      base_family = "Times"))
 
@@ -41,8 +42,7 @@ for (n in load_names) {
     
     slist[[n]] <- do.call("rbind", ll)
     
-    clist[[n]] <- HPDregion(slist[[n]], w=slist[[n]]$weight, prob=c(0.8, 0.95),
-                            lims=c(x.lower=-0.5, x.upper=1.5, y.lower=-0.5, y.upper=1.5)) %>%
+    clist[[n]] <- HPDregion(slist[[n]], w=slist[[n]]$weight, prob=c(0.8, 0.95)) %>%
         lapply(function(df) data.frame(
             level=df$level,
             x=df$x,
