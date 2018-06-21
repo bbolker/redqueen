@@ -188,17 +188,32 @@ We consider mean proportion of infected and sexually reproducing snails in the s
 CV of these proportions across space is calculated by first calculating mean proportions by averaging across generations and then taking the the CV of these mean proportions.
 Likewise, CV across generation is calculated by first averaging across space and then taking the CV.
 
-For each parameter, the model is simulated and a sample is drawn from the simulated population such that the number of sampled population is equal to the number of sites collected in a study.
-Then, summary statistics are calculated based on the last 100 generations and the parameter is accepted if the distance between simulated and observed data (measureed by the sum of absolute differences in summary statistics) is less than the tolerance value.
-By simulating greater number of populations than number of sampled sites, we account for uncertainty in unobserved population.
-
 We use uninformative priors for all parameters except $c_b$, a scale parameter for the cost of sex (See Table [TODO]).
 The prior distribution for the scale parameter is chosen so that 95\% quantile of cost of sex (2/$c_b$) is approximately equal to the 95\% confidence interval reported by \cite{gibson2017two}.
 As \cite{dagan2013clonal} and \cite{mckone2016fine} report proportion of males, instead of proportion of sexual hosts, we double the proportion of males reported when we fit the model.
 
-To allow for more efficient estimation of the posterior distribution, we use Sequential Monte Carlo \cite{turner2012tutorial} (see Appendix for details).
-...
-Dicuss particle weights... [TODO]
+To allow for more efficient estimation of the posterior distribution, we use the Population Monte Carlo approach \cite{turner2012tutorial}.
+First, we start by performing basic ABC.
+For each random parameter sample drawn from the prior distribution, the model is simulated and a sample of simulated populations is drawn from the simulated system such that the number of sampled population is equal to the number of sites collected in a study.
+Then, summary statistics are calculated based on the last 100 generations and the parameter is accepted if the distance between simulated and observed data (measureed by the sum of absolute differences in summary statistics) is less than the tolerance value.
+This process is repeated until 100 parameters are accepted.
+
+After the first run ($t=1$), equal weights ($w_{i,1}=1/100$) are assigned to each accepted parameter $\theta_{i, 1}$.
+For any run $t > 1$,
+a weighted random sample ($\theta^\ast$) is drawn from the accepted parameters of the previous run ($t-1$) and
+a parameter sample ($\theta_{i, t}$) is proposed from a multivariate normal distribution with a mean $\theta^\ast$ and a variance covariance matrix that is equal to $\sigma_{t-1}^2=2 \mathrm{Var}(\theta_{1:N, t-1})$, where $\mathrm{Var}(\theta_{1:N, t-1})$ is the weighted variance covariance matrix.
+$G_{\tiny\textrm{asex}}$ is rounded to the nearest integer and the model is simulated.
+If a proposed parameter is accepted, the following weight is assigned:
+$$
+w_{i,t} = \frac{\pi(\theta_{i, t})}{\sum_{i=1}^{100} w_{j, t-1} q(\theta_{j, t-1} | \theta_{i,t}, \sigma_{t-1}^2)}
+$$
+where $\pi(\cdot)$ is a prior density and $q(\cdot | \theta_{i,t}, \sigma_{t-1}^2)$ is a normal density with mean $\theta_{i,t}$ and variance covariance matrix $\sigma_{t-1}^2$.
+For each run, 100 parameters are accepted and weights are normalized at the end to sum to 1.
+
+For each data, we perform 4 runs with decreasing tolerance every run.
+For spatial data \citep{dagan2013clonal, mckone2016fine}, tolerances of 1.6, 0.8, 0.6 and 0.4 are used for each run.
+For spatiotemporal data \citep{vergara2014infection}, tolerance of 2.4, 1.2, 0.9 and 0.6 are used for each run to account for higher number of summary statistics being compared.
+All statistical results are weighted by parameter weights of the final run.
 
 \subsection{Power analysis}
 
@@ -216,29 +231,35 @@ We repeat the process 100 times for each simulation from a posterior distributio
 \section{Results}
 
 Our simple Red Queen model with population structure can capture observed variation in infection prevalence and frequency of sexual hosts reasonably well.
-Observed coefficients of variation in mean infection prevalence and frequency of sexual hosts are well-matched by the same summary statistics from posterior simulations (\fref{smcsumm}).
-A notable difference is that our model tends to overestimate mean infection prevalence across all three systems.
+Observed coefficients of variation in mean infection prevalence and mean frequency of sexual hosts are well-matched by the same summary statistics from posterior simulations (\fref{smcsumm}).
+As we account for uncertainty in unboserved sites by simulating greater number of populations, there is large variation in simulated summary statistics.
 \cite{dagan2013clonal}, \cite{mckone2016fine} and \cite{vergara2014infection} reported mean infection prevalence of 17.5\%, 5.1\% and 44\%, respectively, but the corresponding mean (95\% quantile) estimate of the fitted model are 29.1\% (8.1\% - 55.7\%), 45.2\% (17.3\% - 73.9\%) and 68\% (26.1\% - 95.3\%), respectively.
 The model particularly underestimates mean frequency of sexual hosts (mean (95\% quantile): 32.2\% (25.3\% - 64.7\%)) when fitted to \cite{vergara2014infection} population (70.3\%).
 Even though model fitting was performed by minimizing the absolute distance between observed and simulated summary statistics, there is large variation in summary statistics of the posterior simulations because uncertainty in unobserved populations is taken into account.
 
 \begin{figure}[!ht]
 \includegraphics[width=\textwidth]{../fig/smc_summary.pdf}
-\caption{{\bf Summary statistics of the observed data v.s. summary statistics of the simulated data from the posterior samples.}
+\caption{{\bf Summary statistics of the observed data v.s. distribution of summary statistics of the simulated data from the posterior samples.}
 Violin plots show weighted distribution of summary statistics from simulated data. For each posterior sample, 10 simulations are ran and each simulated system is sampled at random 100 times so that each sample consists of equal number of populations as number of sites in fitted data. Then, summary statistics are calculated for each sample and are weighted by particle weights. Squares represnt observed summary statistics.
 }
 \label{fig:smcsumm}
 \end{figure}
 
-To further diagnose the fit, we compare the relationships between infection prevalence and frequency of sexual hosts predicted by the model with those observed across three systems (\fref{ivs}).
+To further diagnose the fit, we compare the relationships between infection prevalence and frequency of sexual hosts predicted by the model with the observed data (\fref{ivs}).
 Despite being able to reproduce summary statistics reported by \cite{dagan2013clonal} well, 
 our model is unable to predict qualitative trend bewteen proportion of sexual hosts and proportion of infected hosts (\fref{ivs}; \cite{dagan2013clonal}).
 While both simulated data and observed data mostly consist of asexual populations,
-our model predicts some amount of sexual reproduction to be maintained when infection prevalence is greather than 20\%. 
-On the other hand, the data provided by \cite{dagan2013clonal} shows that sexual reproduction is only maintained at low levels of infection prevalence and is barely maintained otherwise.
-Similarly, overestimation of infection prevalence is more strongly pronounced in \fref{ivs}.
-We find that our model is not able to support high level of sexual reproduction at a low prevalence.
-Due to such badness of fit, we exclude fits to \cite{dagan2013clonal} and \cite{mckone2016fine} from discussing parameter estimates and power analysis.
+our model predicts sexual reproduction to be maintained when infection prevalence is relatively high. 
+On the other hand, \cite{dagan2013clonal} data suggests that sexual reproduction is only maintained when infection prevalence much lowere.
+Similarly, overestimation of infection prevalence is strongly pronounced in our fits to \cite{mckone2016fine}.
+
+While there are a few outliers based on our fits to \cite{vergara2014infection},
+it is important to note that \fref{ivs} only shows proportion of infected and sexual snails averaged across 100 generations for each site.
+The observed data are more likely to be slices across a few generations and cyclic nature of the Red Queen dynamics creates more variation in the data, which is not captured in \fref{ivs}.
+
+[TODO: Talk about a weird sites]
+
+Based on goodness of fits, we exclude fits to \cite{dagan2013clonal} and \cite{mckone2016fine} from discussing parameter estimates and power analysis.
 
 \begin{figure}[!ht]
 \includegraphics[width=\textwidth]{../fig/simulated_data.pdf}
