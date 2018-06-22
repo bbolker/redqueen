@@ -35,26 +35,30 @@ Host parasite coevolution constantly creates selective advantage for rare genoty
 Since the conception of the Red Queen Hypothesis, much of the theoretical work has focused on figuring out conditions under which parasite selection can maintain sexual reproduction in the host population.
 \cite{may1983epidemiology} first noted that parasites must be extremely virulent to maintain sexual reproduction but later studies showed that sexual and asexual hosts can coexist even at intermediate virulence \citep{howard1994parasitism}.
 \cite{agrawal2002infection} compared wide range of infection genetics that determine parasite resistance and the dynamics that arise from different genetic architecture.
-Some studies took a departure from a typical population genetics framework and showed that incorporating ecological and epidemiological details to the model can support sexual reproduction in the host population \citep{galvani2001antigenic, galvani2003maintenance, lively2009maintenance, lively2010epidemiological}.
 Recent studies showed that host genetic diversity plays an important role in determining the selection for sex [CITE].
 
-On the other hand, empiricists have mostly focused on indirect tests that stem from the hypothesis.
-Popular among them are local adaptation, time-lagged selection, and association between parsites and host reproductive mode (see \cite{tobler2008expanding} and \cite{vergara2014infection} for reviews).
-Recent works on experimental systems have provided more direct support for the hypothesis \citep{auld2016sex, slowinski2016coevolutionary}.
-A notable example is a snail population in New Zealand that serve as an intermediate hosts for trematodes [CITE].
-Through several decades of work, Lively [CITE] demonstrated that the population appears to satisfy essential requirements and provide support for the hypothesis.
+Some theoretical studies took a departure from the classical population genetics framework and studied effects of ecological and epidemiological on the Red Queen dynamics.
+On one hand, number of studies showed that incorporating ecological and epidemiological details can support sexual reproduction in the host population \citep{galvani2001antigenic, galvani2003maintenance, lively2009maintenance, lively2010epidemiological}.
+On the other hand, \cite{macpherson2017joint} showed that Red Queen dynamics (i.e., cycles in allele frequencies) fails to persist when explicit epidemiological structure is taken into account with coevolutionary dynamics.
 
-While the Red Queen Hypothesis has gained reasponably support both theoretically and empirically, there still remains a gap between theory and data.
+Empiricists have mostly focused on confirming predictions that stem from the Red Queen hypothesis.
+Typical among them are local adaptation, time-lagged selection, and association between parasites and host reproductive mode (see \cite{tobler2008expanding} and \cite{vergara2014infection} for reviews).
+An important example is the snail population in New Zealand that serve as an intermediate hosts for trematodes [CITE].
+Through several decades of work, Lively \etal demonstrated that the population satisfies necessary conditions for the host-parasite coevolutionary dynamics and provide support for the hypothesis \citep{lively1987evidence, lively1989adaptation, dybdahl1995host, dybdahl1998host, jokela2009maintenance, vergara2014infection, gibson2016within}.
+Recently, \cite{auld2016sex} and \cite{slowinski2016coeveolutionary} showed that more direct evidence can be achieved using experimental systems.
+
+While the Red Queen Hypothesis has gained reasponable support both theoretically and empirically, there still remains a gap between theory and data.
 Many models for Red Queen Hypothesis rely on simplifying assumption that are not applicable to natural populations and make predictions based on assumed parameters.
 In particular, none of the Red Queen models reviewed by \cite{ashby2015diversity} use statistical tools to relate the model to data.
 However, there are exceptions:
 \cite{lively1992parthenogenesis} initially postulated that infection prevalence should be positively correlated with frequency of sexual hosts. 
-\citep{lively2001trematode} then formalized the idea with a mathematical model and confirmed his prediction with a snail-trematode system.
-Many other emprical works have successfully demonstrated the positive correlation \citep{lively2002temporal, kumpulainen2004parasites, vergara2013geographic, mckone2016fine} but surprisingly such correlation was not observed in a different snail-trematode system \citep{dagan2013clonal}.
+\citep{lively2001trematode} then formalized the idea with a mathematical model and confirmed the prediction with a snail-trematode system.
+Many other emprical works have successfully found the positive correlation \citep{lively2002temporal, kumpulainen2004parasites, vergara2013geographic, mckone2016fine, gibson2016within} but surprisingly such correlation was not observed in a different snail-trematode system \citep{dagan2013clonal}.
 
-Here, we try to bridge the gap further.
-We extend the model used by \cite{lively2010epidemiological} to include stochasticity and population structure and fit it the to data from \cite{dagan2013clonal, mckone2016fine, vergara2014infection} using Approximate Bayesian Computation (ABC).
-Using posterior distributions obtained from the fits, we perform power analysis to test the prediction that infection prevalence is positively correlated with frequency of sexual reproduction \cite{lively2001trematode}.
+Here, we try to bridge the gap between theory and data further.
+We extend the model used by \cite{lively2010epidemiological} to include stochasticity and population structure.
+Then, we fit it the to data from \cite{dagan2013clonal, mckone2016fine, vergara2014infection} using Approximate Bayesian Computation (ABC) to estimate biologically relavent parameters.
+Using estimated parameters obtained from the fits, we assess the model by comparing its fit to data and perform a power analysis to test the prediction that infection prevalence is positively correlated with frequency of sexual reproduction \cite{lively2001trematode}.
 
 \section{Methods}
 
