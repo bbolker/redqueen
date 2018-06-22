@@ -22,19 +22,18 @@
 \section{Introduction}
 
 The evolution of sexual reproduction still remains to be explained \citep{otto2009evolutionary}.
-Despite being the dominant mode of reproduction \citep{vrijenhoek1998animal}, sexual reproduction is followed by many costs \citep{lehtonen2012many}.
+Despite being the dominant mode of reproduction \citep{vrijenhoek1998animal}, sexual reproduction entails numerous costs \citep{lehtonen2012many}.
 Perhaps the most often mentioned is the cost of producing males \citep{smith1978evolution}.
-As males cannot produce offspring, a sexually reproducing population is expected to be outgrown by an asexually reproducing counterpart that can grow twice as fast (given that the sexual population produces 50\% males and 50\% females).
+As males cannot produce offsprings, sexual population is expected to be outgrown by the asexual counterpart that can grow twice as fast (assuming that the sexual population produces 50\% male and 50\% female).
 The infamous \emph{two-fold cost of sex} \citep{smith1978evolution} relies on the assumption that everything else is equal but this is not necessarily true.
 So what drives sex to persist?
 
-One explanation for sex is the Red Queen Hypothesis \citep{bell1982masterpiece}.
+One explanation for persistence of sexual reproduction is the Red Queen Hypothesis \citep{bell1982masterpiece}.
 The Red Queen Hypothesis predicts sexually reproducing hosts to overcome the cost of sex under strong parasite selection by producing genetically diverse offspring that are resistant to infection \citep{jbs1949disease, jaenike1978hypothesis, hamilton1980sex}.
-Host parasite coevolution constantly creates selective advantage for rare genotypes (hence osccilation in genotypic frequencies) and allows for sexual reproduction to persist in the host population \citep{clarke1976ecological, hamilton1980sex}.
+Host parasite coevolution constantly creates selective advantage for rare genotypes, hence creating osccilation in genotypic frequencies, and allows for sexual reproduction to persist in the host population \citep{clarke1976ecological, hamilton1980sex}.
 
 Since the conception of the Red Queen Hypothesis, much of the theoretical work has focused on figuring out conditions under which parasite selection can maintain sexual reproduction in the host population.
-\cite{may1983epidemiology} first noted that parasites must be extremely virulent to maintain sexual reproduction.
-Later models showed that virulence is an important factor but it is possible for sexual and asexual hosts to coexist at intermediate virulence \citep{howard1994parasitism}.
+\cite{may1983epidemiology} first noted that parasites must be extremely virulent to maintain sexual reproduction but later studies showed that sexual and asexual hosts can coexist even at intermediate virulence \citep{howard1994parasitism}.
 \cite{agrawal2002infection} compared wide range of infection genetics that determine parasite resistance and the dynamics that arise from different genetic architecture.
 Some studies took a departure from a typical population genetics framework and showed that incorporating ecological and epidemiological details to the model can support sexual reproduction in the host population \citep{galvani2001antigenic, galvani2003maintenance, lively2009maintenance, lively2010epidemiological}.
 Recent studies showed that host genetic diversity plays an important role in determining the selection for sex [CITE].
@@ -210,6 +209,7 @@ $$
 where $\pi(\cdot)$ is a prior density and $q(\cdot | \theta_{i,t}, \sigma_{t-1}^2)$ is a normal density with mean $\theta_{i,t}$ and variance covariance matrix $\sigma_{t-1}^2$.
 For each run, 100 parameters are accepted and weights are normalized at the end to sum to 1.
 
+%% TODO: actually showing 3rd run because 4th run is taking so long 
 For each data, we perform 4 runs with decreasing tolerance every run.
 For spatial data \citep{dagan2013clonal, mckone2016fine}, tolerances of 1.6, 0.8, 0.6 and 0.4 are used for each run.
 For spatiotemporal data \citep{vergara2014infection}, tolerance of 2.4, 1.2, 0.9 and 0.6 are used for each run to account for higher number of summary statistics being compared.
@@ -253,13 +253,11 @@ our model predicts sexual reproduction to be maintained when infection prevalenc
 On the other hand, \cite{dagan2013clonal} data suggests that sexual reproduction is only maintained when infection prevalence much lowere.
 Similarly, overestimation of infection prevalence is strongly pronounced in our fits to \cite{mckone2016fine}.
 
-While there are a few outliers based on our fits to \cite{vergara2014infection},
+While there are a few data points that appear to be outliers compared to our fits to \cite{vergara2014infection},
 it is important to note that \fref{ivs} only shows proportion of infected and sexual snails averaged across 100 generations for each site.
-The observed data are more likely to be slices across a few generations and cyclic nature of the Red Queen dynamics creates more variation in the data, which is not captured in \fref{ivs}.
-
-[TODO: Talk about a weird sites]
-
-Based on goodness of fits, we exclude fits to \cite{dagan2013clonal} and \cite{mckone2016fine} from discussing parameter estimates and power analysis.
+The observed data are more likely to be samples across a few generations and the cyclic nature of the Red Queen dynamics creates more variation in the data, which is not captured in \fref{ivs}.
+On the other hand, \cite{vergara2014infection} reported greater than 90\% sexual snails throughout 5 years in one site but our model can only maintain up to 75\% sexual snails on average given similar inection prevalence.
+Based on the goodness of fits, we exclude fits to \cite{dagan2013clonal} and \cite{mckone2016fine} from discussing parameter estimates and power analysis.
 
 \begin{figure}[!ht]
 \includegraphics[width=\textwidth]{../fig/simulated_data.pdf}
@@ -268,12 +266,12 @@ Solid circles represent a population within a simulation. Triangles represent ob
 \label{fig:ivs}
 \end{figure}
 
-The most striking result from \fref{ivs} is that there is a region (around 10\%-60\% prevalence) in which proportion of infected hosts decreases while proportion of sexual hosts increases (most clearly seen from the fits to \cite{mckone2016fine} and \cite{vergara2014infection}).
-As transmission rate ($\beta$) increases, selection for sexual hosts increases but increasing number of resistant offsprings prevents further infection from occuring. 
-Depending on the strength of infection and amount of resistant offsprings produced, infection prevalence may decrease of stay constant.
-This region connects the overlap in prevalence between sexual and asexual populations noted by \cite{lively2001trematode}
-We find that proportion of sexual hosts decreases when infection prevalence is very high.
-Decrease in fitness of sexual hosts with increase in prevalence was predicted by \cite{ashby2015diversity} but is also observed in an earlier work by \cite{lively2010epidemiological} (not discussed in the paper).
+The most striking result from \fref{ivs} is that there is a region (around 30\%-40\% infection prevalence) in which proportion of infected hosts decreases while proportion of sexual hosts increases (most clearly visible in the fits to \cite{mckone2016fine} and \cite{vergara2014infection}).
+As transmission rate ($\beta$) increases, selection for sexual hosts increases but increasing number of resistant offsprings prevents further infection from occuring and can decrease overall infection prevalence.
+Such trend is consistent with the results of \cite{lively2001trematode} who noted that there is an overlap in infection prevalence that selects for sexual and asexual reproduction.
+We also find that proportion of sexual hosts decreases when infection prevalence is very high.
+Decrease in fitness of sexual hosts associated with increase in prevalence was predicted by \cite{ashby2015diversity}; 
+it can also be found in an earlier work by \cite{lively2010epidemiological} although it was not discussed in the paper.
 
 Parameter estimates for \cite{vergara2014infection} are presented in \fref{smcparam}.
 The most surprising result is that the posterior distributions of the scale parameter for cost of sex, $c_b$, is much wider than the prior distribution and have noticeably higher mean: (mean (95\% credible interval)) 1.30 (0.80-1.97).
