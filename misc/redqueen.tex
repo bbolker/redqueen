@@ -23,80 +23,88 @@
 
 The evolution of sexual reproduction still remains to be explained \citep{otto2009evolutionary}.
 Despite being the dominant mode of reproduction \citep{vrijenhoek1998animal}, sexual reproduction entails numerous costs \citep{lehtonen2012many}.
-Perhaps the most often mentioned is the cost of producing males \citep{smith1978evolution}.
+The most commonly mentioned is the cost of producing males \citep{smith1978evolution}.
 As males cannot produce offsprings, sexual population is expected to be outgrown by the asexual counterpart that can grow twice as fast (assuming that the sexual population produces 50\% male and 50\% female).
-The infamous \emph{two-fold cost of sex} \citep{smith1978evolution} relies on the assumption that everything else is equal but this is not necessarily true.
-So what drives sex to persist?
+This infamous \emph{two-fold cost of sex} \citep{smith1978evolution} relies on the assumption that everything else is equal.
+Then, what else is not equal and drives sex to persist?
 
 One explanation for persistence of sexual reproduction is the Red Queen Hypothesis \citep{bell1982masterpiece}.
 The Red Queen Hypothesis predicts sexually reproducing hosts to overcome the cost of sex under strong parasite selection by producing genetically diverse offspring that are resistant to infection \citep{jbs1949disease, jaenike1978hypothesis, hamilton1980sex}.
-Host parasite coevolution constantly creates selective advantage for rare genotypes, hence creating osccilation in genotypic frequencies, and allows for sexual reproduction to persist in the host population \citep{clarke1976ecological, hamilton1980sex}.
+Host-parasite coevolution constantly creates selective advantage for rare genotypes, hence creating osccilation in genotypic frequencies and allowing for sexual reproduction to persist in the host population \citep{clarke1976ecological, hamilton1980sex}.
 
-Since the conception of the Red Queen Hypothesis, much of the theoretical work has focused on figuring out conditions under which parasite selection can maintain sexual reproduction in the host population.
+Much of the theoretical work has focused on figuring out conditions under which parasite selection can maintain sexual reproduction in the host population.
 \cite{may1983epidemiology} first noted that parasites must be extremely virulent to maintain sexual reproduction but later studies showed that sexual and asexual hosts can coexist even at intermediate virulence \citep{howard1994parasitism}.
 \cite{agrawal2002infection} compared wide range of infection genetics that determine parasite resistance and the dynamics that arise from different genetic architecture.
-Recent studies showed that host genetic diversity plays an important role in determining the selection for sex [CITE].
+Recent studies showed that host genetic diversity plays an important role in determining the selection for sex reproduction [CITE].
 
-Some theoretical studies took a departure from the classical population genetics framework and studied effects of ecological and epidemiological on the Red Queen dynamics.
-On one hand, number of studies showed that incorporating ecological and epidemiological details can support sexual reproduction in the host population \citep{galvani2001antigenic, galvani2003maintenance, lively2009maintenance, lively2010epidemiological}.
+Some theoretical studies took a departure from the classical population genetics framework and studied effects of ecological and epidemiological structures on the Red Queen dynamics.
+On one hand, number of studies showed that incorporating ecological and epidemiological details can assist in supporting sexual reproduction in the host population \citep{galvani2001antigenic, galvani2003maintenance, lively2009maintenance, lively2010epidemiological}.
 On the other hand, \cite{macpherson2017joint} showed that Red Queen dynamics (i.e., cycles in allele frequencies) fails to persist when explicit epidemiological structure is taken into account with coevolutionary dynamics.
 
-Empiricists have mostly focused on confirming predictions that stem from the Red Queen hypothesis.
-Typical among them are local adaptation, time-lagged selection, and association between parasites and host reproductive mode (see \cite{tobler2008expanding} and \cite{vergara2014infection} for reviews).
+Empirical works have mostly focused on confirming predictions that stem from the Red Queen Hypothesis.
+Typical among them are local adaptation, time-lagged selection, and association between parasite prevalence and host reproductive mode (see \cite{tobler2008expanding} and \cite{vergara2014infection} for reviews).
 An important example is the snail population in New Zealand that serve as an intermediate hosts for trematodes [CITE].
 Through several decades of work, Lively \etal demonstrated that the population satisfies necessary conditions for the host-parasite coevolutionary dynamics and provide support for the hypothesis \citep{lively1987evidence, lively1989adaptation, dybdahl1995host, dybdahl1998host, jokela2009maintenance, vergara2014infection, gibson2016within}.
-Recently, \cite{auld2016sex} and \cite{slowinski2016coeveolutionary} showed that more direct evidence can be achieved using experimental systems.
+While many studies provide only indirect evidence, 
+recent studies show that more direct evidence can be achieved using experimental systems \citep{auld2016sex, slowinski2016coeveolutionary}.
 
-While the Red Queen Hypothesis has gained reasponable support both theoretically and empirically, there still remains a gap between theory and data.
+Even though the Red Queen Hypothesis has gained reasponable support both theoretically and empirically, there still remains a gap between theory and data.
 Many models for Red Queen Hypothesis rely on simplifying assumption that are not applicable to natural populations and make predictions based on assumed parameters.
-In particular, none of the Red Queen models reviewed by \cite{ashby2015diversity} use statistical tools to relate the model to data.
+In particular, none of the Red Queen models reviewed by \cite{ashby2015diversity} use statistical tools to relate model to data.
 However, there are exceptions:
-\cite{lively1992parthenogenesis} initially postulated that infection prevalence should be positively correlated with frequency of sexual hosts. 
-\citep{lively2001trematode} then formalized the idea with a mathematical model and confirmed the prediction with a snail-trematode system.
-Many other emprical works have successfully found the positive correlation \citep{lively2002temporal, kumpulainen2004parasites, vergara2013geographic, mckone2016fine, gibson2016within} but surprisingly such correlation was not observed in a different snail-trematode system \citep{dagan2013clonal}.
+\cite{lively1992parthenogenesis} postulated that infection prevalence should be positively correlated with frequency of sexual hosts and later formalized the idea with a mathematical model \citep{lively2001trematode}.
+The prediction has since been confirmed by many empirical studies, most of which are based on the snail-trematode system \citep{lively2002temporal, kumpulainen2004parasites, vergara2013geographic, mckone2016fine, gibson2016within}.
+Surprisingly such correlation was not observed in a different snail-trematode system \citep{dagan2013clonal}.
 
 Here, we try to bridge the gap between theory and data further.
-We extend the model used by \cite{lively2010epidemiological} to include stochasticity and population structure.
-Then, we fit it the to data from \cite{dagan2013clonal, mckone2016fine, vergara2014infection} using Approximate Bayesian Computation (ABC) to estimate biologically relavent parameters.
-Using estimated parameters obtained from the fits, we assess the model by comparing its fit to data and perform a power analysis to test the prediction that infection prevalence is positively correlated with frequency of sexual reproduction \cite{lively2001trematode}.
+We extend the model used by \cite{lively2010epidemiological} to account for demographic stochasticity and simple population structure.
+Then, we fit the model the to observational data from \cite{dagan2013clonal, mckone2016fine, vergara2014infection} using Approximate Bayesian Computation (ABC) to estimate biologically relavent parameters.
+Using estimated parameters, we assess model fits and perform a power analysis to test the prediction that infection prevalence is positively correlated with frequency of sexual reproduction \cite{lively2001trematode}.
 
 \section{Methods}
 
-\subsection{Study systems}
+\subsection{Data}
 
-We consider two snail-trematode populations in New Zealand \citep{vergara2014infection, mckone2016fine} and a similar snail-trematode population in Isral \citep{dagan2013clonal}. 
-The snail-trematode system has been extensively studied under the context of the Red Queen Hypothesis [CITE] so we expect a simple Red Queen model to fit well.
+We consider observational data from two snail-trematode populations in New Zealand \citep{vergara2014infection, mckone2016fine} and a similar snail-trematode population in Isral \citep{dagan2013clonal}. 
+The snail-trematode system has been extensively studied under the context of the Red Queen Hypothesis [CITE] so we expect a simple Red Queen model to fit reasonably well.
 Data collected by \cite{dagan2013clonal} and \cite{vergara2014infection} were obtained from their Dryad repositories \citep{dryad_f5t56, dryad_29nk3_2} and data by \cite{mckone2016fine} was extracted from their figure.
 
 \subsection{Model}
 
 We model obligate sexual hosts competing with obligate asexual hosts in multiple population by extending the model introduced by \cite{lively2010epidemiological}.
-A model that \cite{lively2010epidemiological} used is essentially an SI model on a discrete time scale with natural mortality and virulence (reduced offspring production by infected hosts).
-It is a suitable canditate for this study as it captures essential structures that are present in basic epidemiological and population biology models and is general enough to be applied to broad range of natural systems.
+A model that \cite{lively2010epidemiological} used is essentially an SI model on a discrete time scale with natural mortality and virulence (defined as reduction in offspring production among infected hosts).
+It is a suitable canditate model for this study as it captures essential structures that are present in basic epidemiological and population biology models and is general enough to be applied to broad range of natural systems.
 We do not consider mechanistic details of the snail-trematode system such as life history of trematodes \citep{vergara2014infection}.
 We incorporate population structure and allow for mixing between populations.
-Each population can be considered as a sampling site in the observed populations.
+Each population can be equivalently considered as a sampling site in the observed populations.
 
 All hosts are assumed to be diploids with two biallelic loci, and parasites are assumed to be haploids.
 Let $S_{ij}^k(t)$ and $A_{ij}^k(t)$ be the number of sexual and asexual hosts with genotype $ij$ from population $k$ at generation $t$. 
 For simplicity, we drop the superscript representing population and write $S_{ij}(t)$ and $A_{ij}(t)$;
-every population is modeled using the same equations unless noted otherwise.
-Following \cite{lively2010epidemiological}, the expected number of offsprings (without recombination or outcrossing) produced by a sexual population is given by
+every population is goverend by the same set of equations unless noted otherwise (e.g., when we account for interaction between populations).
+Following \cite{lively2010epidemiological}, the expected number of offsprings (without recombination or outcrossing) produced by a sexual hosts is given by
 \begin{equation}
 S_{ij}' = c_b (1-s) \left(W_U S_{ij,U} (t) + W_I S_{ij,I} (t)\right),
 \end{equation}
 where $s$ is the proportion of males produced by sexual hosts, $S_{ij, U}$ and $S_{ij,I}$ are the number of uninfected and infected sexual hosts in a population.
-$W_U$ and $W_I$ represent their corresponding fitnesses.
-We allow for cost of sex to vary by multiplying a scale parameter, $c_b$, to the growth term ($2/c_b$ corresponds to two fold cost of sex) \citep{ashby2015diversity}.
+$W_U$ and $W_I$ represent their corresponding fitnesses where virulence is defined as $V = 1-W_I/W_U$.
+We allow for cost of sex to vary by multiplying a scale parameter, $c_b$, to the growth term, where$2/c_b$ corresponds to two fold cost of sex \citep{ashby2015diversity}.
 Equivalently, $S_{ij}'$ is the amount of genotypic contribution by sexual hosts to the next generation.
 
-Asexual hosts are assumed to be strictly clonal. Then, the expected number of offsprings produced by an asexual population is given by
+Following \cite{lively2010epidemiological, smith1973stability}, we define
+$$
+W_U = \frac{b_U}{1 + a_U N(t)}, W_I = \frac{b_I}{1 + a_I N(t)}
+$$
+where $b_U$ and $b_I$ are number of offsprings produced by uninfected and infected hosts, respectively, and $a_U$ and $a_I$ determines their corresponding density dependent effects (see \cite{lively2010epidemiological} for detailed a detailed description).
+For simplicity, we assume that $a_U = a_I$ so that virulence can be defined strictly in terms of offspring production: $V = 1- b_I/b_U$.
+
+Asexual hosts are assumed to be strictly clonal. Then, the expected number of offsprings produced by asexual hosts is given by
 \begin{equation}
 A_{ij}' = W_U A_{ij,U} (t) + W_I A_{ij,I} (t),
 \end{equation}
 where $A_{ij, U}$ and $A_{ij,I}$ are the number of uninfected and infected asexual hosts in a population.
 
-We assume mixing between populations occur at rate $\epsilon_{\textrm{mix}}$.
+We assume that proportion $\epsilon_{\textrm{mix}}$ of a population mix with other popualations.
 Then, the expected number of offspring in the next generation (accounting for contributions from all populations) is given by
 \begin{equation}
 \begin{aligned}
@@ -104,50 +112,52 @@ Then, the expected number of offspring in the next generation (accounting for co
 \mathrm{E}\left(A_{ij}^k(t+1)\right) &= (1 - \epsilon_{\textrm{mix}}) \left(A_{ij}^k\right)' + \frac{\epsilon_{\textrm{mix}}}{n_{\textrm{population}}-1} \sum_{h \neq k} \left(A_{ij}^h\right)',\\
 \end{aligned}
 \end{equation}
-where $f_{\textrm{sex}}(x)$ is the function that models sexual reproduction, including recombination at a rate $r_{\textrm{host}}$ and outcrossing, and $n_{\textrm{population}}$ is the number of populations modeled.
-We then take a poisson random variable to simulate process error and allow for stochastic migration to avoid fixation:
+where $f_{\textrm{sex}}(x)$ is the function that models sexual reproduction, including recombination probability $r_{\textrm{host}}$ and outcrossing, and $n_{\textrm{population}}$ is the number of populations modeled.
+Then, the total number of sexual and asexual hosts in the next generation given by poisson random variables with mean specified previously. We also allow for stochastic migration to avoid fixation:
 \begin{equation}
 \begin{aligned}
 S_{ij}^k(t+1) &\sim \mathrm{Poisson}\left(\lambda=\mathrm{E}\left(S_{ij}^k(t+1)\right)\right) + \mathrm{Bernoulli}\left(p=p_{ij,\textrm{sex}}\right),\\
 A_{ij}^k(t+1) &\sim \mathrm{Poisson}\left(\lambda=\mathrm{E}\left(A_{ij}^k(t+1)\right)\right) + \mathrm{Bernoulli}\left(p=p_{ij, \textrm{asex}}\right),
 \end{aligned}
 \end{equation}
-where $p_{ij,\textrm{sex}}$ and $p_{ij, \textrm{asex}}$ are the probability of a sexual and an asexual host with genotype $ij$ entering the popualation.
+where $p_{ij,\textrm{sex}}$ and $p_{ij, \textrm{asex}}$ are the probabilities of a sexual and an asexual host with genotype $ij$ entering a popualation.
 
 Infection is modeled using the matching alleles model \citep{otto1998evolution}.
 We assume that heterozygous individuals are equally susceptible to parasites that match either haplotypes.
-The expected number of infected hosts that carry parasite with genotype $i$ at generation $t$ is given by:
+The total number of infected hosts that carry parasite with genotype $i$ at generation $t$ is given by:
 \begin{equation}
 I_{i}(t) = \sum_{p} 2^{\delta_{ij}} \left( S_{ip,i,I}(t) + A_{ip,i,I}(t)\right),
 \end{equation}
 where $\delta_{ij}$ is kronecker delta.
-$S_{ip,i,I}$ and $A_{ip,i,I}$ represent the expected numbers of sexual and asexual hosts infected with genotype $i$ parasite. 
+$S_{ip,i,I}(t)$ and $A_{ip,i,I}(t)$ represent the expected numbers of sexual and asexual hosts that have genotype $ip$ and are infected with genotype $i$ parasite. 
 Following \cite{ashby2015diversity}, we assume that mutation can occur in one locus with probability $r_{\textrm{parasite}}$. 
-We also allow for external migration of an infected host carrying parasite $i$ with probability $p_{i, \textrm{parasite}}$ to avoid fixation.
+Mutation is modeled using a deterministic process as we introduce stochasticity during the actual infection process.
+We also allow for stochastic external migration of an infected host carrying parasite $i$ with probability $p_{i, \textrm{parasite}}$ to avoid fixation.
 
-The amount of infectious contacts made by infected hosts from a population is given by $\lambda_i^k = \beta^k {I_i'}^k(t)$, where $\beta^K$ is the transmission rate at each population, and $I_i'(t)$ is the number of infected hosts accounting for mutation and migration.  
-Since we allow for mixing between population, infected hosts in a population can make contact to susceptible hosts in other populations as well.
-Then, all infectious contacts made by infected hosts that applies to a host in a single population is
+Total amount of infectious contacts made by infected hosts within a population is given by $\lambda_i^k = \beta^k {I_i'}^k(t)$, where $\beta^k$ is the transmission rate of each population, and $I_i'(t)$ is the number of infected hosts accounting for mutation and migration.  
+Since we allow for mixing between population, infected hosts can make contact with susceptible hosts in other populations.
+Then, the total amounf of infectious contacts, coming from hosts that carry genotype $i$ parasite, that is received by susceptible hosts in population $k$ is given by
 \begin{equation}
-\lambda_{i, \textrm{total}} = (1 - \epsilon_{\textrm{site}}) \lambda_i + \frac{\epsilon_{\textrm{site}}}{n_\textrm{site}-1} \sum_{l \neq k} \lambda_i^l
+\lambda_{i, \textrm{total}}^k = (1 - \epsilon_{\textrm{mix}}) \lambda_i^k + \frac{\epsilon_{\textrm{mix}}}{n_\textrm{population}-1} \sum_{l \neq k} \lambda_i^l
 \end{equation}
-Then, the force of infection that a susceptible host experiences is given by
+Then, the force of infection that a susceptible host with genotype $ij$ experiences in generation $t+1$ is given by
 \begin{equation}
-\mathrm{FOI}_{ij}^k = \frac{\lambda_{i, \textrm{total}}  + \lambda_{j, \textrm{total}}  }{2 N(t+1)}
+\mathrm{FOI}_{ij}^k = \frac{\lambda_{i, \textrm{total}}^k  + \lambda_{j, \textrm{total}}^k}{2 N^k(t+1)},
 \end{equation}
-The probability of infection for a host with genotype $ij$ at site $k$ in the next generation is
+where $N^k(t+1) = \sum_{i,j} S_{ij}^k(t+1) + A_{ij}^k(t+1)$ is the total number of hosts in generation $t+1$.
+The probability that a susceptible host with genotype $ij$ in population $k$ becomes infected in the next generation is given by
 \begin{equation}
 P_{ij}^k(t+1) = 1 - \exp\left(\mathrm{FOI}_{ij}^k\right).
 \end{equation}
 
-Finally, number of infected hosts in the next generation is determined by a binomial process:
+Finally, number of infected hosts in next generation is determined by a binomial process:
 \begin{equation}
 \begin{aligned}
-S_{ij,I} (t+1) &\sim \mathrm{Binom}(S_{ij} (t+1), P_{ij}),\\
-A_{ij,I} (t+1) &\sim \mathrm{Binom}(A_{ij} (t+1), P_{ij}).
+S_{ij,I}^k (t+1) &\sim \mathrm{Binom}(S_{ij}^k (t+1), P_{ij}^k(t+1)),\\
+A_{ij,I}^k (t+1) &\sim \mathrm{Binom}(A_{ij}^k (t+1), P_{ij}^k(t+1)).
 \end{aligned}
 \end{equation}
-Expected number of individuals infected by parasites with genotype $i$ in the next generation is given by a ratio of $\lambda$:
+Expected number of infected hosts that have genotype $ij$ and is infected by parasites with genotype $i$ in the next generation is given by a ratio of $\lambda$:
 \begin{equation}
 \begin{aligned}
 S_{ij,i,I}(t+1) &= \frac{\lambda_{i, \textrm{total}}}{\lambda_{i, \textrm{total}} + \lambda_{j, \textrm{total}}} S_{ij,I}(t+1)\\
@@ -157,7 +167,7 @@ A_{ij,i,I}(t+1) &= \frac{\lambda_{i, \textrm{total}}}{\lambda_{i, \textrm{total}
 
 \subsection{Simulation design and parameterization}
 
-Most Red Queen models have studied a competition between a single asexual genotype and sexual genotypes or have assumed equal genetic diversity of asexual and sexual hosts \citep{ashby2015diversity} but neither of these assumptions are realistic.
+Many Red Queen models have studied a competition between a single asexual genotype and multiple sexual genotypes or have assumed equal genetic diversity between asexual and sexual hosts \citep{ashby2015diversity} but neither of these assumptions are realistic.
 Instead, \cite{ashby2015diversity} adopted a more realistic approach by allowing for stochastic migration of an asexual genotype to a population.
 Here, we combine these methods.
 We allow for stochastic migration of asexual hosts with different genotypes but fix number of asexual genotypes (denoted by $G_{\textrm{asex}}$) that can be present in the system, 
@@ -181,19 +191,58 @@ p_{i, \textrm{parasite}} = 1 - (1-p_{\textrm{infected}})^{1/4},
 \end{equation}
 where $p_{\textrm{infected}}$ is the probability that at least one infected host enters the population in a generation.
 
-Each simulation consists of 40 populations. Every population consists of 2000 sexual hosts where 80 of them are infected. They are assumed to be in Hardy-Weinberg equilibrium with ratio between alleles being exactly half. Transmission rate parameter, $\beta$, is randomly drawn for each population from a gamma distribution with mean $\beta_{\textrm{mean}}$ and coefficient of variation $\beta_{\textrm{cv}}$. Simulation runs for 500 generations without introduction of asexuals. At generation 501, 10 asexual hosts of a single genotype are introduced to each population (note that asexual genotype introduced can vary across population) and simulation runs for 600 generations while allowing for stochastic migration of asexuals as well.
+Each simulation consists of 40 populations. Every population is initiallized with 2000 sexual hosts where 80 of them are infected. They are assumed to be in Hardy-Weinberg equilibrium with ratio between alleles being exactly half. 
+Transmission rate, $\beta^k$, is randomly drawn for each population from a gamma distribution with mean $\beta_{\textrm{mean}}$ and coefficient of variation $\beta_{\textrm{cv}}$. 
+Simulation runs for 500 generations without introduction of asexuals. At generation 501, 10 asexual hosts of a single genotype are introduced to each population (note that asexual genotype introduced can vary across population) and simulation runs for 600 generations while allowing for stochastic migration of asexuals as well.
 
 \subsection{Approximate Bayesian Computation}
 
 We use Approximate Bayesian Computation (ABC) to fit the model \citep{toni2009approximate}.
 ABC relies on comparing summary statistics of observed data and those of simulated data and is particularly useful when the exact likelihood function is not available.
-We consider mean proportion of infected and sexually reproducing snails in the system and variation in these proportions -- measured by coefficient of variation (CV) -- across space and time as summary statistics of interest.
-CV of these proportions across space is calculated by first calculating mean proportions by averaging across generations and then taking the the CV of these mean proportions.
-Likewise, CV across generation is calculated by first averaging across space and then taking the CV.
+We consider mean proportion of infected and sexually reproducing snails in the system and variation in these proportions -- measured by coefficient of variation (CV) -- across space (population) and time as summary statistics of interest.
+CV of these proportions across space is calculated by first calculating mean proportions by averaging across generations for each site (population) and then taking the the CV of these mean proportions.
+Likewise, CV across generation is calculated by first averaging proportions across space (population) at each generation and then taking the CV.
 
-We use uninformative priors for all parameters except $c_b$, a scale parameter for the cost of sex (See Table [TODO]).
+We use weakly informative priors for all parameters that we estimate except $c_b$, a scale parameter for the cost of sex (See Table~\ref{tb:param} for prior distributions used and parameters assumed).
 The prior distribution for the scale parameter is chosen so that 95\% quantile of cost of sex (2/$c_b$) is approximately equal to the 95\% confidence interval reported by \cite{gibson2017two}.
 As \cite{dagan2013clonal} and \cite{mckone2016fine} report proportion of males, instead of proportion of sexual hosts, we double the proportion of males reported when we fit the model.
+
+\begin{table}[h]
+\centering
+\tiny
+\begin{tabular}{c|p{3cm}|c|c}
+\hline
+\textbf{Notation} & \textbf{Description} & \textbf{Prior distribution/parameter values} & \textbf{Source}\\
+\hline
+$\beta_{\textrm{mean}}$ & Mean transmission rate & $\mathrm{Gamma}(k=2, \theta=10)$ & Assumption\\
+$\beta_{\textrm{CV}}$ & CV transmission rate & $\mathrm{Gamma}(k=2, \theta=0.5)$ & Assumption\\
+$V$ & Virulence & $\mathrm{Beta}(\alpha=6, \beta=2)$ & Assumption\\
+$\epsilon_{\textrm{mix}}$ & Mixing proportion & $\mathrm{Beta}(\alpha=1, \beta=9)$ & Assumption\\
+$G_{\textrm{asex}}-1$ & Number of asexual genotypes - 1 & $\mathrm{BetaBinomial}(N=9, p=3/9, \theta=5)$ & Assumption\\
+$c_b$ & Cost of sex scale & $\mathrm{LogNormal}(\mu=-0.07, \sigma=0.09)$ & \cite{gibson2017two}\\
+$s$ & Proportion of male offsprings produced & 0.5 & Assumption\\
+$b_U$ & Number of offsprings produced by an uninfected host per generation & 20 & \cite{lively2010epidemiological}\\
+$a_U$ & Density dependent effect coefficient of uninfected hosts & 0.001 & \cite{lively2010epidemiological}\\
+$a_U$ & Density dependent effect coefficient of infected hosts & 0.001 & \cite{lively2010epidemiological}\\
+$r_{\textrm{host}}$ & Host recombination probability & 0.2 & \cite{lively2010epidemiological}\\
+$r_{\textrm{parasite}}$ & Parasite mutation probability & 0.05 & Assumption\\
+$p_{\textrm{host}}$ & Probability that at least one sexual and asexual host enters the population & 0.1 & Assumption\\
+$p_{\textrm{infected}}$ & Probability that at least one infected host enters the population & 0.02 & Assumption\\
+\hline
+\end{tabular}
+\caption{
+\textbf{Parameter descriptions and values}.
+Parameters with prior distributions are estimated via Approximate Bayesian Computation (ABC).
+$k$ and $\theta$ in gamma distribution represent shape and scale parameters where mean and squared CV are given by $k \theta$ and $1/k$, respectively.
+$\alpha$ and $\beta$ is beta distribution represent shape parameters where mean and squared CV are given by $\alpha/(\alpha+\beta)$ and $\beta/(\alpha^2 + \alpha \beta + \alpha)$.
+$N$, $p$ and $\theta$ in beta binomial distributions represent number of trials, probability of success, and overdispersion parameters. 
+Beta binomial equivalent to a binomial distribution whose probability of succes follows a beta distribution with shape parameters $\theta p$ and $\theta (1-p)$.
+We define prior on $G_{\textrm{asex}} -1$ instead to maintain at least one asexual genotype in the system.
+$\mu$ and $\sigma$ in log-normal distribution represent mean and standard deviation on a log scale.
+All other parameters are fixed throughout simulations.
+}
+\label{tb:param}
+\end{table}
 
 To allow for more efficient estimation of the posterior distribution, we use the Population Monte Carlo approach \cite{turner2012tutorial}.
 First, we start by performing basic ABC.
@@ -205,7 +254,7 @@ After the first run ($t=1$), equal weights ($w_{i,1}=1/100$) are assigned to eac
 For any run $t > 1$,
 a weighted random sample ($\theta^\ast$) is drawn from the accepted parameters of the previous run ($t-1$) and
 a parameter sample ($\theta_{i, t}$) is proposed from a multivariate normal distribution with a mean $\theta^\ast$ and a variance covariance matrix that is equal to $\sigma_{t-1}^2=2 \mathrm{Var}(\theta_{1:N, t-1})$, where $\mathrm{Var}(\theta_{1:N, t-1})$ is the weighted variance covariance matrix.
-$G_{\tiny\textrm{asex}}$ is rounded to the nearest integer and the model is simulated.
+$G_{\textrm{asex}}$ is rounded to the nearest integer and the model is simulated.
 If a proposed parameter is accepted, the following weight is assigned:
 $$
 w_{i,t} = \frac{\pi(\theta_{i, t})}{\sum_{i=1}^{100} w_{j, t-1} q(\theta_{j, t-1} | \theta_{i,t}, \sigma_{t-1}^2)}
