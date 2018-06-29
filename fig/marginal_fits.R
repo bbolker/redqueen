@@ -3,7 +3,7 @@ library(tidyr)
 library(gridExtra)
 library(ggplot2); theme_set(theme_bw(base_size = 12,
                                      base_family = "Times"))
-
+source("../R/HPDregion.R")
 source("../R/ABC_funs.R")
 
 scale_colour_discrete <- function(...,palette="Dark2") scale_colour_brewer(...,palette=palette)
@@ -33,6 +33,10 @@ for (n in load_names) {
     slist[[n]] <- do.call("rbind", ll)
 }
 
+load("../data/SMC_summary.rda")
+
+accepted_df <- weighted_list$sumlist
+
 load("../data/comb_summ.rda")
 
 save <- FALSE
@@ -51,7 +55,15 @@ gg_summary_df <- slist %>%
     mutate(key=factor(key,
                       levels=c("pinf.mean", "pinf.siteCV", "pinf.timeCV", "psex.mean", "psex.siteCV", "psex.timeCV"),
                       labels=rep(c("mean~proportion", "CV~across~population", "CV~across~generation"),2))) %>%
-    filter(!(fit!=as.character(data_name[3]) & key=="CV~across~generation"))
+    filter(!(fit!=as.character(data_name[3]) & key=="CV~across~generation")) %>%
+    mutate(weight=weight/1000)
+
+gg_summary_quant <- gg_summary_df %>%
+    group_by(fit, key, gvar) %>%
+    summarise(
+        lwr=wquant(value, weight, 0.025),
+        upr=wquant(value, weight, 0.975)
+    )
 
 summ_df <- comb_summ  %>%
     lapply(function(x) as.list(x[[1]])) %>%
@@ -64,11 +76,18 @@ summ_df <- comb_summ  %>%
                       levels=c("pinf.mean", "pinf.siteCV", "pinf.timeCV", "psex.mean", "psex.siteCV", "psex.timeCV"),
                       labels=rep(c("mean~proportion", "CV~across~population", "CV~across~generation"),2)))
 
-gg_summary_df$weight <- gg_summary_df$weight/1000
+gg_accepted <- accepted_df %>%
+    filter(run==3, !is.na(value)) %>%
+    mutate(fit=factor(fit, labels=data_name)) %>%
+    mutate(gvar=ifelse(grepl("pinf", key), "proportion~infected", "proportion~sexual")) %>%
+    mutate(key=factor(key,
+                      levels=c("pinf.mean", "pinf.siteCV", "pinf.timeCV", "psex.mean", "psex.siteCV", "psex.timeCV"),
+                      labels=rep(c("mean~proportion", "CV~across~population", "CV~across~generation"),2)))
 
-gg_smc_summ <- ggplot(gg_summary_df, aes(fit, value)) +
-    geom_violin(aes(fill=fit, weight=weight), alpha=0.5, width=0.7) +
-    geom_point(data=summ_df, shape=0, size=2.5) +
+gg_smc_summ <- ggplot(gg_summary_quant, aes(fit)) +
+    geom_errorbar(aes(ymin=lwr, ymax=upr), width=0.1) +
+    geom_violin(data=gg_accepted, aes(y=value, fill=fit, weight=weight), alpha=0.5, width=0.5) +
+    geom_errorbar(data=summ_df, aes(ymin=value, ymax=value), lty=2) +
     facet_grid(key~gvar, scale="free", labeller = label_parsed) +
     scale_fill_discrete(label=data_name) +
     theme(
@@ -90,6 +109,3 @@ gg_summary_df %>%
     summarize(mean=weighted.mean(value, weight=weight),
               lwr=wquant(value, weight=weight, 0.025),
               upr=wquant(value, weight=weight, 0.975))
-
-
-

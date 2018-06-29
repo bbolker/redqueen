@@ -52,14 +52,15 @@ clean_fun <- function(x, target) {
 }  
 
 clean_list <- c("parlist", "sumlist") %>%
-    sapply(clean_fun, x=comb_smc, simplify=FALSE)
+    sapply(clean_fun, x=comb_smc, simplify=FALSE) %>%
+    lapply(mutate, param=1:100)
 
 simlist <- comb_smc %>%
     lapply("[[", "simlist")
 
 SMC_weight <- comb_smc %>%
     lapply("[[", "ww") %>%
-    lapply(function(x) lapply(x, function(y) {data.frame(weight=y) })) %>%
+    lapply(function(x) lapply(x, function(y) {data.frame(param=1:100, weight=y) })) %>%
     lapply(bind_rows, .id="run") %>%
     bind_rows(.id="fit") %>%
     as.tbl
@@ -72,7 +73,7 @@ SMC_summary <- weighted_list %>%
     lapply(summarize, value=weighted.mean(value, w=weight, na.rm=TRUE)) %>%
     lapply(spread, key, value)
 
-if(save) save("comb_summ", "weighted_list", "simlist", "SMC_weight", "SMC_summary", file="SMC_summary.rda")
+if(save) save("comb_summ", "weighted_list", "SMC_weight", "SMC_summary", file="SMC_summary.rda")
 if(save) save("comb_summ", file="comb_summ.rda")
 
 gpar <- ggplot(NULL, aes(col=fit, group=run)) +
