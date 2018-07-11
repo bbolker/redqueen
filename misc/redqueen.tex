@@ -11,10 +11,15 @@
 \bibliographystyle{chicago}
 \date{\today}
 
+\usepackage{bm}
+
+\usepackage{afterpage}
+\usepackage{pdflscape}
+
 \newcommand{\etal}{\textit{et al.}}
 
 \newcommand{\comment}[3]{\textcolor{#1}{\textbf{[#2: }\textit{#3}\textbf{]}}}
-\newcommand{\bmb}[1]{\comment{cyan}{JD}{#1}}
+\newcommand{\bmb}[1]{\comment{cyan}{BMB}{#1}}
 \newcommand{\swp}[1]{\comment{magenta}{SWP}{#1}}
 
 \newcommand{\fref}[1]{Fig.~\ref{fig:#1}}
@@ -211,17 +216,19 @@ Simulation runs for 500 generations without introduction of asexuals. At generat
 We use Approximate Bayesian Computation (ABC) to fit the model \citep{toni2009approximate}.
 ABC relies on comparing summary statistics of observed data and those of simulated data and is particularly useful when the exact likelihood function is not available.
 We consider mean proportion of infected and sexually reproducing snails in the system and variation in these proportions -- measured by coefficient of variation (CV) -- across space (population) and time as summary statistics of interest.
-CV of these proportions across space is calculated by first calculating mean proportions by averaging across generations for each site (population) and then taking the the CV of these mean proportions.
-Likewise, CV across generation is calculated by first averaging proportions across space (population) at each generation and then taking the CV.
+CV of these proportions across populations is calculated by first calculating mean proportions by averaging across generations for each site (population) and then taking the the CV of these mean proportions.
+Likewise, CV across generations is calculated by first averaging proportions across space (population) at each generation and then taking the CV.
 
 We use weakly informative priors for all parameters that we estimate except $c_b$, a scale parameter for the cost of sex (see Table~\ref{tb:param} for prior distributions used and parameters assumed).
 The prior distribution for the scale parameter is chosen so that 95\% quantile of cost of sex (2/$c_b$) is approximately equal to the 95\% confidence interval reported by \cite{gibson2017two}.
 As \cite{dagan2013clonal} and \cite{mckone2016fine} only reported proportion of males, rather than proportion of sexual hosts, we double the proportion of males reported when we fit the model.
 
+\afterpage{
+\clearpage
+\begin{landscape}
 \begin{table}[h]
 \centering
-\tiny
-\begin{tabular}{c|p{3cm}|c|c}
+\begin{tabular}{c|p{5cm}|c|c}
 \hline
 \textbf{Notation} & \textbf{Description} & \textbf{Prior distribution/parameter values} & \textbf{Source}\\
 \hline
@@ -232,7 +239,8 @@ $\epsilon_{\textrm{\tiny mix}}$ & Mixing proportion & $\mathrm{Beta}(\alpha=1, \
 $G_{\textrm{\tiny asex}}-1$ & Number of asexual genotypes - 1 & $\mathrm{BetaBinomial}(N=9, p=3/9, \theta=5)$ & Assumption\\
 $c_b$ & Cost of sex scale & $\mathrm{LogNormal}(\mu=-0.07, \sigma=0.09)$ & \cite{gibson2017two}\\
 $s$ & Proportion of male offsprings produced & 0.5 & Assumption\\
-$b_U$ & Number of offsprings produced by an uninfected host per generation & 20 & \cite{lively2010epidemiological}\\
+$b_U$ & Number of offsprings produced by an uninfected host & 20 & \cite{lively2010epidemiological}\\
+$b_I$ & Number of offsprings produced by an infected host & $(1-V) b_U$ & \cite{lively2010epidemiological}\\
 $a_U$ & Density dependent effect coefficient of uninfected hosts & 0.001 & \cite{lively2010epidemiological}\\
 $a_U$ & Density dependent effect coefficient of infected hosts & 0.001 & \cite{lively2010epidemiological}\\
 $r_{\textrm{\tiny host}}$ & Host recombination probability & 0.2 & \cite{lively2010epidemiological}\\
@@ -253,30 +261,38 @@ All other parameters are fixed throughout simulations.
 }
 \label{tb:param}
 \end{table}
+\end{landscape}
+}
 
-To allow for more efficient estimation of the posterior distribution, we use the Population Monte Carlo approach \citep{turner2012tutorial}.
+% To allow for more efficient estimation of the posterior distribution, we use the Population Monte Carlo approach \citep{turner2012tutorial}.
 We start by performing basic ABC.
 For each random parameter sample drawn from the prior distribution, the model is simulated and a sample of simulated populations is drawn from the simulated system such that the number of sampled population is equal to the number of sites collected in a study.
-Then, summary statistics are calculated based on the last 100 generations out of 1100 generations and the parameter is accepted if the distance between simulated and observed data is less than a tolerance value.
+Then, summary statistics are calculated based on the last 100 generations and the parameter is accepted if the distance between simulated and observed data is less than a tolerance value.
 Distance is measured by the sum of absolute differences in summary statistics between simulated and observed data.
 This process is repeated until 100 parameter sets are accepted.
 
-After the first run ($t=1$), equal weights ($w_{i,1}=1/100$) are assigned to each accepted parameter $\theta_{i, 1}$.
+After the first run ($t=1$), equal weights ($w_{i,1}=1/100$) are assigned to each accepted parameter set $\bm\theta_{i, 1}$, where $1 \leq i \leq 100$.
 For any run $t > 1$,
-a weighted random sample ($\theta^\ast$) is drawn from the accepted parameters of the previous run ($t-1$) with weights $w_{i,t-1}$ and
-a parameter sample ($\theta_{i, t}$) is proposed from a multivariate normal distribution with a mean $\theta^\ast$ and a variance covariance matrix that is equal to $\sigma_{t-1}^2=2 \mathrm{Var}(\theta_{1:N, t-1})$, where $\mathrm{Var}(\theta_{1:N, t-1})$ is the weighted variance covariance matrix.
+a weighted random sample ($\bm\theta^\ast$) is drawn from the accepted parameters of the previous run ($t-1$) with weights $w_{i,t-1}$ and
+a parameter sample ($\bm\theta_{i, t}$) is proposed from a multivariate normal distribution with a mean $\bm\theta^\ast$ and a variance covariance matrix that is equal to $\sigma_{t-1}^2=2 \mathrm{Var}(\bm\theta_{1:N, t-1})$, where $\mathrm{Var}(\bm\theta_{1:N, t-1})$ is the weighted variance covariance matrix of the accepted parameters from the previous run.
+$N$ is the total number of accepted parameters from the previous run.
+
 $G_{\textrm{\tiny asex}}$ is rounded to the nearest integer and the model is simulated.
 If a proposed parameter is accepted, the following weight is assigned:
 $$
-w_{i,t} = \frac{\pi(\theta_{i, t})}{\sum_{i=1}^{100} w_{j, t-1} q(\theta_{j, t-1} | \theta_{i,t}, \sigma_{t-1}^2)}
+w_{i,t} = \frac{\pi(\bm\theta_{i, t})}{\sum_{i=1}^{100} w_{j, t-1} q(\bm\theta_{j, t-1} | \bm\theta_{i,t}, \sigma_{t-1}^2)}
 $$
-where $\pi(\cdot)$ is a prior density and $q(\cdot | \theta_{i,t}, \sigma_{t-1}^2)$ is a multivariate normal density with mean $\theta_{i,t}$ and variance covariance matrix $\sigma_{t-1}^2$.
+where $\pi(\cdot)$ is a prior density and $q(\cdot | \bm\theta_{i,t}, \sigma_{t-1}^2)$ is a multivariate normal density with mean $\bm\theta_{i,t}$ and variance covariance matrix $\sigma_{t-1}^2$.
 For each run, 100 parameters are accepted and weights are normalized at the end to sum to 1.
+This method, known as the Population Monte Carlo approach \citep{turner2012tutorial}, allows for sampling more efficiently while ensuring that final result still satisfies criteria to be a correct (approximate) Bayesian posterior.
 
 %% TODO: actually showing 3rd run because 4th run is taking so long 
-For each data, we perform 4 runs with decreasing tolerance every run.
-For spatial data \citep{dagan2013clonal, mckone2016fine}, tolerance of 1.6, 0.8, 0.6 and 0.4 are used for each run.
-For spatiotemporal data \citep{vergara2014infection}, tolerance of 2.4, 1.2, 0.9 and 0.6 are used for each run to account for higher number of summary statistics being compared.
+For each observed datum, we perform 4 runs with decreasing tolerance every run.
+For spatial data \citep{dagan2013clonal, mckone2016fine}, four summary statistics are compared: mean proportion of infected and sexually reproducing snails and CV in these proportions across populations.
+Tolerances of 1.6, 0.8, 0.6 and 0.4 are used for each run.
+For spatiotemporal data \citep{vergara2014infection}, six summary statistics are compared: mean proportion of infected and sexually reproducing snails, CV in these proportions across populations and CV in these proportions across generations.
+Tolerance of 2.4, 1.2, 0.9 and 0.6 are used for each run to account for higher number of summary statistics being compared.
+Tolerances are chosen so that a parameter set will be accepted during the final run only if its each simulated summary statistic deviates from the corresponding observed summary statistic by 0.1 units on average.
 All statistical results are weighted by parameter weights of the final run.
 
 \subsection{Power analysis (skip this section for now)}
