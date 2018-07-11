@@ -1,0 +1,5 @@
+for BATCHNUM in {1..100}; do
+echo $BATCHNUM
+fn=SMC_mckone_final_${BATCHNUM}
+sqsub -q serial -o $fn.%J.out --mpp 8G -r 160h R CMD BATCH --vanilla "--args $BATCHNUM" SMC_mckone_final.R $fn.Rout
+done;
