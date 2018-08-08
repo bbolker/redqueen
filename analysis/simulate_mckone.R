@@ -4,7 +4,7 @@ source("../R/stochastic_model.R")
 source("../R/ABC_funs.R")
 source("../R/powerfun.R")
 
-load("../data/SMC_mckone.rda")
+load("../data/SMC_mckone_assemble.rda")
 
 argvals <- commandArgs(trailingOnly=TRUE)
 batch_num <- as.numeric(argvals[1])
@@ -13,7 +13,7 @@ fn_sim <- paste0("post_mckone_sim_", batch_num, ".rda")
 fn_summ <- paste0("post_mckone_summ_", batch_num, ".rda")
 fn_data <- paste0("post_mckone_data_", batch_num, ".rda")
 
-param <- parlist[[3]][1:10+10*batch_num,]
+param <- parlist[[4]][1:10+10*batch_num,]
 
 gen <- subyear <- c(1001:1100)
 sitesample <- 18

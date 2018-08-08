@@ -13,7 +13,7 @@ fn_sim <- paste0("post_dagan_sim_", batch_num, ".rda")
 fn_summ <- paste0("post_dagan_summ_", batch_num, ".rda")
 fn_data <- paste0("post_dagan_data_", batch_num, ".rda")
 
-param <- parlist[[3]][1:10+10*batch_num,]
+param <- parlist[[4]][1:10+10*batch_num,]
 
 gen <- subyear <- c(1001:1100)
 sitesample <- 22
