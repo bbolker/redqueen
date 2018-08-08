@@ -3,7 +3,6 @@ library(tidyr)
 library(dplyr)
 library(ggplot2); theme_set(theme_bw(base_size = 12,
                                      base_family = "Times"))
-library(ggstance)
 library(gridExtra)
 load("../data/SMC_parlist.rda")
 

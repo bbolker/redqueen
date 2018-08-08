@@ -77,7 +77,7 @@ summ_df <- comb_summ  %>%
                       labels=rep(c("mean~proportion", "CV~across~population", "CV~across~generation"),2)))
 
 gg_accepted <- accepted_df %>%
-    filter(run==3, !is.na(value)) %>%
+    filter(run==4, !is.na(value)) %>%
     mutate(fit=factor(fit, labels=data_name)) %>%
     mutate(gvar=ifelse(grepl("pinf", key), "proportion~infected", "proportion~sexual")) %>%
     mutate(key=factor(key,

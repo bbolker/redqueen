@@ -17,7 +17,7 @@ if (.Platform$OS.type=="windows") {
 save <- FALSE
 
 src <- "../data/"
-SMC_files <- c("SMC_vergara.rda", "SMC_dagan.rda", "SMC_mckone.rda")
+SMC_files <- c("SMC_vergara.rda", "SMC_dagan.rda", "SMC_mckone_assemble.rda")
 summ_files <- c("vergara_summ.rda", "dagan_summ.rda", "mckone_summ.rda")
 
 get_all <- function(x) {

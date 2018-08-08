@@ -18,7 +18,6 @@ if (.Platform$OS.type=="windows") {
     windowsFonts(Times=windowsFont("Times"))
 } 
 
-
 load_names <- c("dagan", "mckone", "vergara")
 
 dir <- "../simdata/"
@@ -42,6 +41,8 @@ for (n in load_names) {
     }
     
     slist[[n]] <- do.call("rbind", ll)
+    
+    slist[[n]]$weight <- slist[[n]]$weight/sum(slist[[n]]$weight)
     
     clist[[n]] <- HPDregion(slist[[n]], w=slist[[n]]$weight, prob=c(0.8, 0.95)) %>%
         lapply(function(df) data.frame(
@@ -119,7 +120,7 @@ gsim <- ggplot(gg_contour) +
         strip.background = element_blank(),
         panel.border = element_rect(colour = "black"),
         panel.grid=element_blank(),
-        legend.position=c(0.08, 0.8)
+        legend.position=c(0.08, 0.75)
     )
 
 if (save) ggsave("simulated_data.pdf", gsim, width=7, height=3)
