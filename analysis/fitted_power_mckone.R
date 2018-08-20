@@ -56,7 +56,7 @@ for (i in 1:10) {
         }
         
         sampledf <- do.call("rbind", samplelist)
-        ba
+        
         sampledf$site <- nsite
         
         sitelist[[j]] <- sampledf

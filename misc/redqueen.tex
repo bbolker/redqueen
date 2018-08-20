@@ -30,14 +30,14 @@
 
 \section{Introduction}
 
-The evolution of sexual reproduction still remains to be explained \citep{otto2009evolutionary}.
-Despite being the dominant mode of reproduction \citep{vrijenhoek1998animal}, sexual reproduction entails numerous costs \citep{lehtonen2012many}.
+The evolution of sexual reproduction presents a continuing question \citep{otto2009evolutionary}.
+Despite being the dominant mode of reproduction \citep{vrijenhoek1998animal}, \bmb{among?} sexual reproduction entails numerous costs \citep{lehtonen2012many}.
 The most commonly mentioned is the cost of producing males \citep{smith1978evolution}.
 As males cannot produce offspring, sexual lineages is expected to be outgrown by their asexual counterpart that can grow as twice as fast (assuming that the sexual population produces 50\% male and 50\% female).
 This infamous \emph{two-fold cost of sex} \citep{smith1978evolution} relies on the assumption that everything else is equal.
-Then, what else is not equal and drives the sex?
+Then, what else is not equal and drives the sex to persist?
 
-One explanation for persistence of sexual reproduction is the Red Queen Hypothesis \citep{bell1982masterpiece}.
+One explanation for the persistence of sexual reproduction is the Red Queen Hypothesis \citep{bell1982masterpiece}.
 The Red Queen Hypothesis suggests that sexually reproducing hosts overcome the cost of sex under strong parasite selection by producing genetically diverse offspring that are resistant to infection \citep{jbs1949disease, jaenike1978hypothesis, hamilton1980sex}.
 Host-parasite coevolution constantly creates selective advantage for rare genotypes, creating oscillation in genotypic frequencies, and allows for sexual reproduction to persist in the host population \citep{clarke1976ecological, hamilton1980sex}.
 
@@ -50,7 +50,7 @@ Some theoretical studies have departed from the classical population genetics fr
 Number of studies showed that incorporating ecological and epidemiological details can assist in supporting sexual reproduction in the host population \citep{galvani2001antigenic, galvani2003maintenance, lively2009maintenance, lively2010epidemiological}.
 In contrary to these findings, \cite{macpherson2017joint} showed that Red Queen dynamics (i.e., cycles in allele frequencies) fail to persist when explicit epidemiological structure is taken into account with coevolutionary dynamics.
 
-On the other hand, empirical works have mostly focused on confirming predictions that stem from the Red Queen Hypothesis.
+On the other hand, empirical studies have mostly focused on confirming predictions that stem from the Red Queen Hypothesis.
 Typical among them are local adaptation, time-lagged selection, and association between parasite prevalence and host reproductive mode (see \cite{tobler2008expanding} and \cite{vergara2014infection} for reviews).
 A key example is the snail population in New Zealand that serve as an intermediate hosts for trematodes [CITE].
 Through several decades of work, Lively \etal\ demonstrated that the population satisfies necessary conditions for the host-parasite coevolutionary dynamics and provide support for the hypothesis \citep{lively1987evidence, lively1989adaptation, dybdahl1995host, dybdahl1998host, jokela2009maintenance, vergara2014infection, gibson2016within}.
@@ -64,11 +64,13 @@ However, there are exceptions:
 \cite{lively1992parthenogenesis} postulated that infection prevalence should be positively correlated with frequency of sexual hosts and later formalized the idea with a mathematical model \citep{lively2001trematode}.
 The prediction has since been confirmed by many empirical studies, most of which are based on the snail-trematode system \citep{lively2002temporal, kumpulainen2004parasites, vergara2013geographic, mckone2016fine, gibson2016within}.
 Surprisingly such correlation was not observed in a different snail-trematode system \citep{dagan2013clonal}.
+\bmb{A little more on qualitative requirements?}
 
 Here, we try to bridge the gap between theory and data further.
 We extend the model used by \cite{lively2010epidemiological} to account for demographic stochasticity and simple population structure.
 Then, we fit the model to observational data from \cite{dagan2013clonal, mckone2016fine, vergara2014infection} using Approximate Bayesian Computation (ABC) to estimate biologically relevant parameters.
 Using estimated parameters, we assess model fits and perform a power analysis to test the prediction that infection prevalence is positively correlated with frequency of sexual reproduction \cite{lively2001trematode}.
+\bmb{More on power analysis}
 
 \section{Methods}
 
@@ -80,6 +82,7 @@ Data collected by \cite{dagan2013clonal} and \cite{vergara2014infection} were ob
 
 \subsection{Model}
 
+\swp{Read Lively 2018}
 We model obligately sexual hosts competing with obligately asexual hosts in a meta-population by extending the model introduced by \cite{lively2010epidemiological}.
 The model is a discrete time susceptible-infected (SI) model with natural mortality and virulence (defined as reduction in offspring production among infected hosts).
 It is a suitable canditate model for this study as it captures essential structures that are present in basic epidemiological and population genetics models and is general enough to be applied to broad range of natural systems.
@@ -104,7 +107,7 @@ We define
 $$
 W_U = \frac{b_U}{1 + a_U N(t)}, W_I = \frac{b_I}{1 + a_I N(t)}
 $$
-where $b_U$ and $b_I$ are number of offsprings produced by uninfected and infected hosts, respectively, and $a_U$ and $a_I$ determine their corresponding density dependent effects \citep{lively2010epidemiological, smith1973stability}.
+where $b_U$ and $b_I$ are number of offspring produced by uninfected and infected hosts, respectively, and $a_U$ and $a_I$ determine their corresponding density dependent effects \citep{lively2010epidemiological, smith1973stability}.
 For simplicity, we assume that $a_U = a_I$ so that virulence can be defined strictly in terms of decrease in offspring production and is constant for any density: $V = 1- b_I/b_U$.
 \bmb{more specific}
 \swp{Lively doesn't say much beyond this... I think it's OK?}
@@ -134,12 +137,13 @@ A_{ij}^k(t+1) &\sim \mathrm{Poisson}\left(\lambda=\mathrm{E}\left(A_{ij}^k(t+1)\
 where $p_{ij,\textrm{\tiny sex}}$ and $p_{ij, \textrm{\tiny asex}}$ are the probabilities of a sexual and an asexual host with genotype $ij$ entering a popualation.
 
 Infection is modeled using the matching alleles model \citep{otto1998evolution}.
-We assume that heterozygous individuals are equally susceptible to parasites that match either haplotype.
+We assume that snails are equally susceptible to parasites that match either haplotype.
+However, parasites must carry same alleles in both loci in order to match host haplotype.
 The total number of infected hosts that carry parasite with genotype $i$ at generation $t$ is given by:
 \begin{equation}
 I_{i}(t) = \sum_{p} 2^{\delta_{ij}} \left( S_{ij,i,I}(t) + A_{ij,i,I}(t)\right),
 \end{equation}
-where a $\delta_{ij}$ is kronecker delta.
+where a $\delta_{ij}$ is Kronecker delta.
 $\delta_{ij}$ equals 1 when $i = j$ and 0 otherwise.
 $S_{ij,i,I}(t)$ and $A_{ij,i,I}(t)$ represent the expected numbers of sexual and asexual hosts that have genotype $ij$ and are infected with genotype $i$ parasite. 
 Following \cite{ashby2015diversity}, we assume that mutation can occur in one locus with probability $r_{\textrm{\tiny parasite}}$. 
@@ -182,11 +186,13 @@ A_{ij,i,I}^k(t+1) &= \frac{\lambda_{i, \textrm{\tiny total}}^k}{\lambda_{i, \tex
 Many Red Queen models have focused on competition between a single asexual genotype and multiple sexual genotypes or have assumed equal genetic diversity between asexual and sexual hosts (see \citep{ashby2015diversity} for a review of previous Red Queen models) but neither of these assumptions are realistic.
 Instead, \cite{ashby2015diversity} adopted a more realistic approach by allowing for stochastic migration of an asexual genotype to a population.
 Here, we combine these methods.
-We allow for stochastic migration of asexual hosts with different genotypes into the system as well as migration among population but fix the number of asexual genotypes (denoted by $G_{\textrm{\tiny asex}}$) that can be present in the system, 
-while the number of sexual genotypes ($G_{\textrm{\tiny sex}}$) that can be present in the population remains equal to the size of the genotypic space ($=10$ for diploid hosts with two biallelic loci).
+We allow for stochastic external migration of asexual hosts with different genotypes into the system but fix the number of asexual genotypes (denoted by $G_{\textrm{\tiny asex}}$) that can be present in the system. 
+The number of sexual genotypes ($G_{\textrm{\tiny sex}}$) that can be present in the population remains equal to the size of the genotypic space ($=10$ for diploid hosts with two biallelic loci).
+
+\bmb{Explain?}
 Given a value for $G_{\textrm{\tiny asex}}$, asexual genotypes that can be introduced to the population are uniformly chosen from the entire genotypic space in the beginning of the simulation.
 Limiting asexual genotypes account for difference in genetic diversity between asexual and sexual lineages.
-Note that $G_{\textrm{\tiny asex}}$ varies for each simulation as it is one of the parameters we estimate.
+We estimate $G_{\textrm{\tiny asex}}$ to test whether greater asexual genetic diversity can be supported.
 
 To account for differing number of sexual and asexual genotypes, we let 
 \begin{equation}
@@ -207,21 +213,26 @@ where $p_{\textrm{\tiny infected}}$ is the probability that at least one infecte
 
 Each simulation consists of 40 populations. Every population is initiallized with 2000 sexual hosts where 80 of them are infected. They are assumed to be in Hardy-Weinberg equilibrium with ratio between alleles being exactly half. 
 Transmission rate, $\beta^k$, is randomly drawn for each population from a gamma distribution with mean $\beta_{\textrm{\tiny mean}}$ and coefficient of variation $\beta_{\textrm{\tiny cv}}$. 
-Simulation runs for 500 generations without introduction of asexuals. At generation 501, 10 asexual hosts of a single genotype are introduced to each population (note that asexual genotype introduced can vary across population) and simulation runs for 600 generations while allowing for stochastic migration of asexuals as well.
+Simulation runs for 500 generations without introduction of asexuals. At generation 501, 10 asexual hosts of a single genotype are introduced to each population (note that asexual genotype introduced can vary across population) and simulation runs for 600 generations while allowing for stochastic migration of asexuals.
 
 \subsection{Approximate Bayesian Computation}
 
 \bmb{More on probe matching; Kendall et al.?}
+\swp{Not clear what you're looking for...}
 
 We use Approximate Bayesian Computation (ABC) to fit the model \citep{toni2009approximate}.
 ABC relies on comparing summary statistics of observed data and those of simulated data and is particularly useful when the exact likelihood function is not available.
-We consider mean proportion of infected and sexually reproducing snails in the system and variation in these proportions -- measured by coefficient of variation (CV) -- across space (population) and time as summary statistics of interest.
-CV of these proportions across populations is calculated by first calculating mean proportions by averaging across generations for each site (population) and then taking the the CV of these mean proportions.
-Likewise, CV across generations is calculated by first averaging proportions across space (population) at each generation and then taking the CV.
+We consider mean proportion of infected and sexually reproducing snails in the system and variation in these proportions -- measured by coefficient of variation (CV) -- across space (population) and time as our focal summary statistics.
+These summary statistics are calculated for both observed and simulated data and are used in ABC.
+As \cite{dagan2013clonal} and \cite{mckone2016fine} only reported proportion of males, proportion of sexual hosts are assumed to be twice proportion of males.
+
+CV across space is calculated by first calculating mean proportions by averaging across time (generation) for each site (population) and then taking the the CV of these mean proportions.
+CV across time (generation) is calculated by first averaging proportions across space (population) at each generation and then taking the CV.
+For purely spatial data (\cite{dagan2013clonal} and \cite{mckone2016fine), CV across space is calculated without averaging across time.
 
 We use weakly informative priors for all parameters that we estimate except $c_b$, a scale parameter for the cost of sex (see Table~\ref{tb:param} for prior distributions used and parameters assumed).
 The prior distribution for the scale parameter is chosen so that 95\% quantile of cost of sex (2/$c_b$) is approximately equal to the 95\% confidence interval reported by \cite{gibson2017two}.
-As \cite{dagan2013clonal} and \cite{mckone2016fine} only reported proportion of males, rather than proportion of sexual hosts, we double the proportion of males reported when we fit the model.
+All other parameters are assumed to be fixed for simplicity.
 
 \afterpage{
 \clearpage
@@ -267,7 +278,7 @@ All other parameters are fixed throughout simulations.
 % To allow for more efficient estimation of the posterior distribution, we use the Population Monte Carlo approach \citep{turner2012tutorial}.
 We start by performing basic ABC.
 For each random parameter sample drawn from the prior distribution, the model is simulated and a sample of simulated populations is drawn from the simulated system such that the number of sampled population is equal to the number of sites collected in a study.
-Then, summary statistics are calculated based on the last 100 generations and the parameter is accepted if the distance between simulated and observed data is less than a tolerance value.
+Then, summary statistics are calculated based on the last 100 generations out of 1100 generations and the parameter is accepted if the distance between simulated and observed data is less than a tolerance value.
 Distance is measured by the sum of absolute differences in summary statistics between simulated and observed data.
 This process is repeated until 100 parameter sets are accepted.
 
@@ -285,28 +296,30 @@ $$
 where $\pi(\cdot)$ is a prior density and $q(\cdot | \bm\theta_{i,t}, \sigma_{t-1}^2)$ is a multivariate normal density with mean $\bm\theta_{i,t}$ and variance covariance matrix $\sigma_{t-1}^2$.
 For each run, 100 parameters are accepted and weights are normalized at the end to sum to 1.
 This method, known as the Population Monte Carlo approach \citep{turner2012tutorial}, allows for sampling more efficiently while ensuring that final result still satisfies criteria to be a correct (approximate) Bayesian posterior.
+All statistical results reported are weighted by parameter weights of the final run.
 
-%% TODO: actually showing 3rd run because 4th run is taking so long 
 For each observed datum, we perform 4 runs with decreasing tolerance every run.
 For spatial data \citep{dagan2013clonal, mckone2016fine}, four summary statistics are compared: mean proportion of infected and sexually reproducing snails and CV in these proportions across populations.
-Tolerances of 1.6, 0.8, 0.6 and 0.4 are used for each run.
+Tolerance values of 1.6, 0.8, 0.6 and 0.4 are used for each run.
 For spatiotemporal data \citep{vergara2014infection}, six summary statistics are compared: mean proportion of infected and sexually reproducing snails, CV in these proportions across populations and CV in these proportions across generations.
-Tolerance of 2.4, 1.2, 0.9 and 0.6 are used for each run to account for higher number of summary statistics being compared.
-Tolerances are chosen so that a parameter set will be accepted during the final run only if its each simulated summary statistic deviates from the corresponding observed summary statistic by 0.1 units on average.
-All statistical results are weighted by parameter weights of the final run.
+Larger tolerance values (2.4, 1.2, 0.9 and 0.6) are used for each run to account for higher number of summary statistics being compared.
+Tolerance value of the final run is chosen so that a parameter set will be accepted if its each simulated summary statistic deviates from the corresponding observed summary statistic by 0.1 units on average.
+First three tolerance values are chosen in a decreasing order to reach the final step quicker.
 
-\subsection{Power analysis (skip this section for now)}
+\subsection{Power analysis}
 
 %% TODO: don't just take two consecutive generations...
 
-To calculate the power to detect positive correlation between infection prevalence and frequency of sexual hosts, we simulate an observed sample by drawing a random multinomial sample from simulated data.
-For simplicity, we assume that a year contains of two snail generations [CITE] and that samples are taken within a short period of time.
-For each simulation from the posterior distributions, we start by setting a reference generation to generatation 1001 and choosing $n$ populations at random from 40 simulated popoulations.
+Using estimated parameters for each data, we calculate the power to detect positive correlation between infection prevalence and frequency of sexual hosts.
+For each parameter sample from the final run of the ABC, 10 simulations are ran.
+For each simulation, we start by setting a reference generation to 1001st generation choosing $n$ populations at random from 40 simulated populations.
 For each selected population, hosts are divided into four categories based on their infection status (infected/uninfected) and reproductive mode (asexual/sexual),
 and mean proportion of hosts in each category is calculated by averaging over two consecutive generations.
-A multinomial sample of size $m$ is drawn from each selected population independently based on the four categories. 
-Positive correlation between proportion of infected hosts and proportion of sexual hosts is tested using Spearman's rank correlation at 5\% significance level.
-We repeat the process 100 times for each simulation from a posterior distribution.
+We assume that a year contains of two snail generations [CITE] and that samples are taken within a short period of time.
+
+Independent multinomial samples of size $m$ are drawn from each selected population based on the proportions  in each four categories. 
+Correlation between proportion of infected hosts and proportion of sexual hosts is tested using Spearman's rank correlation at 5\% significance level.
+We repeat the process 100 times by changing the reference generation from 1001st generation to 1099th generation.
 
 \section{Results}
 
