@@ -103,9 +103,10 @@ gg_smc_summ <- ggplot(gg_summary_quant, aes(fit)) +
 
 if (save) ggsave("smc_summary.pdf", gg_smc_summ, width=6, height=6)
 
-gg_summary_df %>%
+gg_accepted %>%
     group_by(fit, key, gvar) %>%
     filter(key %in% c("mean~proportion")) %>%
     summarize(mean=weighted.mean(value, weight=weight),
               lwr=wquant(value, weight=weight, 0.025),
               upr=wquant(value, weight=weight, 0.975))
+

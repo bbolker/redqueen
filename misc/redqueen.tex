@@ -228,7 +228,8 @@ As \cite{dagan2013clonal} and \cite{mckone2016fine} only reported proportion of 
 
 CV across space is calculated by first calculating mean proportions by averaging across time (generation) for each site (population) and then taking the the CV of these mean proportions.
 CV across time (generation) is calculated by first averaging proportions across space (population) at each generation and then taking the CV.
-For purely spatial data (\cite{dagan2013clonal} and \cite{mckone2016fine), CV across space is calculated without averaging across time.
+For purely spatial data (\cite{dagan2013clonal} and \cite{mckone2016fine}), CV across space is calculated without averaging across time.
+Sampling error is not taken into account when summary statistics are calculated from simulated populations.
 
 We use weakly informative priors for all parameters that we estimate except $c_b$, a scale parameter for the cost of sex (see Table~\ref{tb:param} for prior distributions used and parameters assumed).
 The prior distribution for the scale parameter is chosen so that 95\% quantile of cost of sex (2/$c_b$) is approximately equal to the 95\% confidence interval reported by \cite{gibson2017two}.
@@ -308,9 +309,7 @@ First three tolerance values are chosen in a decreasing order to reach the final
 
 \subsection{Power analysis}
 
-%% TODO: don't just take two consecutive generations...
-
-Using estimated parameters for each data, we calculate the power to detect positive correlation between infection prevalence and frequency of sexual hosts.
+Using estimated parameters for each data, we calculate the power to detect a correlation between infection prevalence and frequency of sexual hosts.
 For each parameter sample from the final run of the ABC, 10 simulations are ran.
 For each simulation, we start by setting a reference generation to 1001st generation choosing $n$ populations at random from 40 simulated populations.
 For each selected population, hosts are divided into four categories based on their infection status (infected/uninfected) and reproductive mode (asexual/sexual),
@@ -323,37 +322,42 @@ We repeat the process 100 times by changing the reference generation from 1001st
 
 \section{Results}
 
-\fref{smcsumm} compares observed summary statistics with fitted and predicted summary statistics, where fitted summary statistics are those that are accepted via Approximate Bayesian Computation and predicted summary statistics are obtained by simulating from posterior distributions.
-We find that our simple Red Queen model with population structure can capture observed variation in infection prevalence and frequency of sexual hosts reasonably well; 
-observed coefficients of variation in mean infection prevalence and mean frequency of sexual hosts are well-replicated when compared to both fitted and predicted summary statistics.
-As we account for uncertainty in unboserved sites by simulating greater number of populations, there is large variation in predicted summary statistics.
+\fref{smcsumm} compares observed summary statistics with fitted and predicted summary statistics.
+Fitted summary statistics are those that are accepted via ABC and can be interpreted as underlying summary statistics of the study sites estimated by the model. \swp{Is this interpretation OK?}
+Predicted summary statistics are obtained by simulating from estimated parameters and represent what could have been the underlying summary statistics if other sites were chosen from the system.
+As we account for uncertainty in unobserved sites by simulating a greater number of populations, there is large variation in predicted summary statistics.
 
-The model overestimates and overpredicts mean proportion infected.
-\cite{dagan2013clonal}, \cite{mckone2016fine} and \cite{vergara2014infection} reported mean infection prevalence of 17.5\%, 5.1\% and 44\%, respectively, but the corresponding mean (95\% quantile) predicted infection prevalence is 29.1\% (8.1\% - 55.7\%), 45.2\% (17.3\% - 73.9\%) and 68\% (26.1\% - 95.3\%), respectively.
-The model also underpredicts mean frequency of sexual hosts (mean (95\% quantile): 32.2\% (25.3\% - 64.7\%)) when fitted to \cite{vergara2014infection} population (70.3\%).
+We find that our simple meta-population Red Queen model can capture observed variation in infection prevalence and frequency of sexual hosts reasonably well;
+both temporal and spatial variation (measured by CV across mean proportions) are well-matched by the model. 
+On the other hand, the model tends of overestimate mean proportion of infected hosts.
+\cite{dagan2013clonal}, \cite{mckone2016fine} and \cite{vergara2014infection} reported mean infection prevalence of 17.5\%, 5.1\% and 44\% in their study sites, respectively.
+The \emph{estimated} mean (95\% quantile) infection prevalence is 24.0\% (17.4\% - 28.6\%), 31.3\% (23.3\% - 40.4\%) and 54.2\% (36.0\% - 73.0\%), respectively.
+The model also underestimates mean frequency of sexual hosts for \cite{dagan2013clonal} and \cite{vergara2014infection} study sites.
+Observed mean frequency of sexual hosts is 4.5\% and 70.4\%, respectively, whereas corresponding estimated mean (95\% quantile) are 2.6\% (0.7\% - 4.8\%) and 59.6\% (N.A - 67.9\%). \swp{wquant doesn't give us a value at 2.5\%. What should I do?}
 As model fitting is performed by minimizing the sum of absoute distance between observed and simulated summary statistics, our method does not gurantee all summary statistics to be equally well fitted.
 
 \begin{figure}[!ht]
 \includegraphics[width=\textwidth]{../fig/smc_summary.pdf}
-\caption{{\bf Summary statistics of the observed data v.s. distribution of summary statistics of the simulated data from the posterior samples.}
+\caption{{\bf Summary statistics of the observed data vs. distribution of summary statistics of the simulated data from the posterior samples.}
 Dotted horizontal line represents observed summary statistics.
 Violin plots show weighted distribution of fitted summary statistics (i.e., summary statistics that were accepted during Approximate Bayesian Computation). 
-Error bars show 95\% weighted quantiles of predcited summary statistics.
-For each posterior sample, 10 simulations are ran and each simulated system is sampled at random 100 times so that each sample consists of equal number of populations as number of sites in fitted data. 
+Error bars show 95\% weighted quantiles of predicted summary statistics.
+For each posterior sample, 10 simulations are run and each simulated system is sampled at random 100 times so that each sample consists of equal number of populations as number of sites in fitted data. 
 Then, summary statistics are calculated for each sample and are weighted by their corresponding weights.
 }
 \label{fig:smcsumm}
 \end{figure}
 
-To further diagnose the fit, we compare the relationships between mean infection prevalence and mean frequency of sexual hosts in each population (averaged over last 100 generations) predicted by the model with the observed data (\fref{ivs}).
-Note that \fref{ivs} appears to be more variable than \fref{smcsumm} as it plots density of all simulated populations whereas the latter plots summary statistics computed across group of populations.
-Despite being able to reproduce summary statistics reported by \cite{dagan2013clonal} well, 
-our model is unable to capture qualitative trend bewteen proportion of sexual hosts and proportion of infected hosts (\fref{ivs}; \cite{dagan2013clonal}).
+To further diagnose the fit, we compare the predicted relationships between mean infection prevalence and mean frequency of sexual hosts in each population (averaged over last 100 generations) with the observed data (\fref{ivs}).
+Note that \fref{ivs} appears to be more variable than \fref{smcsumm} as it plots density of all simulated populations and hence accounts for uncertainty in unsampled populations.
+Despite being able to reproduce the summary statistics reported by \cite{dagan2013clonal} well, 
+our model is unable to capture the qualitative trend between proportion of sexual hosts and proportion of infected hosts (\fref{ivs}; \cite{dagan2013clonal}).
 Both simulated data and observed data mostly consist of asexual populations
 but our model predicts sexual reproduction to be maintained when infection prevalence is high ($> 40\%$). 
-On the other hand, \cite{dagan2013clonal} data suggests that sexual reproduction is only maintained when infection prevalence much lower ($< 20\%$).
-Similarly, overestimation of infection prevalence is strongly pronounced in our fits to \cite{mckone2016fine}.
+On the other hand, \cite{dagan2013clonal} data suggests that sexual reproduction is only maintained when infection prevalence is low ($< 20\%$).
+Similarly, overestimation of infection prevalence is strongly pronounced in our prediction of system studied by \cite{mckone2016fine}.
 
+\swp{Remake figure}
 While there are a few data points that appear to be outliers compared to our predictions for \cite{vergara2014infection},
 it is important to note that \fref{ivs} does not capture temporal variation as we average over 100 generations to obtain the ``mean'' relationship.
 The observed data are more likely to be samples across a few generations and the cyclic nature of the Red Queen dynamics is likely to have created more variation in the data.
