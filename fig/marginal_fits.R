@@ -41,9 +41,9 @@ load("../data/comb_summ.rda")
 
 save <- FALSE
 
-data_name <- c(expression(Dagan~italic(et~al.)~"(2013)"), 
-               expression(McKone~italic(et~al.)~"(2016)"), 
-               expression(Vergara~italic(et~al.)~"(2014)"))
+data_name <- c(expression(Dagan~italic(et~al.)~"(2013) "), 
+               expression(McKone~italic(et~al.)~"(2016) "), 
+               expression(Vergara~italic(et~al.)~"(2014) "))
 
 names(slist) <- data_name
 
@@ -82,11 +82,11 @@ gg_accepted <- accepted_df %>%
     mutate(gvar=ifelse(grepl("pinf", key), "proportion~infected", "proportion~sexual")) %>%
     mutate(key=factor(key,
                       levels=c("pinf.mean", "pinf.siteCV", "pinf.timeCV", "psex.mean", "psex.siteCV", "psex.timeCV"),
-                      labels=rep(c("mean~proportion", "CV~across~population", "CV~across~generation"),2)))
+                      labels=rep(c("mean", "CV~across~populations", "CV~across~generations"),2)))
 
 gg_smc_summ <- ggplot(gg_summary_quant, aes(fit)) +
     geom_errorbar(aes(ymin=lwr, ymax=upr), width=0.1) +
-    geom_violin(data=gg_accepted, aes(y=value, fill=fit, weight=weight), alpha=0.5, width=0.5) +
+    geom_violin(data=gg_accepted, aes(y=value, fill=fit, weight=weight), alpha=0.7, width=0.5) +
     geom_errorbar(data=summ_df, aes(ymin=value, ymax=value), lty=2) +
     facet_grid(key~gvar, scale="free", labeller = label_parsed) +
     scale_fill_discrete(label=data_name) +
@@ -105,7 +105,7 @@ if (save) ggsave("smc_summary.pdf", gg_smc_summ, width=6, height=6)
 
 gg_accepted %>%
     group_by(fit, key, gvar) %>%
-    filter(key %in% c("mean~proportion")) %>%
+    filter(key %in% c("mean")) %>%
     summarize(mean=weighted.mean(value, weight=weight),
               lwr=wquant(value, weight=weight, 0.025),
               upr=wquant(value, weight=weight, 0.975))

@@ -65,6 +65,7 @@ However, there are exceptions:
 The prediction has since been confirmed by many empirical studies, most of which are based on the snail-trematode system \citep{lively2002temporal, kumpulainen2004parasites, vergara2013geographic, mckone2016fine, gibson2016within}.
 Surprisingly such correlation was not observed in a different snail-trematode system \citep{dagan2013clonal}.
 \bmb{A little more on qualitative requirements?}
+\swp{What do you mean?}
 
 Here, we try to bridge the gap between theory and data further.
 We extend the model used by \cite{lively2010epidemiological} to account for demographic stochasticity and simple population structure.
@@ -82,7 +83,7 @@ Data collected by \cite{dagan2013clonal} and \cite{vergara2014infection} were ob
 
 \subsection{Model}
 
-\swp{Read Lively 2018}
+\swp{TODO: read Lively 2018}
 We model obligately sexual hosts competing with obligately asexual hosts in a meta-population by extending the model introduced by \cite{lively2010epidemiological}.
 The model is a discrete time susceptible-infected (SI) model with natural mortality and virulence (defined as reduction in offspring production among infected hosts).
 It is a suitable canditate model for this study as it captures essential structures that are present in basic epidemiological and population genetics models and is general enough to be applied to broad range of natural systems.
@@ -136,9 +137,11 @@ A_{ij}^k(t+1) &\sim \mathrm{Poisson}\left(\lambda=\mathrm{E}\left(A_{ij}^k(t+1)\
 \end{equation}
 where $p_{ij,\textrm{\tiny sex}}$ and $p_{ij, \textrm{\tiny asex}}$ are the probabilities of a sexual and an asexual host with genotype $ij$ entering a popualation.
 
+\bmb{No epistasis?}
+\swp{Is this clearer?}
 Infection is modeled using the matching alleles model \citep{otto1998evolution}.
 We assume that snails are equally susceptible to parasites that match either haplotype.
-However, parasites must carry same alleles in both loci in order to match host haplotype.
+However, parasites must carry same alleles in both loci in order to match a host haplotype.
 The total number of infected hosts that carry parasite with genotype $i$ at generation $t$ is given by:
 \begin{equation}
 I_{i}(t) = \sum_{p} 2^{\delta_{ij}} \left( S_{ij,i,I}(t) + A_{ij,i,I}(t)\right),
@@ -150,7 +153,7 @@ Following \cite{ashby2015diversity}, we assume that mutation can occur in one lo
 Mutation is modeled using a deterministic process, as we introduce stochasticity during the actual infection process.
 We also allow for stochastic external migration of an infected host carrying parasite $i$ with probability $p_{i, \textrm{\tiny parasite}}$ to avoid fixation.
 
-The total expected number of infectious contacts made by infected hosts within a population is given by $\lambda_i^k = \beta^k {I_i'}^k(t)$, where $\beta^k$ is the transmission rate of each population, and $I_i'(t)$ is the number of infected hosts accounting for mutation and migration.  
+The total expected number of infectious contacts made by infected hosts within a population is given by $\lambda_i^k = \beta^k {I_i'}^k(t)$, where $\beta^k$ is the transmission rate of each population, and $I_i'(t)$ is the number of infected hosts accounting for mutation and migration. 
 Since we allow for mixing between populations, infected hosts can make contact with susceptible hosts in other populations. \swp{TODO: explain mixing}
 Then, the total amounf of infectious contacts, coming from hosts that carry genotype $i$ parasite, that is received by susceptible hosts in population $k$ is given by
 \begin{equation}
@@ -267,7 +270,7 @@ Parameters with prior distributions are estimated via Approximate Bayesian Compu
 $k$ and $\theta$ in Gamma distribution represent shape and scale parameters where mean and squared CV are given by $k \theta$ and $1/k$, respectively.
 $\alpha$ and $\beta$ in Beta distribution represent shape parameters where mean and squared CV are given by $\alpha/(\alpha+\beta)$ and $\beta/(\alpha^2 + \alpha \beta + \alpha)$.
 $N$, $p$ and $\theta$ in Beta binomial distributions represent number of trials, probability of success, and overdispersion parameters \citep{morris1983natural}.
-We define prior on $G_{\textrm{\tiny asex}} -1$ instead to maintain at least one asexual genotype in the system.
+We define prior on $G_{\textrm{\tiny asex}} -1$ instead to always maintain at least one asexual genotype in the system.
 $\mu$ and $\sigma$ in log-normal distribution represent mean and standard deviation on a log scale.
 All other parameters are fixed throughout simulations.
 }
@@ -306,6 +309,10 @@ For spatiotemporal data \citep{vergara2014infection}, six summary statistics are
 Larger tolerance values (2.4, 1.2, 0.9 and 0.6) are used for each run to account for higher number of summary statistics being compared.
 Tolerance value of the final run is chosen so that a parameter set will be accepted if its each simulated summary statistic deviates from the corresponding observed summary statistic by 0.1 units on average.
 First three tolerance values are chosen in a decreasing order to reach the final step quicker.
+\bmb{Intuition for biological meaning of distances?}
+\swp{I don't think there is one?}
+\bmb{What are the summary stats?}
+\swp{They're explained in the beginning of the section}
 
 \subsection{Power analysis}
 
@@ -375,14 +382,16 @@ Open circles represent observed mean proportions averaged across years. Dotted l
 \label{fig:ivs}
 \end{figure}
 
-The most striking result from \fref{ivs} is that there is a region (around 30\%-40\% infection prevalence) in which proportion of infected hosts decreases while proportion of sexual hosts increases (most clearly visible in the fits to \cite{mckone2016fine} and \cite{vergara2014infection}).
+We find that there is a region (around 30\% infection prevalence) in which proportion of infected hosts remains almost constant while proportion of sexual hosts increases (most clearly visible in the fits to \cite{mckone2016fine} and \cite{vergara2014infection}).
 As transmission rate ($\beta$) increases, selection for sexual hosts increases but increasing number of resistant offsprings prevents further infection from occuring and can decrease overall infection prevalence.
-Such trend is consistent with previous results by \cite{lively2001trematode} who noted that there is an overlap in infection prevalence that can select for either sexual and asexual reproduction exclusively.
+Such a trend is consistent with previous results by \cite{lively2001trematode} who noted that there is a region in which both sexual and asexual reproduction can be selected exclusively under same infection prevalence.
 We also find that proportion of sexual hosts decreases when infection prevalence is very high.
 Decrease in fitness of sexual hosts associated with increase in prevalence was predicted by \cite{ashby2015diversity}; 
 it can also be found in an earlier work by \cite{lively2010epidemiological} although it was not discussed in the paper.
 
 \subsection*{Not edited:}
+
+
 
 Parameter estimates for \cite{vergara2014infection} are presented in \fref{smcparam}.
 The most surprising result is that the posterior distributions of the scale parameter for cost of sex, $c_b$, is much wider than the prior distribution and have noticeably higher mean: (mean (95\% credible interval)) 1.30 (0.80-1.97).
@@ -393,7 +402,7 @@ Simulated data from these posterior samples mostly consist of populations with a
 While these estimates are not entirely impossible given that \cite{vergara2014infection} observed almost 100\% sexual snails in one of their sampling sites throughout 5 years, their observation is likely to be a sampling artifact since an earlier work sampled at the same site reported much lower frequency of sexual snails \citep{vergara2013geographic}. %% TODO: double check sources
 
 \begin{figure}[!ht]
-\includegraphics[width=\textwidth]{../fig/verg_post.pdf}
+\includegraphics[width=\textwidth]{../fig/posterior.pdf}
 \caption{{\bf Parameter estimates from Sequential Monte Carlo Approximate Bayesian Computation.}
 Lines repreesnt 95\% quantile and points represent mean posterior estimates. 100 posterior samples were obtained from SMC ABC. Prior distributions are specified in [TODO].
 }
