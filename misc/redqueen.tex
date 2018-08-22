@@ -357,21 +357,20 @@ but our model predicts sexual reproduction to be maintained when infection preva
 On the other hand, \cite{dagan2013clonal} data suggests that sexual reproduction is only maintained when infection prevalence is low ($< 20\%$).
 Similarly, overestimation of infection prevalence is strongly pronounced in our prediction of system studied by \cite{mckone2016fine}.
 
-\swp{Remake figure}
 While there are a few data points that appear to be outliers compared to our predictions for \cite{vergara2014infection},
 it is important to note that \fref{ivs} does not capture temporal variation as we average over 100 generations to obtain the ``mean'' relationship.
 The observed data are more likely to be samples across a few generations and the cyclic nature of the Red Queen dynamics is likely to have created more variation in the data.
 On the other hand, \cite{vergara2014infection} reported greater than 90\% sexual snails throughout 5 years in one of their study sites but it seems unusually high based on our model prediction.
-Based on the goodness of fits, we exclude fits to \cite{dagan2013clonal} and \cite{mckone2016fine} from discussing parameter estimates and power analysis.
 
 \begin{figure}[!ht]
 \includegraphics[width=\textwidth]{../fig/simulated_data.pdf}
 \caption{{\bf Predicted relationship between mean infection prevalence and mean proportion of sexual hosts in each population.}
-For each posterior sample, 10 simulations are ran.
+For each posterior sample, 10 simulations are run.
 For each population within a simulation, mean infection prevalence and mean proportion of sexual hosts is calculated by averaging across last 100 generations. 
 Each population is assigned equal weight as the parameter that simulated the population.
-Contoure lines show 95\% and 80\% weighted highest posterior density region.
-Triangles represent observed data, where proportion of males are converted to proportion of sexual hosts.
+Colored contour lines show 95\% weighted highest posterior density region.
+Open triangles represent observed data; proportion of sexual hosts is computed from proportion of male hosts.
+Open circles represent observed mean proportions averaged across years. Dotted lines around open circles represent ranges of proportion of sexual and infected hosts observed in each site.
 }
 \label{fig:ivs}
 \end{figure}
