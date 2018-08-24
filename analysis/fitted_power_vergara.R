@@ -29,26 +29,18 @@ for (i in 1:10) {
         for (k in 1:length(sample_vec)) {
             nsample <- sample_vec[k]
             
-            powerlist <- vector('list', 99)
+            print(paste(i, j, k, sep=", "))
             
-            for (gg in 0:98) {
-                print(paste(i, j, k, gg, sep=", "))
-                
-                target.gen <- 1001:1002 + gg
-                
-                power <- powerfun(sim, 
-                         nsim=nsim,
-                         nsample=nsample,
-                         nsite=nsite,
-                         transform="raw",
-                         target.gen=target.gen)
-                
-                power$gen <- target.gen[1]
-                
-                powerlist[[gg+1]] <- power
-            }
+            target.gen <- 1099:1100
             
-            powerdf <- do.call("rbind", powerlist)
+            power <- powerfun(sim, 
+                              nsim=nsim,
+                              nsample=nsample,
+                              nsite=nsite,
+                              transform="raw",
+                              target.gen=target.gen)
+            
+            powerdf <- power
             
             powerdf$sample <- nsample
             

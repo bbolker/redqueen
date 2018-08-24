@@ -38,11 +38,11 @@ paramdf <- param_list %>%
     mutate(fit=factor(fit, level=c("dagan", "mckone", "vergara", "Prior"), label=data_name)) %>%
     mutate(key=factor(key, level=oldname, label=newname))
 
-prior <- replicate(1000, as.data.frame(rprior()), simplify=FALSE) %>%
+prior <- replicate(10000, as.data.frame(rprior()), simplify=FALSE) %>%
     bind_rows %>%
     gather(key, value) %>%
     mutate(fit="Prior") %>%
-    mutate(weight=1/1000) %>%
+    mutate(weight=1/10000) %>%
     mutate(fit=factor(fit, level=c("dagan", "mckone", "vergara", "Prior"), label=data_name)) %>%
     mutate(key=factor(key, level=oldname, label=newname))
 
@@ -65,3 +65,8 @@ ggpost <- ggplot(combdf) +
     )
 
 if (save) ggsave("posterior.pdf", ggpost, width=6, height=4)
+
+2/wquant(param_list$mckone$c_b, param_list$mckone$weight, c(0.025, 0.975)) 
+
+weighted.mean(2/param_list$mckone$c_b, param_list$mckone$weight)
+
