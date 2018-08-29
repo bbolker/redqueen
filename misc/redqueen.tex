@@ -426,25 +426,23 @@ We show that (1) model parameters can be estimated from data and (2) biologicall
 However, discrepancy between model prediction and observed data suggests that a simple host-parasite coevolution model is not sufficient to explain maintanence of sexual reproduction observed in snail populations.
 
 A model that does not fit well can sometimes tell us more about a biological system than a model that fits well.
-In particular, there was a clear mismatch between the model prediction and the data presented by \cite{dagan2013clonal} (\fref{ivs}).
+For example, there was a clear mismatch between the model prediction and the data presented by \cite{dagan2013clonal} (\fref{ivs}).
 The snail populations studied by \cite{dagan2013clonal} live in intrinsically different environments from two other snail populations that we considered.
 For example, some habitats are subject to seasonal flash floods, which can affect reproductive strategies of snails \citep{ben2007temporal} and interfere with the host parasite coevolution.
 As a result, positive correlation between infection prevalence and frequency of sexual reproduction could not be detected from the system even though high power is predicted.
 We caution against performing statistical tests that were purely designed under the Red Queen hypothesis when other mechanisms that may affect reproduction mode are present in the system.
 
-On the other hand, discrepancy between 
+On the other hand, discrepancy between the model and the observed data by \cite{mckone2016fine} points us towards the simple structure of the model.
+The model fit (\fref{ivs}) suggests that cost of sex can be overcome and sexual reproduction can be maintained only if infection prevalence is much higher than the observed prevalence.
+Our simple model does not provide sufficient benefit of sex and compensation is necessary in order to support sexual reproduction at such low infection prevalence.
+As our model relies on a simple structure and strong parametric assumptions, additional benefit of sex can only be provided by lowering the cost of sex (i.e., increasing the scale parameter, $c_b$).
 
-The only system that our model could resemble fairly well is one studied by \cite{vergara2014infection}.
-In order for our model to produce similar summary statistics as those observed in nature, it requires the scale parameter ($c_b$) for the cost of sex to have mean greater than 1 (\fref{smcparam}).
-A model that assumes two fold cost of sex ($c_b=1$) would not have fitted well.
-However, from an inferential point of view, $c_b > 1$ does not necessarily imply that cost of sex is less than two fold.
-We interpret an estimate of $c_b > 1$ as amount of compensation required in order for the model to reproduce observed data.
-Additional compensation can include less than two fold cost of sex or any other mechanisms that can promote sex.
+A plausible explanation for lack of benefit of sex is simple infection genetics and limited genetic diversity.
+In this study, we assumed that host resistance to infection is deteremined entirely by two biallelic loci, which result in 10 genotypes.
+Although exact genetic architecture that determines trematode infecion in snails (e.g., number of loci involved in parasite resistance) is not known \swp{How do I even cite this?}, genetic diversity of snails that have been documented is far greater than what we have assumed \citep{king2011parasites, dagan2013clonal}.
+Furthermore, increasing genetic diversity of the model would have allowed sexual hosts to escape infection more easily and therefore maintain sexual reproduction at lower prevalence of infection \citep{lively2010effect, king2012does, ashby2015diversity}.
+Overall, our results indicate that a simple Red Queen model 
 
-A suitable candidate for model compensation is increase in host genetic diversity.
-Although exact genetic architecture that determines trematode infecion in snails (e.g., loci involved in parasite resistance) is not known {CITE}, genetic diversity of snails that have been documented is far greater than what we have assumed \citep{king2011parasites, dagan2013clonal}.
-In addition, increasing genetic diversity of the model may resolve overestimation of infection prevalence (\fref{smcsumm}).
-Previous studies have shown that moderately high genetic diversity can allow sexual hosts to escape infection more easily and therefore reduce prevalence of infection given similar amount of sexual reproduction \citep{lively2010effect, king2012does, ashby2015diversity}.
 Overall, our results indicate that more modeling effort is required to understand prevalence of sexual reproduction in nature.
 
 Our power analysis (\fref{power}) constrasts with the positive correlation predicted by \cite{lively1992parthenogenesis, lively2001trematode} and findings of many empirical studies that have confirmed the prediction \citep{lively1987evidence, lively2002temporal, kumpulainen2004parasites, vergara2013geographic, mckone2016fine}.
