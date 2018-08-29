@@ -403,39 +403,36 @@ Lines repreesnt 95\% weighted quantile and points represent mean posterior estim
 \label{fig:smcparam}
 \end{figure}
 
-Finally, a power analysis show that the power for detecting a positive correlation between infection prevalence and frequency of sexual hosts in \cite{vergara2014infection} population is almost 0 (\fref{power}).
-We find that there is much higher (but still low) power to detect a negative correlation.
-Increasing number of samples per site has small effect on power once the sample size greater than 50.
-Increasing number of sites leads to greater increase in power but the power appears to saturate as number of sites increases.
+Finally, our power analyses reveal that there is high power to detect a positive correlation between infection prevalence and frequency of sexual hosts in both systems studied by \cite{dagan2013clonal} and \cite{mckone2016fine} (\fref{power}).
+Such high power predicted for \cite{dagan2013clonal} is particularly surprising given that they were not able to observe the expected correlation.
+This discrepancy implies that the snail populations studied by \cite{dagan2013clonal} show sufficient variation in infection prevalence to encompass the correlation under pure Red queen selection but other mechanisms, that our model does not take into consideration, may have caused the populations to move away from their expected behaviours.
+On the other hand, our model predicts low power for detecting the positive correlation for the system studied by \cite{vergara2014infection} due to lack of variation in prevalence relative to other two studies (\fref{smcparam}).
 
 \begin{figure}[!ht]
 \includegraphics[width=\textwidth]{../fig/power.pdf}
-\caption{{\bf Power to detect a statistically clear correlation between infection prevalence and frequency of sexual hosts.}
-(a) Power to detect a positive correlation. 
-(b) Power to detect a negative correlation. 
-(c) (Contour) power to detect a positive correlation as a function of transmission rate parameters and (points) marginal posterior distributions.
+\caption{{\bf Power to detect a statistically significant positive correlation between infection prevalence and frequency of sexual hosts.}
 Spearman's rank correlation was used to test for correlation between infection prevalence and frequency of sexual hosts in simulated data from the posterior distributions.
-Contour plot is created by taking the mean posterior estimates and assuming 20 sites and 100 samples per site.
 }
 \label{fig:power}
 \end{figure}
 
 \section{Discussion}
 
-Our results challenge ways in which the Red Queen Hypothesis for sex has been studied.
-Previous modeling studies have either relied on assumed parameters [CITE] or explored parameter spaces [CITE]
-to understand sexual reproduction maintained by host parasite coevolution.
-Here, we show that (1) model parameters are estimable and (2) a simple Red Queen model with population structure can reproduce key summary statistics observed across three different snail systems (\fref{smcsumm}).
-While our model is able to reprouce observed summary statistics, there still remain some discrepancies between model prediction and observed relationship between infection prevalence and frequency of sexual hosts across populations.
-These discrepancies suggest a simple host-parasite model is not sufficient to explain sexual reproduction observed in nature.
-% We also find that detecting a positive correlation between infection prevalence and frequency of sexual hosts is difficult (\fref{power}) and hence not a good measure for measuring the effects of the Red Queen.
+Our study provides a useful direction for studying the Red Queen Hypothesis for sex.
+Many modeling studies have relied on assumed parameter values to understand the role of host parasite coevolution in maintaining sexual reproduction; 
+such method allows us to learn about the model and not so much about the nature.
+Instead, we tried to fit a simple Red Queen model to three different data sets from similar snail trematode systems.
+We show that (1) model parameters can be estimated from data and (2) biologically meaningful predictions can be made from the model.
+However, discrepancy between model prediction and observed data suggests that a simple host-parasite coevolution model is not sufficient to explain maintanence of sexual reproduction observed in snail populations.
 
-A model that does not fit well can sometimes tell us more about the system of interest than a model that fits well.
-For example, there is a clear mismatch between the model and the data presented by \cite{dagan2013clonal} (\fref{ivs}).
-The snail populations studied by \cite{dagan2013clonal} live in intrinsically different environments from two other snail populations that we consider.
-For example, some habitats are subject to seasonal flash floods, which can affect reproductive strategies of snails \citep{ben2007temporal}.
-Althuogh we cannot estimate the strength of the effect of environment on sexual reproduction of snails relative to that of the effect of parasites, it is likely to be a cause of the bad fit.
-We conclude that the Red Queen Hypothesis alone cannot explain maintenance of sexual reproduction in this population.
+A model that does not fit well can sometimes tell us more about a biological system than a model that fits well.
+In particular, there was a clear mismatch between the model prediction and the data presented by \cite{dagan2013clonal} (\fref{ivs}).
+The snail populations studied by \cite{dagan2013clonal} live in intrinsically different environments from two other snail populations that we considered.
+For example, some habitats are subject to seasonal flash floods, which can affect reproductive strategies of snails \citep{ben2007temporal} and interfere with the host parasite coevolution.
+As a result, positive correlation between infection prevalence and frequency of sexual reproduction could not be detected from the system even though high power is predicted.
+We caution against performing statistical tests that were purely designed under the Red Queen hypothesis when other mechanisms that may affect reproduction mode are present in the system.
+
+On the other hand, discrepancy between 
 
 The only system that our model could resemble fairly well is one studied by \cite{vergara2014infection}.
 In order for our model to produce similar summary statistics as those observed in nature, it requires the scale parameter ($c_b$) for the cost of sex to have mean greater than 1 (\fref{smcparam}).

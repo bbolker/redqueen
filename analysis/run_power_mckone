@@ -1,0 +1,5 @@
+for BATCHNUM in {0..9}; do
+echo $BATCHNUM
+fn=fitted_power_mckone_${BATCHNUM}
+sqsub -q serial -o $fn.%J.out --mpp 8G -r 1h R CMD BATCH --vanilla "--args $BATCHNUM" fitted_power_mckone.R $fn.Rout
+done;

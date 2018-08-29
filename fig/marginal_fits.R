@@ -54,8 +54,8 @@ gg_summary_df <- slist %>%
     mutate(gvar=ifelse(grepl("pinf", key), "proportion~infected", "proportion~sexual")) %>%
     mutate(key=factor(key,
                       levels=c("pinf.mean", "pinf.siteCV", "pinf.timeCV", "psex.mean", "psex.siteCV", "psex.timeCV"),
-                      labels=rep(c("mean~proportion", "CV~across~population", "CV~across~generation"),2))) %>%
-    filter(!(fit!=as.character(data_name[3]) & key=="CV~across~generation")) %>%
+                      labels=rep(c("mean", "CV~across~populations", "CV~across~generations"),2))) %>%
+    filter(!(fit!=as.character(data_name[3]) & key=="CV~across~generations")) %>%
     mutate(weight=weight/1000)
 
 gg_summary_quant <- gg_summary_df %>%
@@ -74,7 +74,7 @@ summ_df <- comb_summ  %>%
     mutate(gvar=ifelse(grepl("pinf", key), "proportion~infected", "proportion~sexual")) %>%
     mutate(key=factor(key,
                       levels=c("pinf.mean", "pinf.siteCV", "pinf.timeCV", "psex.mean", "psex.siteCV", "psex.timeCV"),
-                      labels=rep(c("mean~proportion", "CV~across~population", "CV~across~generation"),2)))
+                      labels=rep(c("mean", "CV~across~populations", "CV~across~generations"),2)))
 
 gg_accepted <- accepted_df %>%
     filter(run==4, !is.na(value)) %>%
