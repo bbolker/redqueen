@@ -18,9 +18,9 @@ save <- FALSE
 files <- c("SMC_dagan.rda", "SMC_mckone_assemble.rda", "SMC_vergara.rda")
 fits <- c("dagan", "mckone", "vergara")
 
-data_name <- c(expression(Dagan~italic(et~al.)~"(2013) "), 
-               expression(McKone~italic(et~al.)~"(2016) "), 
-               expression(Vergara~italic(et~al.)~"(2014) "))
+data_name <- c(expression(Dagan~italic(et~al.)~"(2013)"), 
+               expression(McKone~italic(et~al.)~"(2016)"), 
+               expression(Vergara~italic(et~al.)~"(2014)"))
 
 target.gen <- 1099:1100
 
@@ -87,7 +87,8 @@ names(fit_list) <- data_name
 
 truedf <- fit_list %>%
     bind_rows(.id="fit") %>%
-    mutate(weight=weight/10) 
+    mutate(weight=weight/10,
+           plot="violin") 
 
 truesumm <- truedf %>%
     group_by(fit) %>%
@@ -97,13 +98,60 @@ truesumm <- truedf %>%
         upr=wquant(correlation, weight, 0.975)
     )
 
+observed_name <- c(
+    expression(McKone~italic(et ~ al.)~"(2016)"),
+    expression(Lively~and~Jokela~"(2002)"),
+    expression(Kumpulainen~italic(et~al.)~"(2004)"),
+    expression(Vergara~italic(et~al.)~"(2013)"),
+    expression(Gibson~italic(et~al.)~"(2016)")
+)
 
-ggplot(truedf) +
+observed_list <- list(
+    data.frame(
+        value=0.593,
+        type="Spearman"
+    ),
+    data.frame(
+        value=0.542,
+        type="Pearson"
+    ),
+    data.frame(
+        value=c(0.802, 0.542, 0.811),
+        type="Spearman"
+    ),
+    data.frame(
+        value=0.806,
+        type="Spearman"
+    ),
+    data.frame(
+        value=c(0.421, 0.617),
+        type="Spearman"
+    )
+)
+
+names(observed_list) <- observed_name
+
+observed <- observed_list %>%
+    bind_rows(.id="fit") %>%
+    mutate(plot="point")
+        
+level <- c(observed_name[-1], data_name)
+
+total <- truedf %>%
+    bind_rows(observed) %>%
+    mutate(fit=factor(fit, levels=level))
+
+geff <- ggplot(total) +
     geom_violin(aes(fit, correlation, weight=weight, fill=fit), alpha=0.7) +
+    geom_point(aes(fit, value, shape=type), size=2) +
     coord_flip() +
+    geom_hline(yintercept=0, lty=2) +
+    scale_fill_discrete(guide=FALSE) +
+    scale_x_discrete("study", labels=level) +
+    scale_y_continuous("correlation coefficient") +
+    scale_shape_manual(values=c(1, 2), label=c("Pearson", "Spearman", "")) +
     theme(
-        legend.position = "none"
+        legend.title = element_blank()
     )
 
-
-
+if (save) ggsave("effect_size.pdf", geff, width=8, height=6)
