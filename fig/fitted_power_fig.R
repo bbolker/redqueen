@@ -76,18 +76,3 @@ gpower <- ggplot(powersumm) +
     )
 
 if (save) ggsave("power.pdf", gpower, width=7, height=3.5)
-
-effectsumm <- finallist %>%
-    bind_rows %>%
-    filter(site==max(site), sample==max(sample)) %>%
-    mutate(site=as.character(site)) %>%
-    group_by(fit) %>%
-    summarize(
-        mean=weighted.mean(effect.size, weight, na.rm=TRUE)
-        lwr=wquant
-    )
-
-ggplot(effectsumm) +
-    geom_point(aes(fit, mean))
-
-
