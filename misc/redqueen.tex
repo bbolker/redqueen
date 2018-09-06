@@ -337,7 +337,7 @@ For each simulation, we take the final two generations -- assuming that a year c
 For each selected population, hosts are divided into four categories based on their infection status (infected/uninfected) and reproductive mode (asexual/sexual),
 and mean proportion of hosts in each category is calculated by averaging over two generations.
 Independent multinomial samples of size $m$ are drawn from each selected population based on the proportions  in each four categories. 
-Correlation between proportion of infected hosts and proportion of sexual hosts is tested using Spearman's rank correlation at 5\% significance level.
+Correlation between proportion of infected hosts and proportion of sexual hosts is tested using the Spearman's rank correlation at 5\% significance level.
 
 \section{Results}
 
@@ -404,7 +404,7 @@ it can also be found in an earlier work by \cite{lively2010epidemiological} alth
 
 \swp{You haven't read anything after this point:}
 Parameter estimates are presented in \fref{smcparam}.
-Even though we do not obtain good fits to data from \cite{dagan2013clonal} and \cite{mckone2016fine}, we find that high virulence and low asexual to sexual genetic diversity is necesary to partially explain the observed data.
+Even though we do not obtain good fits to data from \cite{dagan2013clonal} and \cite{mckone2016fine}, we find that high virulence and low asexual to sexual genetic diversity is necesary to partially explain the observed dynamics.
 Moreover, observed differences in mean and variation in infection prevalence among studies are captured in estimates of transmission rate parameters ($\beta_{\textrm{\tiny mean}}$ and $\beta_{\textrm{\tiny CV}}$).
 Surprisingly, our fits to \cite{mckone2016fit} suggest that scale parameter for the cost of sex, $c_b$, should be higher than our assumption based on \cite{gibson2017two} that estimated cost of sex (95\% CI) to be 2.14 (1.81 - 2.55).
 \cite{ashby2015diversity} defined $c_b$ as additional costs and benefits of sex, where $c_b=1$ corresponds the two fold cost.
@@ -414,16 +414,22 @@ We propose an alternate interpretation to this parameter estimate in the discuss
 \begin{figure}[!ht]
 \includegraphics[width=\textwidth]{../fig/posterior.pdf}
 \caption{{\bf Parameter estimates from Sequential Monte Carlo Approximate Bayesian Computation.}
-Lines repreesnt 95\% weighted quantile and points represent mean posterior estimates. 100 posterior samples were obtained from ABC.
+Violin plots represent weighted distribution of 100 posterior samples obtained from ABC.
+Violin plots for prior distribution is obtained by drawing 10000 random parameter samples from the prior distribution.
+$G_{\tiny \textrm{asex}}$ is a discrete variable but is drawn on a continuous scale for convenience.
 }
 \label{fig:smcparam}
 \end{figure}
 
 Finally, our power analyses reveal that there is high power to detect a positive correlation between infection prevalence and frequency of sexual hosts in both systems studied by \cite{dagan2013clonal} and \cite{mckone2016fine} (\fref{power}).
 Such high power predicted for \cite{dagan2013clonal} is particularly surprising given that they were not able to observe the expected correlation.
-This discrepancy implies that the snail populations studied by \cite{dagan2013clonal} show sufficient variation in infection prevalence to encompass the correlation under pure Red queen selection but other mechanisms, that our model does not take into consideration, may have caused the populations to move away from their expected behaviours.
-On the other hand, our model predicts low power for detecting the positive correlation for the system studied by \cite{vergara2014infection} due to lack of variation in prevalence relative to other two studies (\fref{smcparam}).
+This discrepancy implies that the snail populations studied by \cite{dagan2013clonal} show sufficient variation in infection prevalence to encompass the correlation under pure Red queen selection but other underlying factors, for which our model does not account, may have caused the populations to move away from their expected behaviours.
+On the other hand, our model predicts low power for detecting the positive correlation for the system studied by \cite{vergara2014infection} (\fref{smcparam}).
 Overall, increasing number of sites is a more effective way to increase power than increasing number of samples per site.
+
+While we originally planned to perform power analysis using Spearman's rank correlation,
+we repeated the analysis using Pearson's correlation after applying arcsine square root transformation [CITE] to see whether there is any change in power.
+Surprisingly, using Pearson correlation gives slightly higher power to detect the positive correlation bewteen frequency of sexual hosts and infection prevalence (see Appendix).
 
 \begin{figure}[!ht]
 \includegraphics[width=\textwidth]{../fig/power.pdf}
@@ -435,10 +441,10 @@ Spearman's rank correlation was used to test for correlation between infection p
 
 \section{Discussion}
 
-Our study provides a useful direction for studying the Red Queen Hypothesis for sex.
+Our study provides a practical for studying the Red Queen Hypothesis for sex for both theoreticians and empiricists.
 Many modeling studies have relied on assumed parameter values to understand the role of host parasite coevolution in maintaining sexual reproduction; 
-such method allows us to learn about the model and not so much about the nature.
-Instead, we tried to fit a simple Red Queen model to three different data sets from similar snail trematode systems.
+such method allows us to learn about the model but not so much about the nature.
+Instead, we tried to fit a simple Red Queen model to observational data from three different snail trematode systems.
 We show that (1) model parameters can be estimated from data and (2) biologically meaningful predictions can be made from the model.
 However, discrepancy between model prediction and observed data suggests that a simple host-parasite coevolution model is not sufficient to explain maintanence of sexual reproduction observed in snail populations.
 

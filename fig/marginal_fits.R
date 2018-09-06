@@ -108,5 +108,6 @@ gg_accepted %>%
     filter(key %in% c("mean")) %>%
     summarize(mean=weighted.mean(value, weight=weight),
               lwr=wquant(value, weight=weight, 0.025),
+              min=min(value),
               upr=wquant(value, weight=weight, 0.975))
 

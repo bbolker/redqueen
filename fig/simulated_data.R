@@ -44,7 +44,8 @@ for (n in load_names) {
     
     slist[[n]]$weight <- slist[[n]]$weight/sum(slist[[n]]$weight)
     
-    clist[[n]] <- HPDregion(slist[[n]], w=slist[[n]]$weight, prob=c(0.95)) %>%
+    clist[[n]] <- HPDregion(slist[[n]], w=slist[[n]]$weight, 
+                            prob=c(0.95)) %>%
         lapply(function(df) data.frame(
             level=df$level,
             x=df$x,
