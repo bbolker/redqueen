@@ -28,6 +28,8 @@
 
 \maketitle
 
+\section*{Abstract}
+
 \section{Introduction}
 
 The evolution of sexual reproduction poses a continuing question \citep{otto2009evolutionary}.
@@ -42,10 +44,10 @@ The Red Queen Hypothesis for sex suggests that sexually reproducing hosts overco
 
 Much of the theoretical literature has focused on determining qualitative conditions under which parasite selection can maintain sexual reproduction in the host population.
 Here, we describe a few important qualitative requirements in order for parasites to promote sexual reproduction within host population.
-First, hosts and parasites must coevolve.
+First, hosts and parasites must coevolve [CITE].
 Host-parasite coevolution creates time-lagged selective advantage for rare host genotypes, creating oscillation in genotypic frequencies and allowing for sexual reproduction to persist in the host population \citep{clarke1976ecological, hamilton1980sex}.
 Second, parasites must be highly virulent to maintain sexual reproduction \citep{may1983epidemiology}.
-Although sexual and asexual hosts can coexist at intermediate virulence \citep{howard1994parasitism}, sexual reproduction will not provide enough advantage to overcome cost of sex against avirulent parasites.
+Although sexual and asexual hosts can coexist at intermediate virulence \citep{howard1994parasitism}, sexual reproduction will not provide enough advantage to overcome cost of sex against avirulent parasites [CITE?].
 Finally, sexual hosts must be genetically more diverse than asexual hosts as high clonal diversity may mask the advantage of sexual reproduction \citep{lively2010review, ashby2015diversity}.
 \bmb{More on qualitative requirement}
 \swp{How is this? I might need more citations...}
@@ -58,21 +60,24 @@ On the other hand, empirical studies have mostly focused on confirming predictio
 Typical among them are local adaptation, time-lagged selection, and association between parasite prevalence and host reproductive mode (see \cite{tobler2008expanding} and \cite{vergara2014infection} for reviews).
 A key example is the snail population in New Zealand that serve as an intermediate hosts for trematodes [CITE].
 Through several decades of work, Lively \etal\ demonstrated that the population satisfies necessary conditions for the host-parasite coevolutionary dynamics and provide support for the hypothesis (e.g., \cite{lively1987evidence, lively1989adaptation, dybdahl1995host, dybdahl1998host, jokela2009maintenance, vergara2014infection, gibson2016within}).
-While many studies provide indirect evidence for the hypothesis, 
+While many studies provide only indirect evidence for the hypothesis, 
 recent studies show that more direct evidence can be achieved using experimental systems \citep{auld2016sex, slowinski2016coevolutionary}.
 
 Even though the Red Queen Hypothesis has gained some support both theoretically and empirically, there still remains a gap between theory and data.
 Many theoretical models rely on simplifying assumptions that are not applicable to natural populations and make indirect connections to empirical studies.
 For example, none of the Red Queen models reviewed by \cite{ashby2015diversity} use statistical tools to relate model to data.
-However, there are exceptions:
+It is unclear how well these models represent the observed prevalence of sexual reproduction.
+
+However, simple models can still be used to make qualitatively useful predictions about the nature.
 \cite{lively1992parthenogenesis} postulated that infection prevalence should be positively correlated with frequency of sexual hosts and later formalized the idea using a mathematical model \citep{lively2001trematode}.
 The prediction has since been confirmed by a number of empirical studies, most of which are based on the snail-trematode system \citep{lively2002temporal, kumpulainen2004parasites, vergara2013geographic, mckone2016fine, gibson2016within}.
 Surprisingly, such correlation was not observed in a different snail-trematode system \citep{dagan2013clonal}.
 
-Here, we try to bridge the gap between theory and data further and test whether a simple model can explain host parasite interaction observed in nature.
+Here, we try to bridge the gap between theory and data further and make quantitative inference about the nature.
 We extend the model used by \cite{lively2010epidemiological} to account for demographic stochasticity and simple population structure.
 Then, we fit the model to observational data from three studies \citep{dagan2013clonal, mckone2016fine, vergara2014infection} using Approximate Bayesian Computation (ABC) to estimate biologically relevant parameters.
-Using estimated parameters, we assess model fits and test for power (probability of observing a significant effect) to detect a positive correlation bdetween frequency of sexual reproduction and prevalence of infection \cite{lively2001trematode}.
+We assess model fits and discuss discrepancies between a theoretical model and the observed data.
+Using biologically realistic parameters, we test for power (probability of observing a significant effect) to detect a positive correlation bdetween frequency of sexual reproduction and prevalence of infection \cite{lively2001trematode}.
 By performing power analysis, we discuss underlying factors that drive the correlation and provide practical guidance for studying the Red Queen Hypothesis.
 \bmb{More on power analysis}
 \swp{Edited.}
@@ -83,6 +88,7 @@ By performing power analysis, we discuss underlying factors that drive the corre
 
 We consider observational data from two snail-trematode populations in New Zealand \citep{vergara2014infection, mckone2016fine} and a similar snail-trematode population in Israel \citep{dagan2013clonal}. 
 The snail-trematode system has been extensively studied under the context of the Red Queen Hypothesis so we expect a simple Red Queen model to fit reasonably well.
+Israel population is of particular interest as the expected correlation was not observed [CITE].
 Data collected by \cite{dagan2013clonal} and \cite{vergara2014infection} were obtained from their Dryad repositories \citep{dryad_f5t56, dryad_29nk3_2} and data collected by \cite{mckone2016fine} was extracted from their figure.
 
 \subsection{Model}
@@ -90,10 +96,12 @@ Data collected by \cite{dagan2013clonal} and \cite{vergara2014infection} were ob
 \swp{TODO: read Lively 2018}
 We model obligately sexual hosts competing with obligately asexual hosts in a meta-population by extending the model introduced by \cite{lively2010epidemiological}.
 The model is a discrete time susceptible-infected (SI) model with natural mortality and virulence (defined as reduction in offspring production among infected hosts).
-It is a suitable canditate model for this study as it captures essential structures that are present in basic epidemiological and population genetics models and is general enough to be applied to broad range of natural systems.
-We do not consider mechanistic details of the snail-trematode system such as life history of trematodes \citep{vergara2014infection}.
-We incorporate population structure and allow for mixing between populations.
+It is a suitable canditate model for this study as it captures essential structures that are present in basic epidemiological and population genetics models and is sufficiently general to be applied to broad range of natural systems.
+
+For simplicity, We do not consider mechanistic details of the snail-trematode system such as life history of trematodes \citep{vergara2014infection}.
+We incorporate metapopulation structure and allow for mixing between populations.
 Each population can be equivalently considered as a sampling site in the observed populations.
+A similar metapopulation model was developed by \cite{lively2017habitat} and was used to study local adaptaion of parasites.
 
 All hosts are assumed to be diploids with two biallelic loci, and parasites are assumed to be haploids.
 Let $S_{ij}^k(t)$ and $A_{ij}^k(t)$ be the number of sexual and asexual hosts with genotype $ij$ from population $k$ at generation $t$. 
@@ -113,11 +121,12 @@ $$
 W_U = \frac{b_U}{1 + a_U N(t)}, W_I = \frac{b_I}{1 + a_I N(t)}
 $$
 where $b_U$ and $b_I$ are number of offspring produced by uninfected and infected hosts, respectively, and $a_U$ and $a_I$ determine their corresponding density dependent effects \citep{lively2010epidemiological, smith1973stability}.
-For simplicity, we assume that $a_U = a_I$ so that virulence can be defined strictly in terms of decrease in offspring production and is constant for any density: $V = 1- b_I/b_U$.
+For simplicity, we assume that $a_U = a_I$ so that virulence can be defined strictly in terms of decrease in offspring production and is density independent: $V = 1- b_I/b_U$.
 \bmb{more specific}
 \swp{Lively doesn't say much beyond this... I think it's OK?}
 
-Asexual hosts are assumed to be strictly clonal. Then, the expected amount of genotypic contribution by asexual hosts is given by
+Asexual hosts are assumed to be strictly clonal.
+Then, the expected amount of genotypic contribution by asexual hosts is given by
 \begin{equation}
 A_{ij}' = W_U A_{ij,U} (t) + W_I A_{ij,I} (t),
 \end{equation}
@@ -197,9 +206,10 @@ We allow for stochastic external migration of asexual hosts with different genot
 The number of sexual genotypes ($G_{\textrm{\tiny sex}}$) that can be present in the population remains equal to the size of the genotypic space ($=10$ for diploid hosts with two biallelic loci).
 
 \bmb{Explain?}
-Given a value for $G_{\textrm{\tiny asex}}$, asexual genotypes that can be introduced to the population are uniformly chosen from the entire genotypic space in the beginning of the simulation.
-Limiting asexual genotypes account for difference in genetic diversity between asexual and sexual lineages.
-We estimate $G_{\textrm{\tiny asex}}$ to test whether greater asexual genetic diversity can be supported.
+\swp{Is this clearer?}
+In the beginning of the simulation, asexual genotypes that can be introduced to the population are uniformly chosen from the entire genotypic space such that the number of asexual genotypes is equal to $G_{\textrm{\tiny asex}}$.
+By limiting the number of asexual genotypes that can be present in the system, we account for intrinsic difference in sexual and asexual genotypic diversity.
+We estimate $G_{\textrm{\tiny asex}}$ to test whether greater asexual genetic diversity can be supported than a typically assumed one-to-many ratio [CITE].
 
 To account for differing number of sexual and asexual genotypes, we let 
 \begin{equation}
@@ -218,7 +228,8 @@ p_{i, \textrm{\tiny parasite}} = 1 - (1-p_{\textrm{\tiny infected}})^{1/4},
 \end{equation}
 where $p_{\textrm{\tiny infected}}$ is the probability that at least one infected host enters the population in a generation.
 
-Each simulation consists of 40 populations. Every population is initiallized with 2000 sexual hosts where 80 of them are infected. They are assumed to be in Hardy-Weinberg equilibrium with ratio between alleles being exactly half. 
+Each simulation consists of 40 populations. Every population is initiallized with 2000 sexual hosts, of which 80 are infected. 
+They are assumed to be in Hardy-Weinberg equilibrium with ratio between alleles being exactly half. 
 Transmission rate, $\beta^k$, is randomly drawn for each population from a gamma distribution with mean $\beta_{\textrm{\tiny mean}}$ and coefficient of variation $\beta_{\textrm{\tiny CV}}$. 
 Simulation runs for 500 generations without introduction of asexuals. At generation 501, 10 asexual hosts of a single genotype are introduced to each population (note that asexual genotype introduced can vary across population) and simulation runs for 600 generations while allowing for stochastic migration of asexuals.
 
@@ -314,7 +325,7 @@ Larger tolerance values (2.4, 1.2, 0.9 and 0.6) are used for each run to account
 Tolerance value of the final run is chosen so that a parameter set will be accepted if its each simulated summary statistic deviates from the corresponding observed summary statistic by 0.1 units on average.
 First three tolerance values are chosen in a decreasing order to reach the final step quicker.
 \bmb{Intuition for biological meaning of distances?}
-\swp{I don't think there is one?}
+\swp{I don't think there is one}
 \bmb{What are the summary stats?}
 \swp{They're explained in the beginning of the section}
 
@@ -337,12 +348,13 @@ As we account for uncertainty in unobserved sites by simulating a greater number
 
 We find that our simple meta-population Red Queen model can capture observed variation in infection prevalence and frequency of sexual hosts reasonably well;
 both temporal and spatial variation (measured by CV across mean proportions) are well-matched by the model. 
-On the other hand, the model tends of overestimate mean proportion of infected hosts.
+However, as model fitting is performed by minimizing the sum of absoute distance between observed and simulated summary statistics, our method does not gurantee all summary statistics to be equally well fitted.
+The model tends of overestimate mean proportion of infected hosts.
 \cite{dagan2013clonal}, \cite{mckone2016fine} and \cite{vergara2014infection} reported mean infection prevalence of 17.5\%, 5.1\% and 44\% in their study sites, respectively.
 The \emph{estimated} mean (95\% quantile) infection prevalence is 24.0\% (17.4\% - 28.6\%), 31.3\% (23.3\% - 40.4\%) and 54.2\% (36.0\% - 73.0\%), respectively.
 The model also underestimates mean frequency of sexual hosts for \cite{dagan2013clonal} and \cite{vergara2014infection} study sites.
-Observed mean frequency of sexual hosts is 4.5\% and 70.4\%, respectively, whereas corresponding estimated mean (95\% quantile) are 2.6\% (0.7\% - 4.8\%) and 59.6\% (N.A - 67.9\%). \swp{wquant doesn't give us a value at 2.5\%. What should I do?}
-As model fitting is performed by minimizing the sum of absoute distance between observed and simulated summary statistics, our method does not gurantee all summary statistics to be equally well fitted.
+Observed mean frequency of sexual hosts is 4.5\% and 70.4\%, respectively, whereas corresponding estimated mean (95\% quantile) are 2.6\% (0.7\% - 4.8\%) and 59.6\% (44.1\% - 67.9\%).
+\swp{44.1\% is actually 2.82\% quantile rather than 2.5\%. Should I write a sentence about it? It feels just a little gratuitous, although I think it is better to be clear and honest.}
 
 \begin{figure}[!ht]
 \includegraphics[width=\textwidth]{../fig/smc_summary.pdf}
@@ -390,9 +402,9 @@ We also find that proportion of sexual hosts decreases when infection prevalence
 Decrease in fitness of sexual hosts associated with increase in prevalence was predicted by \cite{ashby2015diversity}; 
 it can also be found in an earlier work by \cite{lively2010epidemiological} although it was not discussed in the paper.
 
-\swp{You can start here}
+\swp{You haven't read anything after this point:}
 Parameter estimates are presented in \fref{smcparam}.
-Even though we do not obtain good fits to data from \cite{dagan2013clonal} and \cite{mckone2016fine}, we find that high virulence and low asexual to sexual genetic diversity is necesary to explain the observed data.
+Even though we do not obtain good fits to data from \cite{dagan2013clonal} and \cite{mckone2016fine}, we find that high virulence and low asexual to sexual genetic diversity is necesary to partially explain the observed data.
 Moreover, observed differences in mean and variation in infection prevalence among studies are captured in estimates of transmission rate parameters ($\beta_{\textrm{\tiny mean}}$ and $\beta_{\textrm{\tiny CV}}$).
 Surprisingly, our fits to \cite{mckone2016fit} suggest that scale parameter for the cost of sex, $c_b$, should be higher than our assumption based on \cite{gibson2017two} that estimated cost of sex (95\% CI) to be 2.14 (1.81 - 2.55).
 \cite{ashby2015diversity} defined $c_b$ as additional costs and benefits of sex, where $c_b=1$ corresponds the two fold cost.
