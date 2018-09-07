@@ -1,6 +1,6 @@
 \documentclass{article}\usepackage[]{graphicx}\usepackage[]{color}
 
-\title{Bridging the gap between theory and data: the Red Queen hypothesis for sex}
+\title{Bridging the gap between theory and data: the Red Queen Hypothesis for sex}
 \author{Sang Woo Park, Benjamin M Bolker}
 
 \usepackage{tabularx}
@@ -23,12 +23,15 @@
 \newcommand{\swp}[1]{\comment{magenta}{SWP}{#1}}
 
 \newcommand{\fref}[1]{Fig.~\ref{fig:#1}}
-\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
 \begin{document}
 
 \maketitle
 
 \section*{Abstract}
+
+Why does sex continue to persist despite its cost?
+The Red Queen Hypothesis for sex suggests that sexual reproduction is maintained in the host population under strong parasitic selection by producing genetically rare offspring that are resistant to infection.
+
 
 \section{Introduction}
 
@@ -40,7 +43,7 @@ This infamous \emph{two-fold cost of sex} \citep{smith1978evolution} relies on t
 Then, what else is not equal and drives the sex to persist?
 
 One explanation for the persistence of sexual reproduction is the Red Queen Hypothesis \citep{bell1982masterpiece}.
-The Red Queen Hypothesis for sex suggests that sexually reproducing hosts overcome the cost of sex under strong parasite selection by producing genetically diverse offspring that are resistant to infection \citep{jbs1949disease, jaenike1978hypothesis, hamilton1980sex}.
+The Red Queen Hypothesis for sex predict that sexually reproducing hosts overcome the cost of sex under strong parasite selection by producing genetically diverse offspring that can escape infection \citep{jbs1949disease, jaenike1978hypothesis, hamilton1980sex}.
 
 Much of the theoretical literature has focused on determining qualitative conditions under which parasite selection can maintain sexual reproduction in the host population.
 Here, we describe a few important qualitative requirements in order for parasites to promote sexual reproduction within host population.
@@ -453,7 +456,7 @@ For example, there was a clear mismatch between the model prediction and the dat
 The snail populations studied by \cite{dagan2013clonal} live in intrinsically different environments from two other snail populations that we considered.
 For example, some habitats are subject to seasonal flash floods, which can affect reproductive strategies of snails \citep{ben2007temporal} and interfere with the host parasite coevolution.
 As a result, positive correlation between infection prevalence and frequency of sexual reproduction could not be detected from the system even though high power is predicted.
-We caution against performing statistical tests that were purely designed under the Red Queen hypothesis when other mechanisms that may affect reproduction mode are present in the system.
+We caution against performing statistical tests that were purely designed under the Red Queen Hypothesis when other mechanisms that may affect reproduction mode are present in the system.
 In particular, even if the effect of Red Queen cannot be clearly detected, one cannot conclude that there is \emph{no effect} of parasite on maintenance of sex. \swp{Can I cite something here? Maybe Gelman?}
 
 The model fit to \cite{mckone2016fine} suggests that cost of sex can be overcome and sexual reproduction can be maintained only if infection prevalence is much higher than the observed prevalence (\fref{ivs}).
@@ -469,22 +472,23 @@ In addition, increasing genetic diversity of the model would have allowed sexual
 While the positive correlation between frequency of sexual hosts and prevalence of infection can provide evidence for the effect of parasite on the maintence of sexual reproduction in the host population, it does not capture sufficient information about the evolutionary process.
 Precisely, the positive correlation represents contrast between populations that undergo Red Queen dynamics and those that do not;
 hence, it tells us more about asexual selection due to lack of parasitic risk \citep{lively2001trematode}.
-While the similarity between the correlations predicted by the model and the correlations observed in nature may be interpreted as providing more confidence that the observed popoulations provide evidence for the Red Queen hypothesis (\fref{effect}), the strength of correlation, does not provide any evidence for the strength of selection imposed on the host population.
+While the similarity between the correlations predicted by the model and the correlations observed in nature may be interpreted as providing more confidence that the observed popoulations provide evidence for the Red Queen Hypothesis (\fref{effect}), the strength of correlation, does not provide any evidence for the strength of selection imposed on the host population.
 Moreover, when populations are going through active coevolution, wide range of correlations can be detected (\fref{effect}: \cite{vergara2014infection}).
 \swp{I realized that Lively provides similar explanations for these phenomena. Is it OK to keep this in the discussion (I do cite him)? Even though the explanations overlap, I think the point is clearer with a slightly more realistic model and is worth keeping?}
 
 \begin{figure}[!ht]
 \includegraphics[width=\textwidth]{../fig/effect_size.pdf}
-\caption{{\bf Power to detect a statistically significant positive correlation between infection prevalence and frequency of sexual hosts.}
-Spearman's rank correlation was used to test for correlation between infection prevalence and frequency of sexual hosts in simulated data from the posterior distributions.
+\caption{{\bf Predicted vs. observed correlation between infection prevalence and frequency of sexual hosts.}
+Violin plots show weighted distribution of predicted strenght of correlation.
+Predicted vorrelation was measured for each simulation from the posterior by taking into account last two generations from each simulated population.
+Triangles and circles represent observed correlation from previous studies.
 }
 \label{fig:effect}
 \end{figure}
 
-Mathematical models have used extensively to build theoretical foundations for the evolution of sex [CITE].
-Yet, only a few theoretical models have been tested against data [CITE].
-\swp{I actually don't know whether this is true and I'm looking for papers... I doubt that there are none...}
-
+Mathematical models have used extensively to build theoretical foundations for the evolution of sex but only a few models have been statistically connected to data.
+Only recently, the idea of two fold cost of sex was tested directly by fitting a theoretical model to observed data \citep{gibson2017two}.
+Estimating biologically realistic parameters and testing theoretical models against data may provide deeper insight into underpinnings of maintenance of sexual reproduction.
 
 \bibliography{redqueen}
 \end{document}
