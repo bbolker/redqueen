@@ -68,7 +68,7 @@ Many theoretical models rely on simplifying assumptions that are not applicable 
 For example, none of the Red Queen models reviewed by \cite{ashby2015diversity} use statistical tools to relate model to data.
 It is unclear how well these models represent the observed prevalence of sexual reproduction.
 
-However, simple models can still be used to make qualitatively useful predictions about the nature.
+However, simple models can still be used to make qualitative predictions about the nature.
 \cite{lively1992parthenogenesis} postulated that infection prevalence should be positively correlated with frequency of sexual hosts and later formalized the idea using a mathematical model \citep{lively2001trematode}.
 The prediction has since been confirmed by a number of empirical studies, most of which are based on the snail-trematode system \citep{lively2002temporal, kumpulainen2004parasites, vergara2013geographic, mckone2016fine, gibson2016within}.
 Surprisingly, such correlation was not observed in a different snail-trematode system \citep{dagan2013clonal}.
@@ -454,10 +454,11 @@ The snail populations studied by \cite{dagan2013clonal} live in intrinsically di
 For example, some habitats are subject to seasonal flash floods, which can affect reproductive strategies of snails \citep{ben2007temporal} and interfere with the host parasite coevolution.
 As a result, positive correlation between infection prevalence and frequency of sexual reproduction could not be detected from the system even though high power is predicted.
 We caution against performing statistical tests that were purely designed under the Red Queen hypothesis when other mechanisms that may affect reproduction mode are present in the system.
+In particular, even if the effect of Red Queen cannot be clearly detected, one cannot conclude that there is \emph{no effect} of parasite on maintenance of sex. \swp{Can I cite something here? Maybe Gelman?}
 
 The model fit to \cite{mckone2016fine} suggests that cost of sex can be overcome and sexual reproduction can be maintained only if infection prevalence is much higher than the observed prevalence (\fref{ivs}).
 In other words, benefit of producing offspring with novel genotype is small when infection prevalence is low.
-Therefore, benefit of sex must be greater or other mechanisms must compensate for the difference in order to support sexual reproduction at lower infection prevalence.
+Benefit of sex must be greater or other mechanisms must compensate for the difference in order to support sexual reproduction at lower infection prevalence.
 As our model relies on a simple structure and strong parametric assumptions, additional benefit of sex can only be provided by lowering the cost of sex (i.e., increasing the scale parameter, $c_b$).
 
 The simple structure of the model and limited genetic diversity provides an explanation for the discrepancy observed in model prediction and the observed data by \cite{mckone2016fine}.
@@ -465,8 +466,24 @@ Here, we assumed that host resistance to infection is deteremined entirely by tw
 Although exact genetic architecture that determines trematode infecion in snails (e.g., number of loci involved in parasite resistance) is not known \swp{How do I even cite this?}, genetic diversity of snails that have been documented is far greater than what we have assumed \citep{king2011parasites, dagan2013clonal}.
 In addition, increasing genetic diversity of the model would have allowed sexual hosts to escape infection more easily and maintained sexual reproduction at lower prevalence of infection \citep{lively2010effect, king2012does, ashby2015diversity}.
 
-While a simple model cannot 
+While the positive correlation between frequency of sexual hosts and prevalence of infection can provide evidence for the effect of parasite on the maintence of sexual reproduction in the host population, it does not capture sufficient information about the evolutionary process.
+Precisely, the positive correlation represents contrast between populations that undergo Red Queen dynamics and those that do not;
+hence, it tells us more about asexual selection due to lack of parasitic risk \citep{lively2001trematode}.
+While the similarity between the correlations predicted by the model and the correlations observed in nature may be interpreted as providing more confidence that the observed popoulations provide evidence for the Red Queen hypothesis (\fref{effect}), the strength of correlation, does not provide any evidence for the strength of selection imposed on the host population.
+Moreover, when populations are going through active coevolution, wide range of correlations can be detected (\fref{effect}: \cite{vergara2014infection}).
+\swp{I realized that Lively provides similar explanations for these phenomena. Is it OK to keep this in the discussion (I do cite him)? Even though the explanations overlap, I think the point is clearer with a slightly more realistic model and is worth keeping?}
 
+\begin{figure}[!ht]
+\includegraphics[width=\textwidth]{../fig/effect_size.pdf}
+\caption{{\bf Power to detect a statistically significant positive correlation between infection prevalence and frequency of sexual hosts.}
+Spearman's rank correlation was used to test for correlation between infection prevalence and frequency of sexual hosts in simulated data from the posterior distributions.
+}
+\label{fig:effect}
+\end{figure}
+
+Mathematical models have used extensively to build theoretical foundations for the evolution of sex [CITE].
+Yet, only a few theoretical models have been tested against data [CITE].
+\swp{I actually don't know whether this is true and I'm looking for papers... I doubt that there are none...}
 
 
 \bibliography{redqueen}
