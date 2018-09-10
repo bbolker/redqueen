@@ -102,6 +102,7 @@ observed_name <- c(
     expression(McKone~italic(et ~ al.)~"(2016)"),
     expression(Lively~and~Jokela~"(2002)"),
     expression(Kumpulainen~italic(et~al.)~"(2004)"),
+    expression(King~italic(et~al.)~"(2011)")
     expression(Vergara~italic(et~al.)~"(2013)"),
     expression(Gibson~italic(et~al.)~"(2016)")
 )
@@ -120,6 +121,10 @@ observed_list <- list(
         type="Spearman"
     ),
     data.frame(
+        value=sqrt(0.37),
+        type="Pearson"
+    ),
+    data.frame(
         value=0.806,
         type="Spearman"
     ),
@@ -134,7 +139,7 @@ names(observed_list) <- observed_name
 observed <- observed_list %>%
     bind_rows(.id="fit") %>%
     mutate(plot="point")
-        
+
 level <- c(observed_name[-1], data_name)
 
 total <- truedf %>%
