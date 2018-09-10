@@ -32,10 +32,9 @@
 Why does sex continue to persist despite its large cost?
 The Red Queen Hypothesis for sex suggests that sexual reproduction is maintained in the host population under strong parasitic selection by producing genetically rare offspring that are resistant to infection.
 Mathematical models have been used to lay theoretical foundation and empirical data to confirm necessary conditions to support the hypothesis, as predicted by the models.
-For example, Lively predicted frequency of sexual hosts to be positively correlated with prevalence of infection using a mathematical model;
-although prediction was confirmed in numerous studies involving snail-trematode systems in New Zealand, the correlation was consistently not detected from snail-trematode systems in Israel.
+For example, Lively predicted frequency of sexual hosts to be positively correlated with prevalence of infection using a mathematical model, and the prediction was confirmed in numerous studies involving snail-trematode systems in New Zealand.
 In this study, we fit a simple host-parasite coevolution model to observational data from those snail-trematode systems and perform a power analysis to test how likely it is to observe the predicted correlation.
-We discuss ways in which model prediction differs from observation (e.g., high power predicted for the Israel snail system by the modeol) and provide practical guidance to both modelers and empiricists.
+We discuss ways in which model prediction differs from observation (e.g., high power predicted for the Israel snail system by the model) and provide practical guidance to both modelers and empiricists.
 Overall, our study suggests that a simple Red Queen model can only partially explain the observed host-parasite coevolution.
 
 \section{Introduction}
@@ -455,31 +454,33 @@ Many modeling studies have relied on assumed parameter values to understand the 
 such method allows us to learn about the model but not so much about the nature.
 Instead, we tried to fit a simple Red Queen model to observational data from three different snail trematode systems.
 We show that (1) model parameters can be estimated from data and (2) biologically meaningful predictions can be made from the model.
-However, discrepancy between model prediction and observed data suggests that a simple host-parasite coevolution model cannot sufficient explain maintanence of sexual reproduction observed in snail populations.
+However, discrepancy between model prediction and observed data suggests that a simple host-parasite coevolution model cannot sufficiently explain maintanence of sexual reproduction observed in snail populations.
 
 A model that does not fit well can sometimes tell us more about a biological system than a model that fits well.
 For example, there was a clear mismatch between the model prediction and the data presented by \cite{dagan2013clonal} (\fref{ivs}).
 The snail populations studied by \cite{dagan2013clonal} live in intrinsically different environments from two other snail populations that we considered.
-For example, some habitats are subject to seasonal flash floods, which can affect reproductive strategies of snails \citep{ben2007temporal} and interfere with the host parasite coevolution.
+For example, habitats are subject to seasonal flash floods, which can affect reproductive strategies of snails \citep{ben2007temporal} and interfere with the host parasite coevolution.
 As a result, positive correlation between infection prevalence and frequency of sexual reproduction could not be detected from the system even though high power is predicted.
-We caution against performing statistical tests that were purely designed under the Red Queen Hypothesis when other mechanisms that may affect reproduction mode are present in the system.
-In particular, even if the effect of Red Queen cannot be clearly detected, one cannot conclude that there is \emph{no effect} of parasite on maintenance of sex. \swp{Can I cite something here? Maybe Gelman?}
+We caution against performing statistical tests that were purely designed under the Red Queen Hypothesis when other mechanisms that may affect host reproductive mode are present in the system.
+Moreover, even if the effect of Red Queen cannot be clearly detected, one cannot conclude that there is \emph{no effect} of parasite on maintenance of sex. \swp{Can I cite something here?}
 
 The model fit to \cite{mckone2016fine} suggests that cost of sex can be overcome and sexual reproduction can be maintained only if infection prevalence is much higher than the observed prevalence (\fref{ivs}).
-In other words, benefit of producing offspring with novel genotype is small when infection prevalence is low.
+In other words, benefit of producing offspring with novel genotype is relatively small when infection prevalence is low.
 Benefit of sex must be greater or other mechanisms must compensate for the difference in order to support sexual reproduction at lower infection prevalence.
 As our model relies on a simple structure and strong parametric assumptions, additional benefit of sex can only be provided by lowering the cost of sex (i.e., increasing the scale parameter, $c_b$).
 
 The simple structure of the model and limited genetic diversity provides an explanation for the discrepancy observed in model prediction and the observed data by \cite{mckone2016fine}.
 Here, we assumed that host resistance to infection is deteremined entirely by two biallelic loci, which result in 10 genotypes, but it is unlikely that such simple model can capture genetic interaction between hosts and parasites observed in nature.
-Although exact genetic architecture that determines trematode infecion in snails (e.g., number of loci involved in parasite resistance) is not known \swp{How do I even cite this?}, genetic diversity of snails that have been documented is far greater than what we have assumed \citep{king2011parasites, dagan2013clonal}.
-In addition, increasing genetic diversity of the model would have allowed sexual hosts to escape infection more easily and maintained sexual reproduction at lower prevalence of infection \citep{lively2010effect, king2012does, ashby2015diversity}.
+Although exact genetic architecture that determines trematode infecion in snails (e.g., loci involved in parasite resistance) is not known \swp{How do I even cite this?}, genetic diversity of snails that have been documented is far greater than what we have assumed \citep{king2011parasites, dagan2013clonal}.
+Increasing genetic diversity of the model would have allowed sexual hosts to escape infection more easily and maintained sexual reproduction at lower prevalence of infection \citep{lively2010effect, king2012does, ashby2015diversity}.
 
 While the positive correlation between frequency of sexual hosts and prevalence of infection can provide evidence for the effect of parasite on the maintence of sexual reproduction in the host population, it does not capture sufficient information about the evolutionary process.
 Precisely, the positive correlation represents contrast between populations that undergo Red Queen dynamics and those that do not;
-hence, it tells us more about asexual selection due to lack of parasitic risk \citep{lively2001trematode}.
+hence, it emphasizes asexual selection due to lack of parasitic risk instead \citep{lively2001trematode}.
 While the similarity between the correlations predicted by the model and the correlations observed in nature may be interpreted as providing more confidence that the observed popoulations provide evidence for the Red Queen Hypothesis (\fref{effect}), the strength of correlation, does not provide any evidence for the strength of selection imposed on the host population.
 Moreover, when populations are going through active coevolution, wide range of correlations can be detected (\fref{effect}: \cite{vergara2014infection}).
+While simple statistical models such as testing for correlation can be tested easily,
+using more sophisticated and mechanistic statistical models that yield biologically interpretable parameters may be better suited for understanding the effect of parasites on the maintenance of sexual reproduction in the host population.
 \swp{I realized that Lively provides similar explanations for these phenomena. Is it OK to keep this in the discussion (I do cite him)? Even though the explanations overlap, I think the point is clearer with a slightly more realistic model and is worth keeping?}
 
 \begin{figure}[!ht]
@@ -487,14 +488,14 @@ Moreover, when populations are going through active coevolution, wide range of c
 \caption{{\bf Predicted vs. observed correlation between infection prevalence and frequency of sexual hosts.}
 Violin plots show weighted distribution of predicted strenght of correlation.
 Predicted vorrelation was measured for each simulation from the posterior by taking into account last two generations from each simulated population.
-Triangles and circles represent observed correlation from previous studies.
+Triangles and circles represent observed correlation sizes from previous studies that found positive correlation.
 }
 \label{fig:effect}
 \end{figure}
 
 Mathematical models have used extensively to build theoretical foundations for the evolution of sex but only a few models have been statistically connected to data.
 Only recently, the idea of two fold cost of sex was tested directly by fitting a theoretical model to observed data \citep{gibson2017two}.
-Estimating biologically realistic parameters and testing theoretical models against data may provide deeper insight into underpinnings of maintenance of sexual reproduction.
+Making statistical inference on the observed systems and testing theoretical models against data may provide deeper insight into underpinnings of maintenance of sexual reproduction.
 
 \section{Acknowledgements}
 
