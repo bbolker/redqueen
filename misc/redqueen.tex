@@ -93,30 +93,29 @@ By performing power analysis, we provide guidance for studying the Red Queen Hyp
 \subsection{Data}
 
 \swp{CITE}
-We consider three observational data sets \citep{vergara2014infection, mckone2016fine, dagan2013clonal} that represent interactions between freshwater snails and trematodes.
-New Zealand snail populations \citep{vergara2014infection, mckone2016fine} consist of \textit{Potamopyrgus antipodarum}, which serve as intermediate host for several trematode species with \textit{Microphallus} sp. being the most common species.
+We compare three observational data sets \citep{vergara2014infection, mckone2016fine, dagan2013clonal} that represent interactions between freshwater snails and trematodes.
+New Zealand snail populations \citep{vergara2014infection, mckone2016fine} consist of \textit{Potamopyrgus antipodarum}, which serves as an intermediate host for several trematode species with \textit{Microphallus} sp. being the most common species.
 \cite{vergara2014infection} provide infection status specific to \textit{Microphallus} sp., but \cite{mckone2016fine} did not distinguish among different spcies in their data set.
-Israeli snail populations \citep{dagan2013clonal} consist of \textit{Melanoides tuberculata}, which also serve as intermediate host for several trematode species; trematode species are not reported in the data set.
+Israeli snail populations \citep{dagan2013clonal} consist of \textit{Melanoides tuberculata}, which also serves as intermediate host for several trematode species; trematode species are not reported in the data set.
 The data sets collected by \cite{dagan2013clonal} and \cite{vergara2014infection} are obtained from their Dryad repositories \citep{dryad_f5t56, dryad_29nk3_2} and the data set collected by \cite{mckone2016fine} is extracted from their figure.
 
 \swp{Write more}
-The snail-trematode system has been extensively studied under the context of the Red Queen Hypothesis so we expect a simple Red Queen model to fit reasonably well.
+These snail-trematode systems have been extensively studied under the context of the Red Queen Hypothesis so we expect a basic Red Queen model to be able to mimic the observed dynamics reasonably well.
 The Israel population is of particular interest as the expected correlation has not been observed consistently \citep{ben2005spatial, dagan2013clonal}.
 
 
 \subsection{Model}
 
 \swp{TODO: read Lively 2018}
+\swp{TODO: also read \citep{schenk2019suicidal}}
 We model obligately sexual hosts competing with obligately asexual hosts in a metapopulation by extending the model introduced by \cite{lively2010epidemiological}.
-The model is a discrete time susceptible-infected (SI) model with natural mortality and virulence (defined as reduction in offspring production among infected hosts).
-
-
-It is a suitable canditate model for this study as it captures essential structures that are present in basic epidemiological and population genetics models and is sufficiently general to be applied to broad range of natural systems.
-
-For simplicity, we do not consider mechanistic details of the snail-trematode system such as their life history \citep{vergara2014infection}.
-We incorporate metapopulation structure and allow for mixing between populations.
-Each population can be equivalently considered as a sampling site in the observed populations.
+Our model is a discrete time susceptible-infected (SI) model with natural mortality and virulence (defined as reduction in offspring production among infected hosts).
+Metapopulation structure is included to model unobserved dynamics among different habitats; equivalently, each population can be considered as a sampling site.
 A similar metapopulation model was developed by \cite{lively2017habitat} in order to study local adaptaion of parasites.
+
+We do not model the life history of snail-trematode interactions explicitly.
+Modeling interactions of multiple trematodes species, each of which go through a different life cycle, with a single snail species is extremly complicated.
+Instead, testing a basic model against real data will allow us to identify the difference between theory and data more clearly.
 
 All hosts are assumed to be diploids with two biallelic loci controlling resistance, and parasites are assumed to be haploids.
 Let $S_{ij}^k(t)$ and $A_{ij}^k(t)$ be the number of sexual and asexual hosts with genotype $ij$ from population $k$ at generation $t$. 
@@ -128,26 +127,24 @@ S_{ij}' = c_b (1-s) \bigg(W_U S_{ij,U} (t) + W_I S_{ij,I} (t)\bigg),
 \end{equation}
 where $s$ is the proportion of males produced by sexual hosts, and $S_{ij, U}$ and $S_{ij,I}$ are the number of uninfected and infected sexual hosts in a population.
 $W_U$ and $W_I$ represent their corresponding fitnesses where virulence is defined as $V = 1-W_I/W_U$.
-We allow for cost of sex to vary by multiplying a scale parameter, $c_b$, to the growth term, where $2/c_b$ corresponds to a two fold cost of sex \citep{ashby2015diversity}.
+We allow for the cost of sex to vary by multiplying a scale parameter, $c_b$, to the growth term, where $2/c_b$ corresponds to a two fold cost of sex when $c_b = 1$ \citep{ashby2015diversity}.
 Recombination and outcrossing are modeled after incorporating genotypic contributions from other populations.
 
 We define
 $$
-W_U = \frac{b_U}{1 + a_U N(t)}, W_I = \frac{b_I}{1 + a_I N(t)}
+W_U = \frac{b_U}{1 + a_U N(t)},\,  W_I = \frac{b_I}{1 + a_I N(t)}
 $$
-where $b_U$ and $b_I$ are number of offspring produced by uninfected and infected hosts, respectively, and $a_U$ and $a_I$ determine their corresponding density dependent effects \citep{lively2010epidemiological, smith1973stability}.
+where $b_U$ and $b_I$ are number of offspring produced by uninfected and infected hosts, respectively, and $a_U$ and $a_I$ determine their corresponding strengths of density dependence \citep{lively2010epidemiological, smith1973stability}.
 For simplicity, we assume that $a_U = a_I$ so that virulence can be defined strictly in terms of decrease in offspring production and is density independent: $V = 1- b_I/b_U$.
-\bmb{more specific}
-\swp{Lively doesn't say much beyond this... I think it's OK?}
 
 Asexual hosts are assumed to be strictly clonal.
-Then, the expected amount of genotypic contribution by asexual hosts is given by
+Then, the expected genotypic contribution by asexual hosts is given by
 \begin{equation}
 A_{ij}' = W_U A_{ij,U} (t) + W_I A_{ij,I} (t),
 \end{equation}
 where $A_{ij, U}$ and $A_{ij,I}$ are the number of uninfected and infected asexual hosts in a population.
 
-We assume that proportion $\epsilon_{\textrm{\tiny mix}}$ of a population mix with other populations.
+We assume that a proportion $\epsilon_{\textrm{\tiny mix}}$ of a population mixes with other populations.
 Then, the expected number of offspring in the next generation (accounting for contributions from all populations) is given by
 \begin{equation}
 \begin{aligned}
@@ -156,7 +153,7 @@ Then, the expected number of offspring in the next generation (accounting for co
 \end{aligned}
 \end{equation}
 where $f_{\textrm{\tiny sex}}(x)$ is the function that models sexual reproduction, including recombination probability $r_{\textrm{\tiny host}}$ and outcrossing, and $n_{\textrm{\tiny pop}}$ is the number of populations modeled.
-Then, the total number of sexual and asexual hosts in the next generation given by Poisson random variables with mean specified previously. We also allow for stochastic migration to avoid fixation:
+Then, the total number of sexual and asexual hosts in the next generation given by Poisson random variables with mean specified previously. We also allow for stochastic migration in order to avoid fixation:
 \begin{equation}
 \begin{aligned}
 S_{ij}^k(t+1) &\sim \mathrm{Poisson}\left(\lambda=\mathrm{E}\left(S_{ij}^k(t+1)\right)\right) + \mathrm{Bernoulli}\left(p=p_{ij,\textrm{\tiny sex}}\right),\\
