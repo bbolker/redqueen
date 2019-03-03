@@ -118,7 +118,8 @@ Modeling interactions of multiple trematodes species, each of which go through a
 Instead, testing a basic model against real data will allow us to identify the difference between theory and data more clearly.
 
 All hosts are assumed to be diploids with two biallelic loci controlling resistance, and parasites are assumed to be haploids.
-Let $S_{ij}^k(t)$ and $A_{ij}^k(t)$ be the number of sexual and asexual hosts with genotype $ij$ from population $k$ at generation $t$. 
+Let $S_{ij}^k(t)$ and $A_{ij}^k(t)$ be the number of sexual and asexual hosts with genotype $ij$ from population $k$ at generation $t$, 
+where each subscript, $i$ and $j$, represents a host hapolotype: $i, j \in \{\mathrm{AB}, \mathrm{Ab}, \mathrm{aB}, \mathrm{ab}\}$.
 For simplicity, we drop the superscript representing population and write $S_{ij}(t)$ and $A_{ij}(t)$;
 every population is governed by the same set of equations unless noted otherwise (e.g., when we account for interaction between populations).
 Following \cite{lively2010epidemiological}, the expected genotypic contribution (before recombination or outcrossing) by sexual hosts is given by
@@ -162,25 +163,19 @@ A_{ij}^k(t+1) &\sim \mathrm{Poisson}\left(\lambda=\mathrm{E}\left(A_{ij}^k(t+1)\
 \end{equation}
 where $p_{ij,\textrm{\tiny sex}}$ and $p_{ij, \textrm{\tiny asex}}$ are the probabilities of a sexual and an asexual host with genotype $ij$ entering a popualation.
 
-\bmb{No epistasis?}
-\swp{Is this clearer?}
 Infection is modeled using the matching alleles model \citep{otto1998evolution}.
 We assume that snails are equally susceptible to parasites that match either haplotype.
-However, parasites must carry same alleles in both loci in order to match a host haplotype.
-The total number of infected hosts that carry parasite with genotype $i$ at generation $t$ is given by:
+However, parasites must match the host haplotype at both loci in order to successfully infect a host.
+The expected number of infected hosts that is infected with parasite with genotype $i$ at generation $t$ is given by:
 \begin{equation}
-I_{i}(t) = \sum_{p} 2^{\delta_{ij}} \left( S_{ij,i,I}(t) + A_{ij,i,I}(t)\right),
+I_{i}(t) = f_{\textrm{\tiny mutation}} \left( \sum_{j}  \bigg( S_{ij,i,I}(t) + A_{ij,i,I}(t)\bigg)\right).
 \end{equation}
-where a $\delta_{ij}$ is Kronecker delta.
-$\delta_{ij}$ equals 1 when $i = j$ and 0 otherwise.
-$S_{ij,i,I}(t)$ and $A_{ij,i,I}(t)$ represent the expected numbers of sexual and asexual hosts that have genotype $ij$ and are infected with genotype $i$ parasite. 
-Following \cite{ashby2015diversity}, we assume that mutation can occur in one locus with probability $r_{\textrm{\tiny parasite}}$. 
-Mutation is modeled using a deterministic process, as we introduce stochasticity during the actual infection process.
-We also allow for stochastic external migration of an infected host carrying parasite $i$ with probability $p_{i, \textrm{\tiny parasite}}$ to avoid fixation.
+$S_{ij,i,I}(t)$ and $A_{ij,i,I}(t)$ represent the expected numbers of sexual and asexual hosts that have genotype $ij$ and are infected with parasites that have genotype $i$.
+The function $f_{\textrm{\tiny mutation}}$ models mutation at a single locus with with probability $r_{\textrm{\tiny parasite}}$ \citep{ashby2015diversity}.
 
-The total expected number of infectious contacts made by infected hosts within a population is given by $\lambda_i^k = \beta^k {I_i'}^k(t)$, where $\beta^k$ is the transmission rate of each population, and $I_i'(t)$ is the number of infected hosts accounting for mutation and migration. 
+The total expected number of infectious contacts made by infected hosts within a population is given by $\lambda_i^k = \beta^k {I_i'}^k(t)$, where $\beta^k$ is the transmission rate of each population, and $I_i'(t)$ is the number of infected hosts accounting for stochastic migration with probability $p_{i, \textrm{\tiny parasite}}$ to avoid fixation. 
 Since we allow for mixing between populations, infected hosts can make contact with susceptible hosts in other populations. \swp{TODO: explain mixing}
-Then, the total amounf of infectious contacts, coming from hosts that carry genotype $i$ parasite, that is received by susceptible hosts in population $k$ is given by
+Then, the total amount of infectious contact, coming from hosts that carry genotype $i$ parasite, that is received by susceptible hosts in population $k$ is given by
 \begin{equation}
 \lambda_{i, \textrm{\tiny total}}^k = (1 - \epsilon_{\textrm{\tiny mix}}) \lambda_i^k + \frac{\epsilon_{\textrm{\tiny mix}}}{n_\textrm{\tiny pop}-1} \sum_{l \neq k} \lambda_i^l
 \end{equation}
@@ -194,20 +189,21 @@ The probability that a susceptible host with genotype $ij$ in population $k$ bec
 P_{ij}^k(t+1) = 1 - \exp\left(\mathrm{FOI}_{ij}^k\right).
 \end{equation}
 
-Finally, number of infected hosts in the next generation is determined by a binomial process:
+Finally, the number of infected hosts in the next generation is determined by a binomial process:
 \begin{equation}
 \begin{aligned}
-S_{ij,I}^k (t+1) &\sim \mathrm{Binom}(S_{ij}^k (t+1), P_{ij}^k(t+1)),\\
-A_{ij,I}^k (t+1) &\sim \mathrm{Binom}(A_{ij}^k (t+1), P_{ij}^k(t+1)).
+S_{ij,I}^k (t+1) &\sim \mathrm{Binom}\left(S_{ij}^k (t+1), P_{ij}^k(t+1)\right),\\
+A_{ij,I}^k (t+1) &\sim \mathrm{Binom}\left(A_{ij}^k (t+1), P_{ij}^k(t+1)\right).
 \end{aligned}
 \end{equation}
-The expected number of infected hosts that have genotype $ij$ and are infected by parasites with genotype $i$ in the next generation is given by a ratio of $\lambda$:
+The expected number of infected hosts that have genotype $ij$ and are infected by parasites with genotype $i$ in the next generation is proportional to amount of infectious contacts that was made in the current generation:
 \begin{equation}
 \begin{aligned}
-S_{ij,i,I}^k(t+1) &= \frac{\lambda_{i, \textrm{\tiny total}}^k}{\lambda_{i, \textrm{\tiny total}}^k + \lambda_{j, \textrm{\tiny total}}^k} S_{ij,I}^k(t+1)\\
-A_{ij,i,I}^k(t+1) &= \frac{\lambda_{i, \textrm{\tiny total}}^k}{\lambda_{i, \textrm{\tiny total}}^k + \lambda_{j, \textrm{\tiny total}}^k} A_{ij,I}^k(t+1)
+S_{ij,i,I}^k(t+1) &=  \frac{2^{\delta_{ij}} \lambda_{i, \textrm{\tiny total}}^k}{\lambda_{i, \textrm{\tiny total}}^k + \lambda_{j, \textrm{\tiny total}}^k} S_{ij,I}^k(t+1)\\
+A_{ij,i,I}^k(t+1) &=  \frac{2^{\delta_{ij}} \lambda_{i, \textrm{\tiny total}}^k}{\lambda_{i, \textrm{\tiny total}}^k + \lambda_{j, \textrm{\tiny total}}^k} A_{ij,I}^k(t+1)
 \end{aligned}
 \end{equation}
+where a $\delta_{ij}$ is a Kronecker delta ($\delta_{ij}$ equals 1 when $i = j$ and 0 otherwise).
 
 \subsection{Simulation design and parameterization}
 
