@@ -21,6 +21,7 @@
 \newcommand{\comment}[3]{\textcolor{#1}{\textbf{[#2: }\textit{#3}\textbf{]}}}
 \newcommand{\bmb}[1]{\comment{cyan}{BMB}{#1}}
 \newcommand{\swp}[1]{\comment{magenta}{SWP}{#1}}
+\newcommand{\citetapos}[1]{\citeauthor{#1}'s \citeyearpar{#1}}
 
 \newcommand{\fref}[1]{Fig.~\ref{fig:#1}}
 \begin{document}
@@ -196,7 +197,7 @@ S_{ij,I}^k (t+1) &\sim \mathrm{Binom}\left(S_{ij}^k (t+1), P_{ij}^k(t+1)\right),
 A_{ij,I}^k (t+1) &\sim \mathrm{Binom}\left(A_{ij}^k (t+1), P_{ij}^k(t+1)\right).
 \end{aligned}
 \end{equation}
-The expected number of infected hosts that have genotype $ij$ and are infected by parasites with genotype $i$ in the next generation is proportional to amount of infectious contacts that was made in the current generation:
+The expected number of infected hosts that have genotype $ij$ and are infected by parasites with genotype $i$ in the next generation is proportional to the amount of infectious contact that was made in the current generation:
 \begin{equation}
 \begin{aligned}
 S_{ij,i,I}^k(t+1) &=  \frac{2^{\delta_{ij}} \lambda_{i, \textrm{\tiny total}}^k}{\lambda_{i, \textrm{\tiny total}}^k + \lambda_{j, \textrm{\tiny total}}^k} S_{ij,I}^k(t+1)\\
@@ -207,17 +208,14 @@ where a $\delta_{ij}$ is a Kronecker delta ($\delta_{ij}$ equals 1 when $i = j$ 
 
 \subsection{Simulation design and parameterization}
 
-Many Red Queen models have focused on competition between a single asexual genotype and multiple sexual genotypes or have assumed equal genetic diversity between asexual and sexual hosts (see \citep{ashby2015diversity} for a review of previous Red Queen models) but neither of these assumptions are realistic.
-Instead, \cite{ashby2015diversity} adopted a more realistic approach by allowing for stochastic migration of an asexual genotype to a population.
+Many Red Queen models have focused on competition between a single asexual genotype and multiple sexual genotypes or have assumed equal genetic diversity between asexual and sexual hosts (see \citep{ashby2015diversity} for a review of previous Red Queen models) but neither of these assumptions is realistic. \swp{maybe cite Schenk et al}
+Instead, \cite{ashby2015diversity} adopted a more realistic approach by incorporating stochastic external migration of an asexual genotype to a population and allowing for asexual genetic diversity to vary over time.
 Here, we combine these methods.
 We allow for stochastic external migration of asexual hosts with different genotypes into the system but fix the number of asexual genotypes (denoted by $G_{\textrm{\tiny asex}}$) that can be present in the system. 
-The number of sexual genotypes ($G_{\textrm{\tiny sex}}$) that can be present in the population remains equal to the size of the genotypic space ($=10$ for diploid hosts with two biallelic loci).
-
-\bmb{Explain?}
-\swp{Is this clearer?}
-In the beginning of the simulation, asexual genotypes that can be introduced to the population are uniformly chosen from the entire genotypic space such that the number of asexual genotypes is equal to $G_{\textrm{\tiny asex}}$.
-By limiting the number of asexual genotypes that can be present in the system, we account for intrinsic difference in sexual and asexual genotypic diversity.
-We estimate $G_{\textrm{\tiny asex}}$ to test whether greater asexual genetic diversity can be supported than a typically assumed one-to-many ratio.
+Since sexual hosts have limited genetic diversity in our model (diploid hosts with two biallelic loci yields a total of 10 genotypes), allowing for unlimited migration of asexual hosts will cause the sexual population to be easily outcompeted by the asexual population.
+Limiting asexual genetic diversity allows us to account for the intrinsic difference in sexual and asexual diveristy and make a compromise between simple and realistic models.
+At the beginning of each simulation, a pool of $G_{\textrm{\tiny asex}}$ asexual genotypes are sampled at random the entire genotypic space; these are the genotypes that are available for external immigration into subpopulations.
+Then, we use our model-based comparison with data to estimate $G_{\textrm{\tiny asex}}$ to test whether greater asexual genetic diversity can be supported than a typically assumed one-to-many ratio.
 
 To account for differing number of sexual and asexual genotypes, we let 
 \begin{equation}
@@ -230,36 +228,40 @@ p_{ij, \textrm{\tiny asex}} &=
 \end{cases},
 \end{aligned}
 \end{equation}
-where $p_{\textrm{\tiny host}}$ is the probability that at least one sexual and asexual host enters the population in a generation. We scale the probability of infected host carrying parsite genotype $i$ in a similar way for interpretability:
+where $p_{\textrm{\tiny host}}$ is the probability that at least one sexual or asexual host enters the population in a generation. We scale the probability of an infected host carrying parasite genotype $i$ in a similar way for interpretability:
 \begin{equation}
 p_{i, \textrm{\tiny parasite}} = 1 - (1-p_{\textrm{\tiny infected}})^{1/4},
 \end{equation}
 where $p_{\textrm{\tiny infected}}$ is the probability that at least one infected host enters the population in a generation.
+\swp{explain 4; haploid parasites}
 
-Each simulation consists of 40 populations. Every population is initiallized with 2000 sexual hosts, of which 80 are infected. 
-They are assumed to be in Hardy-Weinberg equilibrium with ratio between alleles being exactly half. 
-Transmission rate, $\beta^k$, is randomly drawn for each population from a gamma distribution with mean $\beta_{\textrm{\tiny mean}}$ and coefficient of variation $\beta_{\textrm{\tiny CV}}$. 
-Simulation runs for 500 generations without introduction of asexuals. At generation 501, 10 asexual hosts of a single genotype are introduced to each population (note that asexual genotype introduced can vary across population) and simulation runs for 600 generations while allowing for stochastic migration of asexuals.
+Each simulation consists of 40 subpopulations. Every subpopulation is initialized with 2000 sexual hosts, of which 80 are infected. 
+They are assumed to be in Hardy-Weinberg equilibrium where allele frequencies in each locus is half. 
+The transmission rate, $\beta^k$, is randomly drawn for each subpopulation from a Gamma distribution with mean $\beta_{\textrm{\tiny mean}}$ and coefficient of variation $\beta_{\textrm{\tiny CV}}$. 
+Simulation runs for 500 generations without introduction of asexuals. At generation 501, 10 asexual hosts of a single genotype are introduced to each population (the asexual genotype introduced can vary across population) and simulation runs for 600 generations while allowing for stochastic migration of asexuals.
 
 \subsection{Approximate Bayesian Computation}
 
 \bmb{More on probe matching; Kendall et al.?}
 \swp{Not clear what you're looking for...}
+\swp{TODO: come back again... skipping to results for now}
 
-We use Approximate Bayesian Computation (ABC) to fit the model \citep{toni2009approximate}.
+We use Approximate Bayesian Computation (ABC) to estimate parameters from data \citep{toni2009approximate}.
 ABC relies on comparing summary statistics of observed data and those of simulated data and is particularly useful when the exact likelihood function is not available.
 We consider mean proportion of infected and sexually reproducing snails in the system and variation in these proportions -- measured by coefficient of variation (CV) -- across space (population) and time as our focal summary statistics.
 These summary statistics are calculated for both observed and simulated data and are used in ABC.
-As \cite{dagan2013clonal} and \cite{mckone2016fine} only reported proportion of males, proportion of sexual hosts are assumed to be twice proportion of males.
+As \cite{dagan2013clonal} and \cite{mckone2016fine} only reported the proportion of males, the proportion of sexual hosts is assumed to be twice the proportion of males.
 
-CV across space is calculated by first calculating mean proportions by averaging across time (generation) for each site (population) and then taking the the CV of these mean proportions.
-CV across time (generation) is calculated by first averaging proportions across space (population) at each generation and then taking the CV.
+CV across space is calculated by first calculating mean proportions by averaging across time (generation) for each site (subpopulation) and then taking the the CV of these mean proportions.
+CV across time (generation) is calculated by first averaging proportions across space (subpopulation) at each generation and then taking the CV.
 For purely spatial data (\cite{dagan2013clonal} and \cite{mckone2016fine}), CV across space is calculated without averaging across time.
-Sampling error is not taken into account when summary statistics are calculated from simulated populations.
 
+Because ABC is a Bayesian method, we want to specify prior distributions for all parameters.
 We use weakly informative priors for all parameters that we estimate except $c_b$, a scale parameter for the cost of sex (see Table~\ref{tb:param} for prior distributions used and parameters assumed).
-The prior distribution for the scale parameter is chosen so that 95\% quantile of cost of sex (2/$c_b$) is approximately equal to the 95\% confidence interval reported by \cite{gibson2017two}.
-All other parameters are assumed to be fixed for simplicity.
+The prior distribution for the scale parameter is chosen so that 95\% prior quantile of cost of sex (2/$c_b$) is approximately equal to the 95\% confidence interval reported by \cite{gibson2017two}.
+All other parameters are assumed to be fixed.
+
+
 
 \afterpage{
 \clearpage
@@ -332,89 +334,94 @@ For spatiotemporal data \citep{vergara2014infection}, six summary statistics are
 Larger tolerance values (2.4, 1.2, 0.9 and 0.6) are used for each run to account for higher number of summary statistics being compared.
 Tolerance value of the final run is chosen so that a parameter set will be accepted if its each simulated summary statistic deviates from the corresponding observed summary statistic by 0.1 units on average.
 First three tolerance values are chosen in a decreasing order to reach the final step quicker.
-\bmb{Intuition for biological meaning of distances?}
-\swp{I don't think there is one}
-\bmb{What are the summary stats?}
-\swp{They're explained in the beginning of the section}
 
 \subsection{Power analysis}
 
-Using estimated parameters for each data, we calculate the power to detect a correlation between infection prevalence and frequency of sexual hosts.
-For each parameter sample from the final run of the ABC, 10 simulations are ran.
+\bmb{This is a post hoc power analysis. Need to recognize/admit its limitations. Power strongly correlated with significant correlation in original study; not as bad as direct post hoc power analysis but...}
+
+Using estimated parameters for each data set, we calculate the power to detect a significant positive correlation between infection prevalence and frequency of sexual hosts.
+For each parameter sample from the final run of the ABC, 10 simulations are run.
 For each simulation, we take the last two generations -- assuming that a year contains two snail generations [CITE] -- from the simulation and choose $n$ populations at random from 40 simulated populations.
 For each selected population, hosts are divided into four categories based on their infection status (infected/uninfected) and reproductive mode (asexual/sexual),
 and mean proportion of hosts in each category is calculated by averaging over two generations.
 Independent multinomial samples of size $m$ are drawn from each selected population based on the proportions  in each four categories. 
-Correlation between proportion of infected hosts and proportion of sexual hosts is tested using the Spearman's rank correlation at 5\% significance level.
+Correlation between proportion of infected hosts and proportion of sexual hosts is tested using the Spearman's rank correlation at a 5\% significance level.
 
 \section{Results}
 
-\fref{smcsumm} compares observed summary statistics with fitted and predicted summary statistics.
-Fitted summary statistics are those that are accepted via ABC and can be interpreted as underlying summary statistics of the study sites estimated by the model. \swp{Is this interpretation OK?}
-Predicted summary statistics are obtained by simulating from estimated parameters and represent what could have been the underlying summary statistics if other sites were chosen from the system.
-As we account for uncertainty in unobserved sites by simulating a greater number of populations, there is large variation in predicted summary statistics.
+First, we compare observed summary statistics with fitted and predicted summary statistics (\fref{smcsumm}).
+Fitted summary statistics are those that are accepted via ABC;
+these can be interpreted as model-based estimates of the true summary statistics (and associated confidence intervals) of the study sites.
+Predicted summary statistics are obtained by simulating the model again using the estimated parameters and calculating summary statistics from randomly selected subpopulations;
+these values represent summary statistics that could have been obtained if other sites were chosen for the study.
+The predicted summary statistics are highly variable because they account for uncertainty in the unobserved subpopulations.
 
-We find that our simple meta-population Red Queen model can capture observed variation in infection prevalence and frequency of sexual hosts reasonably well;
+Our simple meta-population Red Queen model can capture observed variation in infection prevalence and frequency of sexual hosts reasonably well;
 both temporal and spatial variation (measured by CV across mean proportions) are well-matched by the model. 
-However, as model fitting is performed by minimizing the sum of absoute distance between observed and simulated summary statistics, our method does not gurantee all summary statistics to be equally well fitted.
-The model tends of overestimate mean proportion of infected hosts.
-\cite{dagan2013clonal}, \cite{mckone2016fine} and \cite{vergara2014infection} reported mean infection prevalence of 17.5\%, 5.1\% and 44\% in their study sites, respectively.
-The \emph{estimated} mean (95\% quantile) infection prevalence is 24.0\% (17.4\% - 28.6\%), 31.3\% (23.3\% - 40.4\%) and 54.2\% (36.0\% - 73.0\%), respectively.
-The model also underestimates mean frequency of sexual hosts for \cite{dagan2013clonal} and \cite{vergara2014infection} study sites.
-Observed mean frequency of sexual hosts is 4.5\% and 70.4\%, respectively, whereas corresponding estimated mean (95\% quantile) are 2.6\% (0.7\% - 4.8\%) and 59.6\% (44.1\% - 67.9\%).
+However, as model fitting is performed by minimizing the sum of absoute distance between observed and simulated summary statistics, our method does not gurantee that all summary statistics are equally well-fitted.
+The model tends to overestimate mean proportion of infected hosts.
+The observed mean proportion of infected hosts are 0.175 \citep{dagan2013clonal}, 0.051 \citep{mckone2016fine}, and 0.440 \citep{vergara2014infection}, 
+whereas their ABC-based estimates are 0.240 (95\% CI: 0.174 - 0.286), 0.313 (95\% CI: 0.233 - 0.404), and 0.542 (95\% CI: 0.360 - 0.730), respectively.
+The model underestimates mean proportion of sexual hosts for \cite{dagan2013clonal} and \cite{vergara2014infection}.
+Observed mean proportions of sexual hosts are 0.045 and 0.704, respectively, whereas their ABC-based estimates are 0.026 (95\% CI: 0.007 - 0.048) and 0.596 (95\% CI: 0.441 - 0.679).
 \swp{44.1\% is actually 2.82\% quantile rather than 2.5\%. Should I write a sentence about it? It feels just a little gratuitous, although I think it is better to be clear and honest.}
 
 \begin{figure}[!ht]
 \includegraphics[width=\textwidth]{../fig/smc_summary.pdf}
 \caption{{\bf Summary statistics of the observed data vs. distribution of summary statistics of the simulated data from the posterior samples.}
-Dotted horizontal line represents observed summary statistics.
-Violin plots show weighted distribution of fitted summary statistics (i.e., summary statistics that were accepted during Approximate Bayesian Computation). 
+Dotted horizontal lines represent observed summary statistics.
+Violin plots show weighted distribution of fitted summary statistics (i.e., summary statistics that were accepted during ABC). 
 Error bars show 95\% weighted quantiles of predicted summary statistics.
-For each posterior sample, 10 simulations are run and each simulated system is sampled at random 100 times so that each sample consists of equal number of populations as number of sites in fitted data. 
-Then, summary statistics are calculated for each sample and are weighted by their corresponding weights.
+The weights correspond to the posterior distribution weights from ABC.
+For each posterior sample, 10 simulations are run and each simulated system is sampled at random 100 times so that each sample consists of the same number of populations as in the fitted data.
+All univariate summary statistics are matched reasonably well, except for the mean proportion of infected hosts in \cite{mckone2016fine}.
 }
 \label{fig:smcsumm}
 \end{figure}
 
 \swp{updated text and fig:}
-To further diagnose the fit, we compare the predicted relationships between mean infection prevalence and mean frequency of sexual hosts in each population with the observed data (\fref{ivs});
-we consider infection prevalence and frequency of sexual hosts averaged over the last two generations to remain consistent with power analyses.
-Despite being able to reproduce the summary statistics reported by \cite{dagan2013clonal} well, 
-our model is unable to capture the qualitative trend between proportion of sexual hosts and proportion of infected hosts (\fref{ivs}; \cite{dagan2013clonal}).
-Both the simulations and the observed data mostly consist of asexual populations
-but our model predicts sexual reproduction to be reasonably maintained when infection prevalence is high ($> 40\%$); \cite{dagan2013clonal} data suggests that sexual reproduction is only maintained when infection prevalence is low ($< 20\%$).
-Similarly, sexual reproduction in \cite{mckone2016fine} population is maintained at a much lower infection prevalence than what the model predicts.
-On the other hand, \cite{vergara2014infection} reported greater than 90\% sexual snails throughout 5 years in one of their study sites but our model fails to maintain such high levels of sexual reproduction.
+To further diagnose the fit, we compare the predicted relationships between the mean proportion of infected hosts and the mean proportion of sexual hosts across subpopulations with the observed data (\fref{ivs});
+% we consider infection prevalence and frequency of sexual hosts averaged over the last two generations to remain consistent with power analyses.
+Despite its accuracy in reproducing summary statistics reported by \cite{dagan2013clonal}, 
+our model poorly captures the relationship between the mean proportion of infected hosts and the mean proportion of sexual hosts (\fref{ivs}; \cite{dagan2013clonal}).
+The model predicts sexual reproduction to be well maintained when infection prevalence is high ($> 40\%$) whereas
+the observed data \citep{dagan2013clonal} suggests that sexual reproduction can only be supported when infection prevalence is low ($< 20\%$).
+\cite{mckone2016fine} also found sexually reproducing snails in sites with low infection prevalence ($< 20\%$).
+
+On the other hand, \citetapos{vergara2014infection} data set suggests that sexually reproducing populations are likely to have a relatively high prevalence of infection (approximately 20\% - 80\%).
+This is broadly consistent with our model prediction. 
+Most of the data points fall within the range of model predictions (\fref{ivs}; \cite{vergara2014infection}).
+However, there is one site in which more than 90\% of the snails were found to be sexual throughout the study period of 5 years \citep{vergara2014infection};
 
 \begin{figure}[!ht]
 \includegraphics[width=\textwidth]{../fig/simulated_data2.pdf}
 \caption{{\bf Predicted relationship between mean infection prevalence and mean proportion of sexual hosts in each population.}
 For each posterior sample, 10 simulations are run.
 For each population within a simulation, mean infection prevalence and mean proportion of sexual hosts is calculated by averaging across last two generations. 
-Each point, consisting of mean infection prevalence and meal proportion of sexual hosts, is assigned equal weight as the parameter that simulated the population.
-Then, density at each grid is calculated by taking to sum of weights of the points that lie within the grid.
-Grid densities are normalized by dividing by the maximum grid densities for each fit.
+Each point, consisting of mean infection prevalence and meal proportion of sexual hosts, is assigned the weight of the parameter used to simulated the population.
+The density at each cell is calculated as the sum of weights of the points that lie within it.
+Cell densities are normalized by dividing by the maximum grid densities for each fit.
 \swp{I tweaked color gradient schemes and plotted log relative densities. Need to clarify this?}
 Open triangles represent observed data; proportion of sexual hosts is computed from proportion of male hosts.
 }
 \label{fig:ivs}
 \end{figure}
 
-We find that there is a high density region (around 40\% infection prevalence) in which proportion of infected hosts remains almost constant while proportion of sexual hosts increases (visible in the fits to \cite{mckone2016fine} and \cite{vergara2014infection}).
-As transmission rate ($\beta$) increases, selection for sexual hosts increases but increasing number of resistant offsprings prevents further infection from occuring and can decrease overall infection prevalence.
-Such a trend is consistent with previous results by \cite{lively2001trematode} who noted that there is a region in which both sexual and asexual reproduction can be selected exclusively under same infection prevalence.
-We also find that proportion of sexual hosts decreases when infection prevalence is very high.
-Decrease in fitness of sexual hosts associated with increase in prevalence was predicted by \cite{ashby2015diversity}; 
-it can also be found in an earlier work by \cite{lively2010epidemiological} although it was not discussed in the paper.
+There is a high posterior density region (around 50\% infection prevalence) in which the proportion of infected hosts remains almost constant while the proportion of sexual hosts increases (visible in the fits to \cite{mckone2016fine} and \cite{vergara2014infection}). \swp{Appendix}
+As transmission rate ($\beta$) increases, selection for sexual hosts increases but the increasing number of resistant offspring prevents further infection from occuring and can decrease overall infection prevalence.
+Such a trend is consistent with previous results of \cite{lively2001trematode} who noted that there is a region in which either sexual and asexual reproduction can be selected exclusively under same infection prevalence.
+The proportionf of sexual hosts decreases when infection prevalence is extremely high.
+This pattern can be explained by the decrease in fitness of sexual hosts with increase in infection prevalence, predicted by \cite{ashby2015diversity}. 
+The same pattern can be found in an earlier work by \cite{lively2010epidemiological} although it was not discussed.
 
-\swp{You haven't read anything after this point:}
-Parameter estimates are presented in \fref{smcparam}.
-Even though we do not obtain good fits to data from \cite{dagan2013clonal} and \cite{mckone2016fine}, we find that high virulence and low asexual to sexual genetic diversity is necesary to partially explain the observed dynamics.
-Moreover, observed differences in mean and variation in infection prevalence among studies are captured in estimates of transmission rate parameters ($\beta_{\textrm{\tiny mean}}$ and $\beta_{\textrm{\tiny CV}}$).
-Surprisingly, our fits to \cite{mckone2016fine} suggest that scale parameter for the cost of sex, $c_b$, should be higher than our assumption based on \cite{gibson2017two} that estimated cost of sex (95\% CI) to be 2.14 (1.81 - 2.55).
+\fref{smcparam} presents parameter estimates.
+Keeping in mind that we do not obtain good fits to data from \cite{dagan2013clonal} and \cite{mckone2016fine}, we still find that high virulence and a low ratio of asexual to sexual genetic diversity are necesary to explain the observed dynamics.
+Moreover, we are able to capture observed differences in mean and variation in infection prevalence among studies in our estimates of transmission rate parameters ($\beta_{\textrm{\tiny mean}}$ and $\beta_{\textrm{\tiny CV}}$).
+
+Our fits to \cite{mckone2016fine} suggest that scale parameter for the cost of sex, $c_b$, should be higher than our prior assumption based on \cite{gibson2017two} that the estimated cost of sex to be 2.14 (95\% CI: 1.81 - 2.55).
 \cite{ashby2015diversity} defined $c_b$ as additional costs and benefits of sex, where $c_b=1$ corresponds the two fold cost.
-Under their interpretaion, our estimate of $c_b$ corresponds to the following mean (95\% CI) cost of sex: 1.95 (1.68 - 2.4).
-We propose an alternate interpretation to this parameter estimate in the discussion.
+Under their interpretation, our estimate of $c_b$ corresponds to a slightly lower estimate of cost of sex: 1.95 (95\% CI: 1.68 - 2.4). 
+(We propose an alternate interpretation to this parameter estimate below).
 
 \begin{figure}[!ht]
 \includegraphics[width=\textwidth]{../fig/posterior.pdf}
@@ -426,15 +433,16 @@ $G_{\tiny \textrm{asex}}$ is a discrete variable but is drawn on a continuous sc
 \label{fig:smcparam}
 \end{figure}
 
-Finally, our power analyses reveal that there is high power to detect a positive correlation between infection prevalence and frequency of sexual hosts in both systems studied by \cite{dagan2013clonal} and \cite{mckone2016fine} (\fref{power}).
+Finally, our power analyses suggest that there is high power to detect a positive correlation between infection prevalence and frequency of sexual hosts in the systems studied by \cite{dagan2013clonal} and \cite{mckone2016fine} (\fref{power}).
 Such high power predicted for \cite{dagan2013clonal} is particularly surprising given that they were not able to observe the expected correlation.
-This discrepancy implies that the snail populations studied by \cite{dagan2013clonal} show sufficient variation in infection prevalence in order for the correlation to be observed under pure Red queen selection, but other underlying factors, for which our model does not account, may have caused the populations to move away from their expected behaviours.
+This discrepancy implies that the snail populations studied by \cite{dagan2013clonal} show sufficient variation in infection prevalence in order for the correlation to be observed under pure Red queen selection, but other underlying factors that are neglected by our model does not account may have caused the populations to deviate from their expected behaviours.
 On the other hand, our model predicts low power for detecting the positive correlation for the system studied by \cite{vergara2014infection} (\fref{smcparam}).
-Overall, increasing number of sites is a more effective way to increase power than increasing number of samples per site.
+Overall, we predict that increasing number of sites is a more effective way to increase power than increasing number of samples per site.
 
 While we originally planned to perform power analysis using Spearman's rank correlation,
-we repeated the analysis using Pearson's correlation after applying arcsine square root transformation [CITE] to see whether there is any change in power.
+we repeated the analysis using Pearson's correlation after applying arcsine square root transformation [CITE] to see whether this procedure improves power.
 Surprisingly, using Pearson correlation gives slightly higher power to detect the positive correlation bewteen frequency of sexual hosts and infection prevalence (see Appendix).
+\bmb{Not surprinsing; pearson has higher power if pattern is actually linear}
 
 \begin{figure}[!ht]
 \includegraphics[width=\textwidth]{../fig/power.pdf}
