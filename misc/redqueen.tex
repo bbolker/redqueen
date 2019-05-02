@@ -181,7 +181,8 @@ $S_{ij,i,I}(t)$ and $A_{ij,i,I}(t)$ represent the expected numbers of sexual and
 The function $f_{\textrm{\tiny mutation}}$ models mutation at a single locus with with probability $r_{\textrm{\tiny parasite}}$ \citep{ashby2015diversity}.
 
 The total expected number of infectious contacts made by infected hosts within a population is given by $\lambda_i^k = \beta^k {I_i'}^k(t)$, where $\beta^k$ is the transmission rate of each population, and $I_i'(t)$ is the number of infected hosts accounting for stochastic migration with probability $p_{i, \textrm{\tiny parasite}}$ to avoid fixation. 
-Since we allow for mixing between populations, infected hosts can make contact with susceptible hosts in other populations. \swp{TODO: explain mixing}
+We model mixing between subpopulations by allowing infected hosts to make contact with susceptible hosts in other populations;
+we assume that proportion $\epsilon_{\textrm{\tiny mix}}$ of the infectious contacts are equally distributed among other subpopulations.
 Then, the total amount of infectious contact, coming from hosts that carry genotype $i$ parasite, that is received by susceptible hosts in population $k$ is given by
 \begin{equation}
 \lambda_{i, \textrm{\tiny total}}^k = (1 - \epsilon_{\textrm{\tiny mix}}) \lambda_i^k + \frac{\epsilon_{\textrm{\tiny mix}}}{n_\textrm{\tiny pop}-1} \sum_{l \neq k} \lambda_i^l
@@ -236,10 +237,10 @@ p_{ij, \textrm{\tiny asex}} &=
 \end{equation}
 where $p_{\textrm{\tiny host}}$ is the probability that at least one sexual or asexual host enters the population in a generation. We scale the probability of an infected host carrying parasite genotype $i$ in a similar way for interpretability:
 \begin{equation}
-p_{i, \textrm{\tiny parasite}} = 1 - (1-p_{\textrm{\tiny infected}})^{1/4},
+p_{i, \textrm{\tiny parasite}} = 1 - (1-p_{\textrm{\tiny infected}})^{1/G_\textrm{\tiny parasite}},
 \end{equation}
 where $p_{\textrm{\tiny infected}}$ is the probability that at least one infected host enters the population in a generation.
-\swp{explain 4; haploid parasites}
+The number of parasite genotypes $G_\textrm{\tiny parasite}$ is equal to 4 (because parasites are assumed to be haploids with two loci).
 
 Each simulation consists of 40 subpopulations. Every subpopulation is initialized with 2000 sexual hosts, of which 80 are infected. 
 They are assumed to be in Hardy-Weinberg equilibrium where allele frequencies in each locus is half. 
