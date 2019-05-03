@@ -1,7 +1,7 @@
 \documentclass{article}\usepackage[]{graphicx}\usepackage[]{color}
 
 \title{Bridging the gap between theory and data: the Red Queen Hypothesis for sex}
-\author{Sang Woo Park, Benjamin M Bolker}
+\author{Sang Woo Park and Benjamin M Bolker}
 
 \usepackage{tabularx}
 
@@ -61,12 +61,13 @@ Although sexual and asexual hosts can coexist at intermediate virulence \citep{h
 Finally, sexual hosts must be genetically more diverse than asexual hosts, as high clonal diversity may diminish the advantage of sexual reproduction \citep{lively1994selection, lively2010review, ashby2015diversity}.
 
 Some theoretical studies have departed from the classical population genetics framework to study effects of ecological and epidemiological structures on the Red Queen dynamics.
-A few studies suggested that incorporating more realistic ecological and epidemiological details may assist in supporting sexual reproduction in the host population \citep{lively2009maintenance, lively2010epidemiological}.
+A few studies suggested that incorporating more realistic ecological and epidemiological details may assist in supporting sexual reproduction in the host population \citep{lively2009maintenance, lively2010epidemiological} and maintaining coevolutionary cycle \citep{ashby2014parasitic}.
 In contrast to these findings, \cite{macpherson2018joint} showed that Red Queen dynamics (i.e., cycles in allele frequencies) fail to persist when explicit epidemiological structure is taken into account with coevolutionary dynamics.
-\swp{Transition}
+Given a wide range of assumptions that these eco-evolutionary models make, it may be difficult to understand how different ecological details of these models affect the overall maintenance of sexual reproduction;
+however, what is clear is that these details play important roles in shaping the coevolutionary dynamics \citep{song2015host, ashby2019understanding}.
 
 On the other hand, empirical studies have mostly focused on confirming predictions that stem from the Red Queen Hypothesis.
-Typical among them are local adaptation, time-lagged selection, and association between parasite prevalence and host reproductive mode (see \cite{tobler2008expanding} and \cite{vergara2014infection} for reviews).
+Typical among them are local adaptation, time-lagged selection, and association between parasite prevalence and host reproductive mode (\citep{tobler2008expanding, vergara2014infection}).\swp{proper citation}
 A key example is the snail population in New Zealand that serves as an intermediate hosts for trematodes \citep{winterbourn1974larval, mcarthur1976suppression}.
 Through a few decades of work, Lively \etal\ have demonstrated that the population satisfies necessary conditions for the host-parasite coevolutionary dynamics and provides support for the hypothesis (e.g., \cite{lively1987evidence, lively1989adaptation, dybdahl1995host, dybdahl1998host, jokela2009maintenance, vergara2014infection, gibson2016within}).
 While field studies provide only indirect evidence for the hypothesis, 
@@ -114,7 +115,6 @@ The data set collected by \cite{mckone2016fine} is extracted from their figure.
 \subsection{Model}
 
 \swp{TODO: read Lively 2018}
-\swp{TODO: also read \citep{schenk2019suicidal}}
 We model obligately sexual hosts competing with obligately asexual hosts in a metapopulation by extending the model introduced by \cite{lively2010epidemiological}.
 Our model is a discrete time susceptible-infected (SI) model with natural mortality and virulence (defined as reduction in offspring production among infected hosts).
 Metapopulation structure is included to model unobserved dynamics among different habitats; equivalently, each population can be considered as a sampling site.
@@ -215,7 +215,7 @@ where a $\delta_{ij}$ is a Kronecker delta ($\delta_{ij}$ equals 1 when $i = j$ 
 
 \subsection{Simulation design and parameterization}
 
-Many Red Queen models have focused on competition between a single asexual genotype and multiple sexual genotypes or have assumed equal genetic diversity between asexual and sexual hosts (see \citep{ashby2015diversity} for a review of previous Red Queen models) but neither of these assumptions is realistic. \swp{maybe cite Schenk et al}
+Many Red Queen models have focused on competition between a single asexual genotype and multiple sexual genotypes or have assumed equal genetic diversity between asexual and sexual hosts (see \citep{ashby2015diversity} for a review of previous Red Queen models) but neither of these assumptions is realistic.
 Instead, \cite{ashby2015diversity} adopted a more realistic approach by incorporating stochastic external migration of an asexual genotype to a population and allowing for asexual genetic diversity to vary over time.
 Here, we combine these methods.
 We allow for stochastic external migration of asexual hosts with different genotypes into the system but fix the number of asexual genotypes (denoted by $G_{\textrm{\tiny asex}}$) that can be present in the system. 
@@ -386,7 +386,6 @@ All univariate summary statistics are matched reasonably well, except for the me
 \label{fig:smcsumm}
 \end{figure}
 
-\swp{updated text and fig:}
 To further diagnose the fit, we compare the predicted relationships between the mean proportion of infected hosts and the mean proportion of sexual hosts across subpopulations with the observed data (\fref{ivs});
 % we consider infection prevalence and frequency of sexual hosts averaged over the last two generations to remain consistent with power analyses.
 Despite its accuracy in reproducing summary statistics reported by \cite{dagan2013clonal}, 
@@ -468,7 +467,7 @@ However, discrepancies between the model predictions and observed data suggest t
 A model that fits poorly can sometimes tell us more about a biological system than a model that fits well.
 Our model clearly failed to match the data presented by \cite{dagan2013clonal} (\fref{ivs}).
 The snail populations studied by \cite{dagan2013clonal} live in qualitatively different environments from two other snail populations that we considered \citep{vergara2014infection, mckone2016fine}.
-Their habitats are subject to seasonal flash floods, which can affect reproductive strategies of snails \citep{ben2007temporal} and interfere with the host-parasite coevolution \swp{CITE}.
+For example, their habitats are subject to seasonal flash floods, which can affect reproductive strategies of snails \citep{ben2007temporal} and interfere with the host-parasite coevolution \swp{CITE}.
 As a result, a positive correlation between infection prevalence and frequency of sexual reproduction could not be detected from the system even though our model (which does not incorporate disturbance) predicts high power.
 These results suggest that a significant correlation (or the lack of it) between infection prevalence and the frequency of sexual reproduction may not provide sufficient evidence for (or against) the role of parasites in maintaining sexual reproduction in the host population.
 
@@ -514,7 +513,7 @@ We thank SHARCnet for providing computational resources.
 
 \section{Funding}
 
-This work was supported by The Natural Sciences and Engineering Research Council, Undergraduate Student Research Award (to SWP).
+This work is supported by The Natural Sciences and Engineering Research Council, Undergraduate Student Research Award (to SWP).
 
 \bibliography{redqueen}
 
