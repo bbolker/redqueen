@@ -279,9 +279,9 @@ $V$ & Virulence & $\mathrm{Beta}(\alpha=6, \beta=2)$ & Assumption\\
 $\epsilon_{\textrm{\tiny mix}}$ & Mixing proportion & $\mathrm{Beta}(\alpha=1, \beta=9)$ & Assumption\\
 $G_{\textrm{\tiny asex}}-1$ & Number of asexual genotypes - 1 & $\mathrm{BetaBinomial}(N=9, p=3/9, \theta=5)$ & Assumption\\
 $c_b$ & Cost of sex scale & $\mathrm{LogNormal}(\mu=-0.07, \sigma=0.09)$ & \cite{gibson2017two}\\
-$s$ & Proportion of male offsprings produced & 0.5 & Assumption\\
-$b_U$ & Number of offsprings produced by an uninfected host & 20 & \cite{lively2010epidemiological}\\
-$b_I$ & Number of offsprings produced by an infected host & $(1-V) b_U$ & \cite{lively2010epidemiological}\\
+$s$ & Proportion of male offspring produced & 0.5 & Assumption\\
+$b_U$ & Number of offspring produced by an uninfected host & 20 & \cite{lively2010epidemiological}\\
+$b_I$ & Number of offspring produced by an infected host & $(1-V) b_U$ & \cite{lively2010epidemiological}\\
 $a_U$ & Density dependent effect coefficient of uninfected hosts & 0.001 & \cite{lively2010epidemiological}\\
 $a_U$ & Density dependent effect coefficient of infected hosts & 0.001 & \cite{lively2010epidemiological}\\
 $r_{\textrm{\tiny host}}$ & Host recombination probability & 0.2 & \cite{lively2010epidemiological}\\
@@ -408,16 +408,16 @@ For each population within a simulation, mean infection prevalence and mean prop
 Each point, consisting of mean infection prevalence and meal proportion of sexual hosts, is assigned the weight of the parameter used to simulated the population.
 The density at each cell is calculated as the sum of weights of the points that lie within it.
 Cell densities are normalized by dividing by the maximum grid densities for each fit.
-\swp{I tweaked color gradient schemes and plotted log relative densities. Need to clarify this?}
 Open triangles represent observed data; proportion of sexual hosts is computed from proportion of male hosts.
 }
 \label{fig:ivs}
 \end{figure}
 
-There is a high posterior density region (around 50\% infection prevalence) in which the proportion of infected hosts remains almost constant while the proportion of sexual hosts increases (visible in the fits to \cite{mckone2016fine} and \cite{vergara2014infection}). \swp{Appendix}
+There is a high posterior density region in which the proportion of infected hosts remains almost constant (around 0.5) among subpopulations while the proportion of sexual hosts can range from 0 to 0.3 (visible in the fits to \cite{mckone2016fine}).
 As transmission rate ($\beta$) increases, selection for sexual hosts increases but the increasing number of resistant offspring prevents further infection from occuring and can decrease overall infection prevalence.
-Such a trend is consistent with previous results of \cite{lively2001trematode} who noted that there is a region in which either sexual and asexual reproduction can be selected exclusively under same infection prevalence.
-The proportionf of sexual hosts decreases when infection prevalence is extremely high.
+This trend is consistent with previous results of \cite{lively2001trematode} who noted that there is a region in which either sexual and asexual reproduction can be selected exclusively under same infection prevalence.
+
+The proportionf of sexual hosts decreases when infection prevalence is extremely high (visible in the fits to \cite{vergara2014infection}).
 This pattern can be explained by the decrease in fitness of sexual hosts with increase in infection prevalence, predicted by \cite{ashby2015diversity}. 
 The same pattern can be found in an earlier work by \cite{lively2010epidemiological} although it was not discussed.
 
