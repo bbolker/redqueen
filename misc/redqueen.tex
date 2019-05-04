@@ -64,10 +64,10 @@ Some theoretical studies have departed from the classical population genetics fr
 A few studies suggested that incorporating more realistic ecological and epidemiological details may assist in supporting sexual reproduction in the host population \citep{lively2009maintenance, lively2010epidemiological} and maintaining coevolutionary cycle \citep{ashby2014parasitic}.
 In contrast to these findings, \cite{macpherson2018joint} showed that Red Queen dynamics (i.e., cycles in allele frequencies) fail to persist when explicit epidemiological structure is taken into account with coevolutionary dynamics.
 Given a wide range of assumptions that these eco-evolutionary models make, it may be difficult to understand how different ecological details of these models affect the overall maintenance of sexual reproduction;
-however, what is clear is that these details play important roles in shaping the coevolutionary dynamics \citep{song2015host, ashby2019understanding}.
+however, what is clear is that these details play important roles in shaping the coevolutionary dynamics \citep{song2015host, ashby2019understanding, haafke2016eco}.
 
 On the other hand, empirical studies have mostly focused on confirming predictions that stem from the Red Queen Hypothesis.
-Typical among them are local adaptation, time-lagged selection, and association between parasite prevalence and host reproductive mode (\citep{tobler2008expanding, vergara2014infection}).\swp{proper citation}
+Typical among them are rapid parasite evolution \citep{rauch2006one}, local adaptation \citep{lively1989adaptation, morran2014experimental, king2011coevolutionary, gibson2016within}, time-lagged selection \citep{buckling2002antagonistic, decaestecker2007host, koskella2009evidence, thrall2012rapid, koskella2013phage, koskella2014bacteria}, and association between parasite prevalence and host reproductive mode \citep{lively1992parthenogenesis, vergara2013geographic, verhoeven2013geographic}. 
 A key example is the snail population in New Zealand that serves as an intermediate hosts for trematodes \citep{winterbourn1974larval, mcarthur1976suppression}.
 Through a few decades of work, Lively \etal\ have demonstrated that the population satisfies necessary conditions for the host-parasite coevolutionary dynamics and provides support for the hypothesis (e.g., \cite{lively1987evidence, lively1989adaptation, dybdahl1995host, dybdahl1998host, jokela2009maintenance, vergara2014infection, gibson2016within}).
 While field studies provide only indirect evidence for the hypothesis, 
@@ -114,11 +114,10 @@ The data set collected by \cite{mckone2016fine} is extracted from their figure.
 
 \subsection{Model}
 
-\swp{TODO: read Lively 2018}
 We model obligately sexual hosts competing with obligately asexual hosts in a metapopulation by extending the model introduced by \cite{lively2010epidemiological}.
 Our model is a discrete time susceptible-infected (SI) model with natural mortality and virulence (defined as reduction in offspring production among infected hosts).
 Metapopulation structure is included to model unobserved dynamics among different habitats; equivalently, each population can be considered as a sampling site.
-A similar metapopulation model was developed by \cite{lively2017habitat} in order to study local adaptaion of parasites.
+A similar metapopulation model was developed by \cite{lively2018habitat} in order to study local adaptaion of parasites.
 
 We do not model the life history of snail-trematode interactions explicitly.
 Modeling interactions of multiple trematodes species, each of which go through a different life cycle, with a single snail species is extremly complicated.
@@ -263,7 +262,7 @@ Because ABC is a Bayesian method, we want to specify prior distributions for all
 We use weakly informative priors for all parameters that we estimate except $c_b$, a scale parameter for the cost of sex (see Table~\ref{tb:param} for prior distributions used and parameters assumed).
 The prior distribution for the scale parameter is chosen so that 95\% prior quantile of cost of sex (2/$c_b$) is approximately equal to the 95\% confidence interval reported by \cite{gibson2017two}.
 For brevity, all other parameters are assumed to be fixed.
-While it is a common practice to assume parameters of a Red Queen model \swp{CITE}, making strong parametric assumptions can lead to overly confident conclusions \citep{elderd2006uncertainty}.
+While it is a common practice to fix several parameters of a Red Queen model (e.g., \citep{lively2010epidemiological, ashby2015diversity, haafke2016eco, ashby2019understanding}), not explicitly accounting for uncertainty in parameters of a model can lead to overly confident conclusions \citep{elderd2006uncertainty}.
 
 \afterpage{
 \clearpage
@@ -306,12 +305,11 @@ All other parameters are fixed throughout simulations.
 \end{landscape}
 }
 
-% To allow for more efficient estimation of the posterior distribution, we use the Population Monte Carlo approach \citep{turner2012tutorial}.
-We start by performing basic ABC.
+We use the Population Monte Carlo approach \citep{turner2012tutorial}, which allows for sampling more efficiently while ensuring that final result still satisfies criteria to be a correct (approximate) Bayesian posterior.
+The Population Monte Carlo approach begins with a basic ABC.
 For each random parameter sample drawn from the prior distribution, the model is simulated and a sample of subpopulation is drawn from the simulated system, equal to the number of sites collected in a study.
 Then, summary statistics are calculated based on the last 100 generations out of 1100 generations; current parameter set is accepted if the distance between simulated and observed data is less than a specified tolerance value.
-Distance is measured by the sum of absolute differences in summary statistics between simulated and observed data. \swp{REF?}
-This process is repeated until 100 parameter sets are accepted.
+Distance is measured by the sum of absolute differences in summary statistics between simulated and observed data. This process is repeated until 100 parameter sets are accepted.
 
 After the first run ($t=1$), equal weights ($w_{i,1}=1/100$) are assigned to each accepted parameter set $\bm\theta_{i, 1}$, where $1 \leq i \leq 100$.
 a weighted random sample ($\bm\theta^\ast$) is drawn from the accepted parameters of the previous run ($t-1$) with weights $w_{i,t-1}$ and
@@ -326,16 +324,14 @@ w_{i,t} = \frac{\pi(\bm\theta_{i, t})}{\sum_{i=1}^{100} w_{j, t-1} q(\bm\theta_{
 $$
 where $\pi(\cdot)$ is a prior density and $q(\cdot | \bm\theta_{i,t}, \sigma_{t-1}^2)$ is a multivariate normal density with mean $\bm\theta_{i,t}$ and variance covariance matrix $\sigma_{t-1}^2$.
 For each run, 100 parameters are accepted and weights are normalized at the end to sum to 1.
-This method, known as the Population Monte Carlo approach \citep{turner2012tutorial}, allows for sampling more efficiently while ensuring that final result still satisfies criteria to be a correct (approximate) Bayesian posterior.
-\swp{Come back...}
 
-For each observed datum, we perform 4 runs with decreasing tolerance every run.
-For spatial data \citep{dagan2013clonal, mckone2016fine}, four summary statistics are compared: mean proportion of infected and sexually reproducing snails and CV in these proportions across populations.
-Tolerance values of 1.6, 0.8, 0.6 and 0.4 are used for each run.
-For spatiotemporal data \citep{vergara2014infection}, six summary statistics are compared: mean proportion of infected and sexually reproducing snails, CV in these proportions across populations and CV in these proportions across generations.
-Larger tolerance values (2.4, 1.2, 0.9 and 0.6) are used for each run to account for higher number of summary statistics being compared.
-Tolerance value of the final run is chosen so that a parameter set will be accepted if its each simulated summary statistic deviates from the corresponding observed summary statistic by 0.1 units on average.
+For each observed datum, we perform 4 runs with decreasing toleranc.
 First three tolerance values are chosen in a decreasing order to reach the final step quicker.
+Tolerance value of the final run is chosen so that a parameter set will be accepted if its each simulated summary statistic deviates from the corresponding observed summary statistic by 0.1 units on average.
+For spatial data \citep{dagan2013clonal, mckone2016fine}, four summary statistics are compared: mean proportion of infected and sexually reproducing hosts and CV in these proportions across populations.
+Tolerance values of 1.6, 0.8, 0.6 and 0.4 are used for each run.
+For spatiotemporal data \citep{vergara2014infection}, we additionally compare the CV of proportions infected and sexually reproducing hosts across generations.
+Larger tolerance values (2.4, 1.2, 0.9 and 0.6) are used for each run to account for higher number of summary statistics being compared.
 
 All statistical results are weighted by parameter weights of the final run; 
 confidence intervals are obtained by taking weighted quantiles. 
@@ -355,6 +351,11 @@ and mean proportion of hosts in each category is calculated by averaging over tw
 Independent multinomial samples of size $m$ are drawn from each selected population based on the proportions  in each four categories. 
 Correlation between proportion of infected hosts and proportion of sexual hosts is tested using the Spearman's rank correlation at a 5\% significance level.
 
+We caution that this procedure is essentially a post-hoc power analysis \citep{goodman1994use, senn2002power}.
+While this is not as bad as a \emph{direct} post-hoc analysis (i.e., we do not try to match observed correlations explicitly), 
+post-hoc power analyses based on observed effect sizes are likely to overestimate power.
+Given that \cite{mckone2016fine} already observed a significant correlation, our analysis is likely to estimate high power for the same population.
+
 \section{Results}
 
 First, we compare observed summary statistics with fitted and predicted summary statistics (\fref{smcsumm}).
@@ -372,7 +373,6 @@ The observed mean proportion of infected hosts are 0.175 \citep{dagan2013clonal}
 whereas their ABC-based estimates are 0.240 (95\% CI: 0.174 - 0.286), 0.313 (95\% CI: 0.233 - 0.404), and 0.542 (95\% CI: 0.360 - 0.730), respectively.
 The model underestimates mean proportion of sexual hosts for \cite{dagan2013clonal} and \cite{vergara2014infection}.
 Observed mean proportions of sexual hosts are 0.045 and 0.704, respectively, whereas their ABC-based estimates are 0.026 (95\% CI: 0.007 - 0.048) and 0.596 (95\% CI: 0.441 - 0.679).
-\swp{44.1\% is actually 2.82\% quantile rather than 2.5\%. Should I write a sentence about it? It feels just a little gratuitous, although I think it is better to be clear and honest.}
 
 \begin{figure}[!ht]
 \includegraphics[width=\textwidth]{../fig/smc_summary.pdf}
@@ -468,7 +468,7 @@ However, discrepancies between the model predictions and observed data suggest t
 A model that fits poorly can sometimes tell us more about a biological system than a model that fits well.
 Our model clearly failed to match the data presented by \cite{dagan2013clonal} (\fref{ivs}).
 The snail populations studied by \cite{dagan2013clonal} live in qualitatively different environments from two other snail populations that we considered \citep{vergara2014infection, mckone2016fine}.
-For example, their habitats are subject to seasonal flash floods, which can affect reproductive strategies of snails \citep{ben2007temporal} and interfere with the host-parasite coevolution \swp{CITE}.
+For example, their habitats are subject to seasonal flash floods \citep{ben2007temporal}, which can affect reproductive strategies of snails and interfere with the host-parasite coevolution \citep{lytle2000biotic, ben2007temporal}.
 As a result, a positive correlation between infection prevalence and frequency of sexual reproduction could not be detected from the system even though our model (which does not incorporate disturbance) predicts high power.
 These results suggest that a significant correlation (or the lack of it) between infection prevalence and the frequency of sexual reproduction may not provide sufficient evidence for (or against) the role of parasites in maintaining sexual reproduction in the host population.
 
