@@ -341,8 +341,6 @@ While this procedure results in a slightly narrower confidence interval, the rou
 
 \subsection{Power analysis}
 
-\bmb{This is a post hoc power analysis. Need to recognize/admit its limitations. Power strongly correlated with significant correlation in original study; not as bad as direct post hoc power analysis but...}
-
 Using estimated parameters for each data set, we calculate the power to detect a significant positive correlation between infection prevalence and frequency of sexual hosts.
 For each parameter sample from the final run of the ABC, 10 simulations are run.
 For each simulation, we take the last two generations -- assuming that a year contains two snail generations (estimated generation time is 4-9 months \citep{neiman2005variation}) -- from the simulation and choose $n$ populations at random from 40 simulated populations.
@@ -448,8 +446,7 @@ Overall, we predict that increasing number of sites is a more effective way to i
 
 While we originally planned to perform power analysis using Spearman's rank correlation,
 we repeated the analysis using Pearson's correlation after applying arcsine square root transformation \citep{lively1992parthenogenesis} to see whether this procedure improves power.
-Surprisingly, using Pearson correlation gives slightly higher power to detect the positive correlation bewteen frequency of sexual hosts and infection prevalence (see Appendix).
-\bmb{Not surprinsing; pearson has higher power if pattern is actually linear}
+Using Pearson correlation gives slightly higher power to detect the positive correlation bewteen frequency of sexual hosts and infection prevalence (see Appendix).
 
 \begin{figure}[!ht]
 \includegraphics[width=\textwidth]{../fig/power.pdf}

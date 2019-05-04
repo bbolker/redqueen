@@ -25,12 +25,12 @@ finallist <- vector('list', 3)
 for (k in 1:3) {
     load(paste0("../data/", files[k]))
     
-    dir <- "../powerdata/"
+    dir <- "../powerdata_lm/"
     
     powerlist <- vector('list', 10)
     
     for (i in 0:9) {
-        fn <- paste0("power_", names[k], "_", i, ".rda")
+        fn <- paste0("lm_power_", names[k], "_", i, ".rda")
         load(paste0(dir, fn))
         
         powerlist[[i+1]] <- reslist %>%
@@ -72,7 +72,7 @@ gpower <- ggplot(powersumm) +
     theme(
         strip.background = element_blank(),
         panel.spacing=grid::unit(0,"lines"),
-        legend.position=c(0.9, 0.73)
+        legend.position=c(0.22, 0.3)
     )
 
-if (save) ggsave("power.pdf", gpower, width=7, height=3.5)
+if (save) ggsave("power_lm.pdf", gpower, width=7, height=3.5)

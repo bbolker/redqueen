@@ -102,7 +102,7 @@ observed_name <- c(
     expression(McKone~italic(et ~ al.)~"(2016)"),
     expression(Lively~and~Jokela~"(2002)"),
     expression(Kumpulainen~italic(et~al.)~"(2004)"),
-    expression(King~italic(et~al.)~"(2011)")
+    expression(King~italic(et~al.)~"(2011)"),
     expression(Vergara~italic(et~al.)~"(2013)"),
     expression(Gibson~italic(et~al.)~"(2016)")
 )
@@ -152,11 +152,11 @@ geff <- ggplot(total) +
     coord_flip() +
     geom_hline(yintercept=0, lty=2) +
     scale_fill_discrete(guide=FALSE) +
-    scale_x_discrete("study", labels=level) +
-    scale_y_continuous("correlation coefficient") +
+    scale_x_discrete("Study", labels=level) +
+    scale_y_continuous("Correlation coefficient") +
     scale_shape_manual(values=c(1, 2), label=c("Pearson", "Spearman", "")) +
     theme(
         legend.title = element_blank()
     )
 
-if (save) ggsave("effect_size.pdf", geff, width=8, height=6)
+if (save) ggsave("effect_size.pdf", geff, width=6, height=4)

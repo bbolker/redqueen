@@ -51,10 +51,10 @@ gg_summary_df <- slist %>%
     bind_rows(.id="fit") %>%
     as.tbl %>%
     gather(key, value, -sim, -param, -fit, -weight) %>%
-    mutate(gvar=ifelse(grepl("pinf", key), "proportion~infected", "proportion~sexual")) %>%
+    mutate(gvar=ifelse(grepl("pinf", key), "Proportion~infected", "Proportion~sexual")) %>%
     mutate(key=factor(key,
                       levels=c("pinf.mean", "pinf.siteCV", "pinf.timeCV", "psex.mean", "psex.siteCV", "psex.timeCV"),
-                      labels=rep(c("mean", "CV~across~populations", "CV~across~generations"),2))) %>%
+                      labels=rep(c("Mean", "CV~across~populations", "CV~across~generations"),2))) %>%
     filter(!(fit!=as.character(data_name[3]) & key=="CV~across~generations")) %>%
     mutate(weight=weight/1000)
 
@@ -71,18 +71,18 @@ summ_df <- comb_summ  %>%
     lapply(gather) %>%
     bind_rows(.id="fit") %>%
     mutate(fit=factor(fit, labels=data_name)) %>%
-    mutate(gvar=ifelse(grepl("pinf", key), "proportion~infected", "proportion~sexual")) %>%
+    mutate(gvar=ifelse(grepl("pinf", key), "Proportion~infected", "Proportion~sexual")) %>%
     mutate(key=factor(key,
                       levels=c("pinf.mean", "pinf.siteCV", "pinf.timeCV", "psex.mean", "psex.siteCV", "psex.timeCV"),
-                      labels=rep(c("mean", "CV~across~populations", "CV~across~generations"),2)))
+                      labels=rep(c("Mean", "CV~across~populations", "CV~across~generations"),2)))
 
 gg_accepted <- accepted_df %>%
     filter(run==4, !is.na(value)) %>%
     mutate(fit=factor(fit, labels=data_name)) %>%
-    mutate(gvar=ifelse(grepl("pinf", key), "proportion~infected", "proportion~sexual")) %>%
+    mutate(gvar=ifelse(grepl("pinf", key), "Proportion~infected", "Proportion~sexual")) %>%
     mutate(key=factor(key,
                       levels=c("pinf.mean", "pinf.siteCV", "pinf.timeCV", "psex.mean", "psex.siteCV", "psex.timeCV"),
-                      labels=rep(c("mean", "CV~across~populations", "CV~across~generations"),2)))
+                      labels=rep(c("Mean", "CV~across~populations", "CV~across~generations"),2)))
 
 gg_smc_summ <- ggplot(gg_summary_quant, aes(fit)) +
     geom_errorbar(aes(ymin=lwr, ymax=upr), width=0.1) +
@@ -105,9 +105,8 @@ if (save) ggsave("smc_summary.pdf", gg_smc_summ, width=6, height=6)
 
 gg_accepted %>%
     group_by(fit, key, gvar) %>%
-    filter(key %in% c("mean")) %>%
+    filter(key %in% c("Mean")) %>%
     summarize(mean=weighted.mean(value, weight=weight),
               lwr=wquant(value, weight=weight, 0.025),
               min=min(value),
               upr=wquant(value, weight=weight, 0.975))
-
