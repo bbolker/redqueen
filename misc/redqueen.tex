@@ -249,10 +249,6 @@ Simulation runs for 500 generations without introduction of asexuals. At generat
 
 \subsection{Approximate Bayesian Computation}
 
-\bmb{More on probe matching; Kendall et al.?}
-\swp{Not clear what you're looking for...}
-\swp{TODO: come back again... skipping to results for now}
-
 We use Approximate Bayesian Computation (ABC) to estimate parameters from data \citep{toni2009approximate}.
 ABC relies on comparing summary statistics of observed data and those of simulated data and is particularly useful when the exact likelihood function is not available.
 We consider mean proportion of infected and sexually reproducing snails in the system and variation in these proportions -- measured by coefficient of variation (CV) -- across space (population) and time as our focal summary statistics.
@@ -266,9 +262,8 @@ For purely spatial data (\cite{dagan2013clonal} and \cite{mckone2016fine}), CV a
 Because ABC is a Bayesian method, we want to specify prior distributions for all parameters.
 We use weakly informative priors for all parameters that we estimate except $c_b$, a scale parameter for the cost of sex (see Table~\ref{tb:param} for prior distributions used and parameters assumed).
 The prior distribution for the scale parameter is chosen so that 95\% prior quantile of cost of sex (2/$c_b$) is approximately equal to the 95\% confidence interval reported by \cite{gibson2017two}.
-All other parameters are assumed to be fixed.
-
-
+For brevity, all other parameters are assumed to be fixed.
+While it is a common practice to assume parameters of a Red Queen model \swp{CITE}, making strong parametric assumptions can lead to overly confident conclusions \citep{elderd2006uncertainty}.
 
 \afterpage{
 \clearpage
@@ -313,14 +308,14 @@ All other parameters are fixed throughout simulations.
 
 % To allow for more efficient estimation of the posterior distribution, we use the Population Monte Carlo approach \citep{turner2012tutorial}.
 We start by performing basic ABC.
-For each random parameter sample drawn from the prior distribution, the model is simulated and a sample of simulated populations is drawn from the simulated system such that the number of sampled population is equal to the number of sites collected in a study.
-Then, summary statistics are calculated based on the last 100 generations out of 1100 generations and the parameter is accepted if the distance between simulated and observed data is less than a tolerance value.
-Distance is measured by the sum of absolute differences in summary statistics between simulated and observed data.
+For each random parameter sample drawn from the prior distribution, the model is simulated and a sample of subpopulation is drawn from the simulated system, equal to the number of sites collected in a study.
+Then, summary statistics are calculated based on the last 100 generations out of 1100 generations; current parameter set is accepted if the distance between simulated and observed data is less than a specified tolerance value.
+Distance is measured by the sum of absolute differences in summary statistics between simulated and observed data. \swp{REF?}
 This process is repeated until 100 parameter sets are accepted.
 
 After the first run ($t=1$), equal weights ($w_{i,1}=1/100$) are assigned to each accepted parameter set $\bm\theta_{i, 1}$, where $1 \leq i \leq 100$.
-For any run $t > 1$,
 a weighted random sample ($\bm\theta^\ast$) is drawn from the accepted parameters of the previous run ($t-1$) with weights $w_{i,t-1}$ and
+For any run $t > 1$,
 a parameter sample ($\bm\theta_{i, t}$) is proposed from a multivariate normal distribution with a mean $\bm\theta^\ast$ and a variance covariance matrix that is equal to $\sigma_{t-1}^2=2 \mathrm{Var}(\bm\theta_{1:N, t-1})$, where $\mathrm{Var}(\bm\theta_{1:N, t-1})$ is the weighted variance covariance matrix of the accepted parameters from the previous run.
 $N$ is the total number of accepted parameters from the previous run.
 
@@ -332,7 +327,7 @@ $$
 where $\pi(\cdot)$ is a prior density and $q(\cdot | \bm\theta_{i,t}, \sigma_{t-1}^2)$ is a multivariate normal density with mean $\bm\theta_{i,t}$ and variance covariance matrix $\sigma_{t-1}^2$.
 For each run, 100 parameters are accepted and weights are normalized at the end to sum to 1.
 This method, known as the Population Monte Carlo approach \citep{turner2012tutorial}, allows for sampling more efficiently while ensuring that final result still satisfies criteria to be a correct (approximate) Bayesian posterior.
-All statistical results reported are weighted by parameter weights of the final run.
+\swp{Come back...}
 
 For each observed datum, we perform 4 runs with decreasing tolerance every run.
 For spatial data \citep{dagan2013clonal, mckone2016fine}, four summary statistics are compared: mean proportion of infected and sexually reproducing snails and CV in these proportions across populations.
@@ -342,13 +337,19 @@ Larger tolerance values (2.4, 1.2, 0.9 and 0.6) are used for each run to account
 Tolerance value of the final run is chosen so that a parameter set will be accepted if its each simulated summary statistic deviates from the corresponding observed summary statistic by 0.1 units on average.
 First three tolerance values are chosen in a decreasing order to reach the final step quicker.
 
+All statistical results are weighted by parameter weights of the final run; 
+confidence intervals are obtained by taking weighted quantiles. 
+However, it is always not possible to obtain the exact 95\% confidence interval when the smallest (or the largest) value has a weight greater than 0.025. 
+In these cases, we take the lowest (or largest) possible quantile that is closest to the 2.5\% (or the 97.5\%) quantile.
+While this procedure results in a slightly narrower confidence interval, the rounding errors in quantiles are negligible (for example, we use the 2.82\% quantile instead of the 2.5\% quantile as the lower end of a confidence interval).
+
 \subsection{Power analysis}
 
 \bmb{This is a post hoc power analysis. Need to recognize/admit its limitations. Power strongly correlated with significant correlation in original study; not as bad as direct post hoc power analysis but...}
 
 Using estimated parameters for each data set, we calculate the power to detect a significant positive correlation between infection prevalence and frequency of sexual hosts.
 For each parameter sample from the final run of the ABC, 10 simulations are run.
-For each simulation, we take the last two generations -- assuming that a year contains two snail generations [CITE] -- from the simulation and choose $n$ populations at random from 40 simulated populations.
+For each simulation, we take the last two generations -- assuming that a year contains two snail generations (estimated generation time is 4-9 months \citep{neiman2005variation}) -- from the simulation and choose $n$ populations at random from 40 simulated populations.
 For each selected population, hosts are divided into four categories based on their infection status (infected/uninfected) and reproductive mode (asexual/sexual),
 and mean proportion of hosts in each category is calculated by averaging over two generations.
 Independent multinomial samples of size $m$ are drawn from each selected population based on the proportions  in each four categories. 
@@ -446,7 +447,7 @@ On the other hand, our model predicts low power for detecting the positive corre
 Overall, we predict that increasing number of sites is a more effective way to increase power than increasing number of samples per site.
 
 While we originally planned to perform power analysis using Spearman's rank correlation,
-we repeated the analysis using Pearson's correlation after applying arcsine square root transformation [CITE] to see whether this procedure improves power.
+we repeated the analysis using Pearson's correlation after applying arcsine square root transformation \citep{lively1992parthenogenesis} to see whether this procedure improves power.
 Surprisingly, using Pearson correlation gives slightly higher power to detect the positive correlation bewteen frequency of sexual hosts and infection prevalence (see Appendix).
 \bmb{Not surprinsing; pearson has higher power if pattern is actually linear}
 
