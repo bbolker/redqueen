@@ -367,16 +367,16 @@ Given that \cite{mckone2016fine} already observed a significant correlation, our
 
 \section{Results}
 
-First, we compare observed summary statistics with fitted and predicted summary statistics (\fref{smcsumm}).
-Fitted summary statistics are those that are accepted via ABC;
+First, we compare observed summary statistics with either fitted or predicted summary statistics (\fref{smcsumm}).
+\emph{Fitted} (filtered) summary statistics (\fref{smcsumm}) are values that have been accepted by the ABC procedure as being sufficiently close to observed summary statistics;
 these can be interpreted as model-based estimates of the summary statistics (and associated confidence intervals) of the study sites.
-Predicted summary statistics are obtained by simulating the model again using the estimated parameters and calculating summary statistics from randomly selected subpopulations;
-these values represent summary statistics that could have been obtained if other sites were chosen for the study.
-The predicted summary statistics are highly variable because they account for uncertainty in the unobserved subpopulations. \swp{??}
+\emph{Predicted} (unfiltered) summary statistics, in contrast (\fref{ivs}), use parameters from the posterior distribution sampled by ABC, but generate new simulations of the dynamics and calculate summary statistics from randomly selected subpopulations.
+These values represent summary statistics sampled from the full distribution of coevolutionary dynamics that are consistent with the observed dynamics; they represent the expected range of dynamics from randomly sampled host-parasite metapopulations with a given distribution of parameters.
+Because they include an additional level of dynamical variability, the predicted summary statistics range much more widely than the fitted summary statistics.
 
 Our simple meta-population Red Queen model can capture observed variation in infection prevalence and frequency of sexual hosts reasonably well;
 both temporal and spatial variation (measured by CV across mean proportions) are well-matched by the model. 
-However, as model fitting is performed by minimizing the sum of absoute distance between observed and simulated summary statistics, our method does not gurantee that all summary statistics are equally well-fitted.
+However, as model fitting is performed by minimizing the sum of absolute distance between observed and simulated summary statistics, our method does not guarantee that all summary statistics are equally well-fitted.
 The model tends to overestimate mean proportion of infected hosts.
 The observed mean proportions of infected hosts are 0.175 \citep{dagan2013clonal}, 0.051 \citep{mckone2016fine}, and 0.440 \citep{vergara2014infection}, 
 whereas their ABC-based estimates are 0.240 (95\% CI: 0.174 - 0.286), 0.313 (95\% CI: 0.233 - 0.404), and 0.542 (95\% CI: 0.360 - 0.730), respectively.
