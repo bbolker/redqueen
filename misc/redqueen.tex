@@ -47,9 +47,7 @@ Despite being the dominant mode of reproduction in multicellular organisms \cite
 The most commonly mentioned is the cost of producing males \citep{smith1978evolution}:
 as males cannot produce offspring, asexual lineages are expected to outgrow their sexual counterparts.
 This \emph{two-fold cost of sex} \citep{smith1978evolution} relies on the assumption that everything else is equal.
-Then, what else is not equal and drives the sex to persist?
-\swp{??}
-\bmb{awkward}
+Then, what drives the observed prevalence of sexual reproduction?
 
 One explanation for the persistence of sexual reproduction is the Red Queen Hypothesis (RQH) \citep{bell1982masterpiece}.
 The RQH predicts that sexually reproducing hosts overcome the cost of sex under strong parasitic pressure by producing genetically diverse offspring that can escape infection \citep{jbs1949disease, jaenike1978hypothesis, hamilton1980sex, hamilton1990sexual}.
@@ -74,9 +72,7 @@ Typical among them are rapid parasite evolution \citep{rauch2006one}, local adap
 A key example is the snail population in New Zealand that serves as an intermediate hosts for trematodes \citep{winterbourn1974larval, mcarthur1976suppression}.
 Through decades of work, Lively \etal\ have demonstrated that the population satisfies necessary conditions for the host-parasite coevolutionary dynamics and provides support for the hypothesis (e.g., \cite{lively1987evidence, lively1989adaptation, dybdahl1995host, dybdahl1998host, jokela2009maintenance, vergara2014infection, gibson2016within}).
 While field studies provide only indirect evidence for the hypothesis, 
-recent studies show that more direct evidence can be achieved using experimental systems \citep{auld2016sex, slowinski2016coevolutionary}.
-\swp{??}
-\bmb{turn around}
+experimental systems can be used to achieve more direct evidence \citep{auld2016sex, slowinski2016coevolutionary}.
 
 Even though the Red Queen Hypothesis has gained both theoretical and empirical support, there still remains a gap between theory and data.
 Many theoretical models rely on simplifying assumptions that are not applicable to natural populations and make indirect connections to empirical studies.
@@ -232,9 +228,7 @@ We allow for stochastic external migration of asexual hosts with different genot
 Since sexual hosts have limited genetic diversity in our model (diploid hosts with two biallelic loci yields a total of 10 genotypes), allowing for unlimited migration of asexual hosts will cause the sexual population to be easily outcompeted by the asexual population.
 Limiting asexual genetic diversity allows us to account for the intrinsic difference in sexual and asexual diversity and make a compromise between simple and realistic models.
 At the beginning of each simulation, a pool of $G_{\textrm{\tiny asex}}$ asexual genotypes are sampled at random from the entire genotypic space; these are the genotypes that are available for external immigration into subpopulations.
-Then, we use our model-based comparison with data to estimate $G_{\textrm{\tiny asex}}$ to test whether greater asexual genetic diversity can be supported than the typically assumed one-to-many ratio.
-\swp{??}
-\bmb{whether the data are consistent with more than a single asexual clone}
+Then, we use our model-based comparison with data to estimate $G_{\textrm{\tiny asex}}$ to test whether the data are consistent with the dynamics of a model that allows for more than a single asexual clone.
 
 To account for differing number of sexual and asexual genotypes, we let 
 \begin{equation}
@@ -361,11 +355,13 @@ and mean proportion of hosts in each category is calculated by averaging over tw
 Independent multinomial samples of size $m$ are drawn from each selected population based on the proportions  in each four categories. 
 Correlation between proportion of infected hosts and proportion of sexual hosts is tested using the Spearman's rank correlation at a 5\% significance level.
 
-\bmb{explain more.}
-We caution that this procedure is essentially a post-hoc power analysis \citep{goodman1994use, senn2002power}.
-While this is not as bad as a \emph{direct} post-hoc analysis (i.e., we do not try to match observed correlations explicitly), 
-post-hoc power analyses based on observed effect sizes are likely to overestimate power.
-Given that \cite{mckone2016fine} already observed a significant correlation, our analysis is likely to estimate high power for the same population.
+While we do not explicitly try to match observed correlations, this procedure is essentially a retrospective power analysis.
+The main purpose of a power analysis is to design an experiment and determine an appropriate sample size \citep{cohen1992statistical}.
+If instead, power is calculated based on an observed effect size after an experiment, the estimated power is likely to be correlated with the observed significance of the result;
+therefore, interpreting significance (or a lack of significance) of a statistical result based on a retrospective power analysis is inappropriate \citep{goodman1994use, senn2002power}.
+
+Here, we do not try to justify the significant correlation observed by \citep{mckone2016fine} or the nonsignificant correlation observed by \citep{dagan2013clonal} based on this power analysis. 
+Instead, we perform a power analysis to better understand how a study design or the dynamics of the model might affect the correlation between the prevalence of infection and sexual reproduction while using biologically realistic parameters.
 
 \section{Results}
 
@@ -456,9 +452,13 @@ $G_{\tiny \textrm{asex}}$ is a discrete variable but is drawn on a continuous sc
 Finally, our power analyses suggest that there is high power to detect a positive correlation between infection prevalence and frequency of sexual hosts in the systems studied by \cite{dagan2013clonal} and \cite{mckone2016fine} (\fref{power}).
 Such high power predicted for \cite{dagan2013clonal} is particularly surprising given that they were not able to observe the expected correlation.
 This discrepancy implies that the snail populations studied by \cite{dagan2013clonal} show sufficient variation in infection prevalence in order for the correlation to be observed under pure Red queen selection, but other underlying factors that are neglected by our model may have caused the populations to deviate from their expected behaviours.
-On the other hand, our model predicts low power for detecting the positive correlation for the system studied by \cite{vergara2014infection} (\fref{smcparam}).
-Overall, we predict that increasing the number of sites is a more effective way to increase power than increasing number of samples per site.
-\bmb{Maybe comment on this}
+On the other hand, our model predicts low power for detecting the positive correlation for the system studied by \cite{vergara2014infection} (\fref{power}).
+
+Overall, our analysis suggests that increasing the number of study sites is a more effective way to increase power than increasing the number of samples per site (\fref{power}).
+The correlation between the proportion of infected and sexual hosts depends on the spatial distribution of parasite infection; 
+increasing the number of sites can better capture this distribution and increase the power to observe the correlation.
+On the other hand, collecting more samples from a site only gives us a more accurate estimate of the two proportions for that specific site; it does not tell us how these proportions are distributed across space.
+As a result, the power quickly saturates after we have a sufficient number of samples ($> 100$) to estimate the two proportions reliably at each site.
 
 While we originally planned to perform power analysis using Spearman's rank correlation,
 we repeated the analysis using Pearson's correlation after applying arcsine square root transformation \citep{lively1992parthenogenesis} to see whether this procedure improves power.
@@ -502,7 +502,7 @@ low-risk populations will be dominated by asexual individuals whereas high-risk 
 \cite{lively2001trematode} gave a similar explanation and predicted that large variation in the risk of infection is required to observe the predicted correlation.
 
 The similarity between the correlations predicted by the model and the correlations observed in nature may be interpreted as providing more confidence that the observed populations provide evidence for the Red Queen Hypothesis (\fref{effect}).
-However, the strength of correlation does not provide any evidence for the strength of selection imposed on the host population. \swp{??} \bmb{not a direct measure of }
+However, the strength of correlation is not a direct measure of the strength of selection imposed on the host population.
 Moreover, when populations are actively coevolving, wide range of correlations can be detected (\fref{effect}: \cite{vergara2014infection}).
 While simple statistical summaries, such as a correlation coefficient, are easily accessible,
 more sophisticated and mechanistic statistical models that yield biologically interpretable parameters may be better suited for understanding the effect of parasites on the maintenance of sexual reproduction in the host population.
