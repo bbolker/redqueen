@@ -121,6 +121,11 @@ dagan <- dagan %>%
     rename(pinf=Infected) %>%
     dplyr::select(pinf, psex)
 
+cor(vergara_obs$pinf, vergara_obs$psex, method="spearman")
+cor(asin(sqrt(vergara_obs$pinf)), vergara_obs$psex)
+cor(dagan$pinf, dagan$psex, method="spearman")
+cor(asin(sqrt(dagan$pinf)), asin(sqrt(dagan$psex)))
+
 aggr <- list(mckone=mckone, dagan=dagan, vergara=vergara) %>%
     bind_rows(.id="fit") %>%
     mutate(fit=factor(fit, labels=data_name), sim=NA) 
@@ -130,8 +135,8 @@ gg_df <- slist %>%
 
 gg_density <- gg_df %>%
     mutate(
-        xregion=floor(infected/0.025)*0.025,
-        yregion=floor(sexual/0.025)*0.025
+        xregion=floor(infected/0.05)*0.05,
+        yregion=floor(sexual/0.05)*0.05
     ) %>%
     group_by(fit, xregion, yregion) %>%
     summarize(density=sum(weight)) %>%
@@ -141,10 +146,12 @@ gg_density <- gg_df %>%
 gsim <- ggplot(gg_density) +
     geom_raster(aes(xregion, yregion, fill=reldensity), hjust = 0, vjust = 0) +
     geom_point(data=aggr,aes(pinf, psex), pch=2, size=2.5, col="black") +
+    geom_contour(aes(xregion, yregion, z=reldensity), breaks=-4, col="black", 
+                 lty=2) +
     facet_wrap(~fit) +
     scale_x_continuous("Proportion infected", limits=c(0, 1), breaks=seq(0,1,0.2), expand=c(0, 0.07)) +
     scale_y_continuous("Proportion sexual", limits=c(-0, 1), expand=c(0, 0.02)) +
-    scale_fill_gradient2(name="log(density)", low="white", mid="#c5c5e8", high="darkred", midpoint=-5.5) +
+    scale_fill_gradient2(name="log(density)", low="white", mid="#c5c5e8", high="darkred", midpoint=-5) +
     scale_alpha_continuous(guide=FALSE) +
     scale_linetype("probability") +
     facet_wrap(~fit, labeller = label_parsed) +

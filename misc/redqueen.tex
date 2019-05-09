@@ -283,7 +283,7 @@ $\beta_{\textrm{\tiny mean}}$ & Mean transmission rate & $\mathrm{Gamma}(k=2, \t
 $\beta_{\textrm{\tiny CV}}$ & CV transmission rate & $\mathrm{Gamma}(k=2, \theta=0.5)$ & Assumption\\
 $V$ & Virulence & $\mathrm{Beta}(\alpha=6, \beta=2)$ & Assumption\\
 $\epsilon_{\textrm{\tiny mix}}$ & Mixing proportion & $\mathrm{Beta}(\alpha=1, \beta=9)$ & Assumption\\
-$G_{\textrm{\tiny asex}}$ & Number of asexual genotypes - 1 & $1 + \mathrm{BetaBinomial}(N=9, p=3/9, \theta=5)$ & Assumption\\
+$G_{\textrm{\tiny asex}}$ & Number of asexual genotypes & $1 + \mathrm{BetaBinomial}(N=9, p=3/9, \theta=5)$ & Assumption\\
 $c_b$ & Cost of sex scale & $\mathrm{LogNormal}(\mu=-0.07, \sigma=0.09)$ & \cite{gibson2017two}\\
 $s$ & Proportion of male offspring produced & 0.5 & Assumption\\
 $b_U$ & Number of offspring produced by an uninfected host & 20 & \cite{lively2010epidemiological}\\
@@ -302,8 +302,7 @@ Parameters with prior distributions are estimated via Approximate Bayesian Compu
 Parameters $k$ and $\theta$ in Gamma distribution represent shape and scale parameters where mean and squared CV are given by $k \theta$ and $1/k$, respectively.
 $\alpha$ and $\beta$ in Beta distribution represent shape parameters where mean and squared CV are given by $\alpha/(\alpha+\beta)$ and $\beta/(\alpha^2 + \alpha \beta + \alpha)$.
 $N$, $p$ and $\theta$ in Beta binomial distributions represent number of trials, probability of success, and overdispersion parameters \citep{morris1983natural}.
-We define prior on $G_{\textrm{\tiny asex}} -1$ instead to always maintain at least one asexual genotype in the system.
-$\mu$ and $\sigma$ in log-normal distribution represent mean and standard deviation on a log scale.
+Parameters $\mu$ and $\sigma$ in a log-normal distribution represent mean and standard deviation on a log scale.
 All other parameters are fixed throughout simulations.
 }
 \label{tb:param}
@@ -389,7 +388,7 @@ Violin plots show weighted distribution of fitted summary statistics (i.e., summ
 Error bars show 95\% weighted quantiles of predicted summary statistics.
 The weights correspond to the posterior distribution weights from ABC.
 For each posterior sample, 10 simulations are run and each simulated system is sampled at random 100 times so that each sample consists of the same number of populations as in the fitted data.
-All univariate summary statistics are matched reasonably well, except for the mean proportion of infected hosts in \cite{mckone2016fine}. \swp{??}
+All univariate summary statistics are matched reasonably well, except for the mean proportion of infected hosts in \cite{mckone2016fine} (indicated by an asterisk). 
 }
 \label{fig:smcsumm}
 \end{figure}
@@ -415,8 +414,8 @@ For each population within a simulation, mean infection prevalence and mean prop
 Each point, consisting of mean infection prevalence and meal proportion of sexual hosts, is assigned the weight of the parameter used to simulated the population.
 The density at each cell is calculated as the sum of weights of the points that lie within it.
 Cell densities are normalized by dividing by the maximum grid densities for each fit.
+Dashed contours are calculated at $\log(\textrm{density}) = -4$.
 Open triangles represent observed data; proportion of sexual hosts is computed by doubling proportion of male hosts.
-\bmb{contour}
 }
 \label{fig:ivs}
 \end{figure}
@@ -441,10 +440,11 @@ Under their interpretation, our estimate of $c_b$ corresponds to a slightly lowe
 \begin{figure}[!ht]
 \includegraphics[width=\textwidth]{../fig/posterior.pdf}
 \caption{{\bf Parameter estimates from Sequential Monte Carlo Approximate Bayesian Computation.}
+We estimate mean transmission rate ($\beta_{\textrm{\tiny mean}}$), CV in transmission rate ($\beta_{\textrm{\tiny CV}}$), virulence ($V$), mixing proportion ($\epsilon_{\textrm{\tiny mean}}$), number of asexual genotypes ($G_{\textrm{\tiny asex}}$), and a scale parameter for cost of sex ($c_b$).
 Violin plots represent weighted distribution of 100 posterior samples obtained from ABC.
 Violin plots for prior distribution is obtained by drawing 10000 random parameter samples from the prior distribution.
 $G_{\tiny \textrm{asex}}$ is a discrete variable but is drawn on a continuous scale for convenience.
-\bmb{English parameter descriptions}
+See Table~\ref{tb:param} for full parameter descriptions and their prior distributions.
 }
 \label{fig:smcparam}
 \end{figure}
@@ -458,7 +458,7 @@ Overall, our analysis suggests that increasing the number of study sites is a mo
 The correlation between the proportion of infected and sexual hosts depends on the spatial distribution of parasite infection; 
 increasing the number of sites can better capture this distribution and increase the power to observe the correlation.
 On the other hand, collecting more samples from a site only gives us a more accurate estimate of the two proportions for that specific site; it does not tell us how these proportions are distributed across space.
-As a result, the power quickly saturates after we have a sufficient number of samples ($> 100$) to estimate the two proportions reliably at each site.
+As a result, the power quickly saturates once we have a sufficient number of samples ($> 100$) to estimate the two proportions reliably at each site.
 
 While we originally planned to perform power analysis using Spearman's rank correlation,
 we repeated the analysis using Pearson's correlation after applying arcsine square root transformation \citep{lively1992parthenogenesis} to see whether this procedure improves power.
@@ -501,7 +501,7 @@ In particular, the positive correlation represents a contrast between population
 low-risk populations will be dominated by asexual individuals whereas high-risk populations will consist of both sexual and asexual individuals.
 \cite{lively2001trematode} gave a similar explanation and predicted that large variation in the risk of infection is required to observe the predicted correlation.
 
-The similarity between the correlations predicted by the model and the correlations observed in nature may be interpreted as providing more confidence that the observed populations provide evidence for the Red Queen Hypothesis (\fref{effect}).
+The similarity between the correlations predicted by the model and the correlations observed in nature may provide us more confidence that the observed populations provide evidence for the Red Queen Hypothesis (\fref{effect}).
 However, the strength of correlation is not a direct measure of the strength of selection imposed on the host population.
 Moreover, when populations are actively coevolving, wide range of correlations can be detected (\fref{effect}: \cite{vergara2014infection}).
 While simple statistical summaries, such as a correlation coefficient, are easily accessible,
@@ -510,9 +510,10 @@ more sophisticated and mechanistic statistical models that yield biologically in
 \begin{figure}[!ht]
 \includegraphics[width=\textwidth]{../fig/effect_size.pdf}
 \caption{{\bf Predicted vs. observed correlation between infection prevalence and frequency of sexual hosts.}
-Violin plots show weighted distribution of predicted strength of correlation based on ABC fits. \bmb{missing points}
+Violin plots show weighted distribution of predicted strength of correlation based on ABC fits.
 Predicted correlation was measured for each simulation from the posterior by taking into account the last two generations from each simulated population.
-Triangles and circles represent observed correlation sizes from previous studies that found positive correlation.
+Triangles and circles represent observed correlation sizes from previous studies.
+\cite{dagan2013clonal} and \cite{vergara2014infection} do not report the size of the correlation; correlations are re-calculated from their data sets using both Pearson (after applying arcsine square root transformation) and Spearman correlations.
 }
 \label{fig:effect}
 \end{figure}
