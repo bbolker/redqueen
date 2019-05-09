@@ -49,6 +49,7 @@ as males cannot produce offspring, asexual lineages are expected to outgrow thei
 This \emph{two-fold cost of sex} \citep{smith1978evolution} relies on the assumption that everything else is equal.
 Then, what else is not equal and drives the sex to persist?
 \swp{??}
+\bmb{not awkward}
 
 One explanation for the persistence of sexual reproduction is the Red Queen Hypothesis (RQH) \citep{bell1982masterpiece}.
 The RQH predicts that sexually reproducing hosts overcome the cost of sex under strong parasitic pressure by producing genetically diverse offspring that can escape infection \citep{jbs1949disease, jaenike1978hypothesis, hamilton1980sex, hamilton1990sexual}.
@@ -75,6 +76,7 @@ Through decades of work, Lively \etal\ have demonstrated that the population sat
 While field studies provide only indirect evidence for the hypothesis, 
 recent studies show that more direct evidence can be achieved using experimental systems \citep{auld2016sex, slowinski2016coevolutionary}.
 \swp{??}
+\bmb{turn around}
 
 Even though the Red Queen Hypothesis has gained both theoretical and empirical support, there still remains a gap between theory and data.
 Many theoretical models rely on simplifying assumptions that are not applicable to natural populations and make indirect connections to empirical studies.
@@ -232,6 +234,7 @@ Limiting asexual genetic diversity allows us to account for the intrinsic differ
 At the beginning of each simulation, a pool of $G_{\textrm{\tiny asex}}$ asexual genotypes are sampled at random from the entire genotypic space; these are the genotypes that are available for external immigration into subpopulations.
 Then, we use our model-based comparison with data to estimate $G_{\textrm{\tiny asex}}$ to test whether greater asexual genetic diversity can be supported than the typically assumed one-to-many ratio.
 \swp{??}
+\bmb{whether the data are consistent with more than a single asexual clone}
 
 To account for differing number of sexual and asexual genotypes, we let 
 \begin{equation}
@@ -319,13 +322,11 @@ The Population Monte Carlo approach begins with a basic ABC.
 For each random parameter sample drawn from the prior distribution, the model is simulated and a sample of subpopulation is drawn from the simulated system, equal to the number of sites collected in a study.
 Summary statistics are calculated based on the last 100 generations out of 1100 generations; current parameter set is accepted if the distance between simulated and observed data is less than a specified tolerance value.
 Distance is measured by the sum of absolute differences in summary statistics between simulated and observed data. This process is repeated until 100 parameter sets are accepted.
-\swp{??}
 
 After the first run ($t=1$), equal weights ($w_{i,1}=1/100$) are assigned to each accepted parameter set $\bm\theta_{i, 1}$ ($i = 1, 2, \dots, 100$).
 A weighted random sample ($\bm\theta^\ast$) is drawn from the accepted parameters of the previous run ($t-1$) with weights $w_{i,t-1}$.
 For any run $t > 1$, a parameter sample ($\bm\theta_{i, t}$) is proposed from a multivariate normal distribution with a mean $\bm\theta^\ast$ and a variance covariance matrix that is equal to $\sigma_{t-1}^2=2 \mathrm{Var}(\bm\theta_{1:N, t-1})$, where $\mathrm{Var}(\bm\theta_{1:N, t-1})$ is the weighted variance covariance matrix of the accepted parameters from the previous run.
 $N$ is the total number of accepted parameters from the previous run.
-\swp{??}
 
 The parameter $G_{\textrm{\tiny asex}}$ is rounded to the nearest integer and the model is simulated.
 If a proposed parameter is accepted, the following weight is assigned:
@@ -347,7 +348,8 @@ All statistical results are weighted by parameter weights of the final run;
 confidence intervals are obtained by taking weighted quantiles. 
 However, it is always not possible to obtain the exact 95\% confidence interval when the smallest (or the largest) value has a weight greater than 0.025. 
 In these cases, we take the lowest (or largest) possible quantile that is closest to the 2.5\% (or the 97.5\%) quantile.
-While this procedure results in a slightly narrower confidence interval, the rounding errors in quantiles are negligible (for example, we use the 2.82\% quantile instead of the 2.5\% quantile as the lower end of a confidence interval).\swp{??}
+While this procedure results in a slightly narrower confidence interval, the rounding errors in quantiles are negligible.
+This rule leads to one instance where we use the 2.82\% quantile instead of the 2.5\% quantile as the lower end of a confidence interval).
 
 \subsection{Power analysis}
 
@@ -367,6 +369,7 @@ Given that \cite{mckone2016fine} already observed a significant correlation, our
 
 \section{Results}
 
+\swp{This is the difference between filtered vs. unfiltered. You said you're going to take a look at this paragraph.}
 First, we compare observed summary statistics with fitted and predicted summary statistics (\fref{smcsumm}).
 Fitted summary statistics are those that are accepted via ABC;
 these can be interpreted as model-based estimates of the summary statistics (and associated confidence intervals) of the study sites.
@@ -418,6 +421,7 @@ Each point, consisting of mean infection prevalence and meal proportion of sexua
 The density at each cell is calculated as the sum of weights of the points that lie within it.
 Cell densities are normalized by dividing by the maximum grid densities for each fit.
 Open triangles represent observed data; proportion of sexual hosts is computed by doubling proportion of male hosts.
+\bmb{contour}
 }
 \label{fig:ivs}
 \end{figure}
@@ -499,7 +503,7 @@ low-risk populations will be dominated by asexual individuals whereas high-risk 
 \cite{lively2001trematode} gave a similar explanation and predicted that large variation in the risk of infection is required to observe the predicted correlation.
 
 The similarity between the correlations predicted by the model and the correlations observed in nature may be interpreted as providing more confidence that the observed popoulations provide evidence for the Red Queen Hypothesis (\fref{effect}).
-However, the strength of correlation does not provide any evidence for the strength of selection imposed on the host population. \swp{??}
+However, the strength of correlation does not provide any evidence for the strength of selection imposed on the host population. \swp{??} \bmb{not a direct measure of...}
 Moreover, when populations are actively coevolving, wide range of correlations can be detected (\fref{effect}: \cite{vergara2014infection}).
 While simple statistical summaries, such as a correlation coefficient, are easily accessible,
 more sophisticated and mechanistic statistical models that yield biologically interpretable parameters may be better suited for understanding the effect of parasites on the maintenance of sexual reproduction in the host population.
