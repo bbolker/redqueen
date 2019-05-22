@@ -84,9 +84,17 @@ gg_accepted <- accepted_df %>%
                       levels=c("pinf.mean", "pinf.siteCV", "pinf.timeCV", "psex.mean", "psex.siteCV", "psex.timeCV"),
                       labels=rep(c("Mean", "CV~across~populations", "CV~across~generations"),2)))
 
+ast_data <- data.frame(
+    fit=gg_summary_quant[5,1],
+    value=0.65, 
+    key="Mean",
+    gvar="Proportion~infected"
+)
+
 gg_smc_summ <- ggplot(gg_summary_quant, aes(fit)) +
     geom_errorbar(aes(ymin=lwr, ymax=upr), width=0.1) +
     geom_violin(data=gg_accepted, aes(y=value, fill=fit, weight=weight), alpha=0.7, width=0.5) +
+    geom_text(data=ast_data, aes(y=value, x=fit), label="*", size=7) +
     geom_errorbar(data=summ_df, aes(ymin=value, ymax=value), lty=2) +
     facet_grid(key~gvar, scale="free", labeller = label_parsed) +
     scale_fill_discrete(label=data_name) +

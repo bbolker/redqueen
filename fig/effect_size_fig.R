@@ -100,7 +100,10 @@ truesumm <- truedf %>%
 
 observed_name <- c(
     expression(McKone~italic(et ~ al.)~"(2016)"),
+    expression(Dagan~italic(et~al.)~"(2013)"),
+    expression(Vergara~italic(et~al.)~"(2014)"),
     expression(Lively~and~Jokela~"(2002)"),
+    expression("Ben-Ami"~and~Heller~"(2005)"),
     expression(Kumpulainen~italic(et~al.)~"(2004)"),
     expression(King~italic(et~al.)~"(2011)"),
     expression(Vergara~italic(et~al.)~"(2013)"),
@@ -113,8 +116,20 @@ observed_list <- list(
         type="Spearman"
     ),
     data.frame(
+        value=c(0.276, 0.098),
+        type=c("Spearman", "Pearson")
+    ),
+    data.frame(
+        value=c(-0.312, -0.318),
+        type=c("Spearman", "Pearson")
+    ),
+    data.frame(
         value=0.542,
         type="Pearson"
+    ),
+    data.frame(
+        value=c(-0.022, -0.353, -0.270),
+        type=c("Pearson", "Pearson", "Spearman")
     ),
     data.frame(
         value=c(0.802, 0.542, 0.811),
@@ -140,7 +155,7 @@ observed <- observed_list %>%
     bind_rows(.id="fit") %>%
     mutate(plot="point")
 
-level <- c(observed_name[-1], data_name)
+level <- c(observed_name[-c(1:3)], data_name)
 
 total <- truedf %>%
     bind_rows(observed) %>%
