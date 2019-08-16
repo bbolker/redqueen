@@ -1,6 +1,6 @@
 \documentclass{article}\usepackage[]{graphicx}\usepackage[]{color}
 
-\title{Bridging the gap between theory and data: the Red Queen Hypothesis for sex}
+\title{A simple metapopulation model for Red Queen dynamics: parameter estimation and power analysis}
 \author{Sang Woo Park and Benjamin M Bolker}
 
 \usepackage{tabularx}
@@ -21,6 +21,7 @@
 \newcommand{\comment}[3]{\textcolor{#1}{\textbf{[#2: }\textit{#3}\textbf{]}}}
 \newcommand{\bmb}[1]{\comment{cyan}{BMB}{#1}}
 \newcommand{\swp}[1]{\comment{magenta}{SWP}{#1}}
+\newcommand{\rev}[1]{\comment{red}{REV}{#1}}
 \newcommand{\citetapos}[1]{\citeauthor{#1}'s \citeyearpar{#1}}
 
 \newcommand{\fref}[1]{Fig.~\ref{fig:#1}}
@@ -33,9 +34,9 @@
 Sexual reproduction persists in nature despite its large cost.
 The Red Queen Hypothesis postulates that parasite pressure maintains sexual reproduction in the host population by selecting for the ability to produce rare genotypes that are resistant to infection.
 Mathematical models have been used to lay theoretical foundations for the hypothesis; empirical studies have confirmed these predictions.
-For example, Lively used a simple host-parasite model to predict that the frequency of sexual hosts should be positively correlated with the prevalence of infection. 
+For example, Lively used a simple host-parasite model to predict that the frequency of sexual hosts should be positively correlated with the prevalence of infection, provided that there is sufficient variance in the risk of infection among populations. 
 Lively \textit{et al.} later confirmed the prediction through numerous field studies of snail-trematode systems in New Zealand.
-In this study, we fit a simple metapopulation host-parasite coevolution model to three data sets, each representing a different snail-trematode system, by matching the observed prevalence of sexual reproduction and trematode infection among hosts.
+In this study, we fit a simple metapopulation host-parasite coevolution model to three data sets (one from an Israeli population and two from New Zealand populations) by matching the observed prevalence of sexual reproduction and trematode infection among hosts.
 Using the estimated parameters, we perform a power analysis to test the feasibility of observing the positive correlation predicted by Lively.
 We discuss anomalies in the data that are poorly explained by the model and provide practical guidance to both modelers and empiricists.
 Overall, our study suggests that a simple Red Queen model can only partially explain the observed relationships between parasite infection and the maintenance of sexual reproduction.
@@ -55,7 +56,7 @@ Limited genetic diversity of asexually reproducing hosts allows for sexual repro
 
 Much of the theoretical literature has focused on determining qualitative conditions under which parasite selection can maintain sexual reproduction in the host population.
 Here, we describe a few important criteria.
-First, hosts and parasites must coevolve \citep{bell1982masterpiece}.
+First, hosts and parasites must coevolve \citep{bell1982masterpiece, paterson2010antagonistic}.
 Host-parasite coevolution creates a time-lagged selective advantage for rare host genotypes, creating an oscillation in genotypic frequencies \citep{jaenike1978hypothesis, hamilton1980sex, agrawal2001parasites}; this process promotes host genetic diversity and not necessarily sex \citep{king2009geographic, dagan2013clonal, ashby2015diversity}.
 Second, parasites must be highly virulent \citep{may1983epidemiology}.
 Although sexual and asexual hosts can coexist at intermediate virulence, sexual reproduction is unable to provide enough advantage to overcome the cost of sex against avirulent parasites \citep{howard1994parasitism}.
@@ -68,28 +69,50 @@ Given the wide range of assumptions underlying these eco-evolutionary models, it
 however, it is clear is that these details play important roles in shaping coevolutionary dynamics \citep{song2015host, haafke2016eco, ashby2019understanding}.
 
 Many empirical studies have focused on confirming predictions that stem from the RQH.
-Typical among them are rapid parasite evolution \citep{rauch2006one}, local adaptation \citep{lively1989adaptation, morran2014experimental, king2011coevolutionary, gibson2016within}, time-lagged selection \citep{buckling2002antagonistic, decaestecker2007host, koskella2009evidence, thrall2012rapid, koskella2013phage, koskella2014bacteria}, and association between parasite prevalence and host reproductive mode \citep{lively1992parthenogenesis, vergara2013geographic, verhoeven2013geographic}. 
+Typical among them are rapid parasite evolution \citep{rauch2006one}, local adaptation \citep{lively1989adaptation, morran2014experimental, king2009geographic, king2011coevolutionary, gibson2016within}, time-lagged selection \citep{buckling2002antagonistic, decaestecker2007host, koskella2009evidence, thrall2012rapid, koskella2013phage, koskella2014bacteria}, and association between parasite prevalence and host reproductive mode \citep{lively1992parthenogenesis, vergara2013geographic, verhoeven2013geographic}. 
 A key example is the snail population in New Zealand that serves as intermediate hosts for trematodes \citep{winterbourn1974larval, mcarthur1976suppression}.
 Through decades of work, Lively \etal\ have demonstrated that the population satisfies necessary conditions for the host-parasite coevolutionary dynamics and provides support for the hypothesis (e.g., \cite{lively1987evidence, lively1989adaptation, dybdahl1995host, dybdahl1998host, jokela2009maintenance, vergara2014infection, gibson2016within}).
 While field studies often provide only indirect evidence for the hypothesis, 
-experimental systems can be used to directly test the hypothesis \citep{auld2016sex, slowinski2016coevolutionary, lynch2018turnover, zilio2018effect}.
+experimental systems can be used to directly test the hypothesis \citep{morran2011running, auld2016sex, slowinski2016coevolutionary, lynch2018turnover, zilio2018effect}.
 
 Even though the Red Queen Hypothesis has gained both theoretical and empirical support, there still remains a gap between theory and data.
 Many theoretical models rely on simplifying assumptions that are not applicable to natural populations and make indirect connections to empirical studies.
 For example, none of the Red Queen models reviewed by \cite{ashby2015diversity} make statistical connections to empirical data.
 It is unclear how well these models capture coevolutionary dynamics in natural systems.
 
-Theoretical models can still be used to make \emph{qualitative} predictions about nature.
-\cite{lively1992parthenogenesis} initially postulated that infection prevalence should be positively correlated with the frequency of sexual hosts and later formalized the idea using a mathematical model \citep{lively2001trematode}.
-The prediction has since been confirmed in several empirical studies, most of which are based on the snail-trematode system \citep{lively2002temporal, kumpulainen2004parasites, king2011parasites, vergara2013geographic, mckone2016fine, gibson2016within}.
+Theoretical models can be still useful for making \emph{qualitative} predictions about 
+nature.
+\cite{lively1992parthenogenesis} initially postulated that infection prevalence should
+be positively correlated with the frequency of sexual hosts and later formalized the
+idea using a mathematical model \citep{lively2001trematode}.
+The prediction has since been confirmed in several empirical studies, most of which 
+are based on a snail-trematode system from New Zealand 
+\citep{lively2002temporal, kumpulainen2004parasites, king2011parasites, vergara2013geographic, mckone2016fine, gibson2016within}; 
+these New Zealand freshwater snails (\textit{Potamopyrgus antipodarum}), which serve 
+as intermediate hosts for several trematode species (e.g., \textit{Microphallus} sp.), 
+provide key evidence for the Red Queen Hypothesis
+\citep{lively1987evidence, lively2001trematode, lively2002temporal, lively2004host, koskella2009evidence,
+king2011coevolutionary, king2011parasites,
+vergara2013geographic, vergara2014infection, mckone2016fine, gibson2018periodic}.
 Surprisingly, the predicted correlation was not observed in a different snail-trematode system \citep{heller1990sexual, ben2005spatial, ben2007temporal, ben2008sex, dagan2013clonal}.
 
-Here, we try to help bridge the gap between theory and data in understanding the role of parasites in maintaining sexual reproduction in host populations and make quantitative inference about empirical systems.
-We extend the model used by \cite{lively2010epidemiological} to account for demographic stochasticity and include a simple metapopulation structure.
-Then, we fit the model to data sets from three field studies \citep{dagan2013clonal, mckone2016fine, vergara2014infection} using Approximate Bayesian Computation (ABC) to estimate biologically relevant parameters.
-We assess model fits and discuss discrepancies between a theoretical model and the observed data.
-Using biologically realistic parameters, we test for power (probability of observing a significant effect) to detect a positive correlation between frequency of sexual reproduction and prevalence of infection \cite{lively2001trematode}.
-We provide guidance for studying the RQH and discuss underlying factors that drive the correlation.
+Many theoretical models of the RQH still make simplifying assumptions 
+about the life history of host-parasite interactions as well as their underlying parameters
+(often relying on assumed values or exploring a wide range of parameter values);
+instead, we try to confront these simple models with data.
+We extend the model used by \cite{lively2010epidemiological} to account for 
+demographic stochasticity and include a simple metapopulation structure.
+Then, we fit the extended model to data sets from three field studies 
+\citep{dagan2013clonal, mckone2016fine, vergara2014infection} 
+using Approximate Bayesian Computation (ABC) to estimate biologically realistic 
+parameters, which capture the observed behaviours of real empirical systems, and
+test whether a simple coevolutionary model can sufficiently explain the data.
+Using estimated parameters, we test for power (probability of observing a 
+significant effect) to detect a positive correlation between frequency of
+sexual reproduction and prevalence of infection \cite{lively2001trematode}.
+We provide practical guidance for studying the RQH for modelers and empiricsts
+by disucssing discrepancies between a model predictions and the observed data
+as well as underlying factors that drive the correlation.
 
 \section{Methods}
 
@@ -122,8 +145,11 @@ Metapopulation structure is included to model unobserved dynamics among differen
 A similar metapopulation model was developed by \cite{lively2018habitat} in order to study the local adaptation of parasites.
 
 We do not model the life history of snail-trematode interactions explicitly.
-Modeling interactions of multiple trematodes species, each of which goes through a different life cycle, with a single snail species is extremely complicated.
-Instead, testing a basic model against data will allow us to identify the difference between theory and data more clearly.
+Modeling interactions of multiple trematodes species, each of which goes 
+through a different life cycle, with a single snail species is extremely complicated;
+it is unclear how each stage of the life cycle will affect the coevolutionary dynamics.
+Instead, testing a basic model against data may help us identify factors
+that drive the difference between theoretical predictions and data more clearly.
 
 All hosts are diploids with two biallelic loci controlling resistance; parasites are assumed to be haploids.
 Let $S_{ij}^k(t)$ and $A_{ij}^k(t)$ be the number of sexual and asexual hosts with genotype $ij$ from subpopulation $k$ at generation $t$, 
@@ -145,6 +171,9 @@ W_U = \frac{b_U}{1 + a_U N(t)},\,  W_I = \frac{b_I}{1 + a_I N(t)}
 $$
 where $b_U$ and $b_I$ are the maximum number of offspring produced by uninfected and infected hosts, respectively, and $a_U$ and $a_I$ determine their corresponding strengths of density dependence \citep{smith1973stability, lively2010epidemiological}.
 For simplicity, we assume that $a_U = a_I$ so that virulence can be defined strictly in terms of decrease in offspring production: $V = 1- b_I/b_U$.
+While many trematode species (including Microphallus sp.) sterilize upon 
+infection (which would correspond to $V = 1$), we allow virulence to vary
+in order to test whether high virulence is necessary to explain the data.
 
 Asexual hosts are strictly clonal.
 The expected genotypic contribution by asexual hosts is given by
@@ -220,14 +249,33 @@ where a $\delta_{ij}$ is a Kronecker delta ($\delta_{ij}$ equals 1 when $i = j$ 
 
 \subsection{Simulation design and parameterization}
 
-Many Red Queen models have focused on competition between a single asexual genotype and multiple sexual genotypes or have assumed equal genetic diversity between asexual and sexual hosts (see \cite{ashby2015diversity} for a review of previous Red Queen models) but neither of these assumptions is realistic.
-In contrast, \cite{ashby2015diversity} adopted a more realistic approach by incorporating stochastic external migration of an asexual genotype to a population and allowing for asexual genetic diversity to vary over time.
-Here, we combine these methods.
-We allow for stochastic external migration of asexual hosts with different genotypes into the system but fix the number of asexual genotypes (denoted by $G_{\textrm{\tiny asex}}$) that can be present in the system. 
-Since sexual hosts have limited genetic diversity in our model (diploid hosts with two biallelic loci yields a total of 10 genotypes), allowing for unlimited migration of asexual hosts will cause the sexual population to be easily outcompeted by the asexual population.
-Limiting asexual genetic diversity allows us to account for the intrinsic difference in sexual and asexual diversity and make a compromise between simple and realistic models.
-At the beginning of each simulation, a pool of $G_{\textrm{\tiny asex}}$ asexual genotypes are sampled at random from the entire genotypic space; these are the genotypes that are available for external immigration into subpopulations.
-Then, we use our model-based comparison with data to estimate $G_{\textrm{\tiny asex}}$ to test whether the data are consistent with the dynamics of a model that allows for more than a single asexual clone.
+Many Red Queen models have focused on competition between a single asexual genotype
+and multiple sexual genotypes or have assumed equal genetic diversity between 
+asexual and sexual hosts (see \cite{ashby2015diversity} for a review of previous 
+Red Queen models) but neither of these assumptions is realistic;
+asexual hosts should be able to maintain some genetic diversity (e.g., \citep{king2011parasites})
+but are expected to be less diverse than their sexual counterparts.
+In contrast, \cite{ashby2015diversity} adopted a more realistic approach by 
+incorporating stochastic external migration of an asexual genotype to a 
+population, which allows for asexual genetic diversity to vary over time.
+
+Here, we try to combine these methods.
+We allow for stochastic external migration of asexual hosts with different
+genotypes into the system but assume that the total number of asexual genotypes 
+that can be present in the system (denoted by $G_{\textrm{\tiny asex}}$) is fixed
+throughout a simulation. 
+Since sexual hosts have limited genetic diversity in our model (diploid hosts 
+with two biallelic loci yields a total of only 10 genotypes), allowing for 
+unlimited migration of asexual hosts will cause the sexual population to be 
+easily outcompeted by the asexual population. Limiting asexual genetic diversity 
+allows us to account for the intrinsic difference in sexual and asexual diversity,
+while allowing for some genetic diversity in the asexual population.
+At the beginning of each simulation, a pool of $G_{\textrm{\tiny asex}}$ asexual 
+genotypes are sampled at random from the entire genotypic space; these are the 
+genotypes that are available for external immigration into subpopulations.
+Then, we use our model-based comparison with data to estimate $G_{\textrm{\tiny asex}}$
+to test whether the data are consistent with the dynamics of a model that allows 
+for more than a single asexual clone.
 
 To account for differing number of sexual and asexual genotypes, we let 
 \begin{equation}
@@ -258,7 +306,7 @@ The simulation runs for 500 generations without the introduction of asexuals. At
 We use Approximate Bayesian Computation (ABC) to estimate parameters from data \citep{toni2009approximate}.
 ABC relies on comparing summary statistics of observed data with those of simulated data; it is particularly useful when the exact likelihood function is not available.
 Each summary statistic (also referred to as a \emph{probe}) represents an aspect of a system \cite{kendall1999populations};
-probe matching can be more powerful than classical likelihood-based approaches because it allows to evaluate model fits based on biologically meaningful aspects of a system \citep{wood2010statistical}.
+probe matching can be more powerful than classical likelihood-based approaches because it allows to evaluate model fits based on certain aspects of a biological system that we are interested in \citep{wood2010statistical}.
 We consider the mean proportion of infected and sexually reproducing snails in the system and variation in these proportions --- measured by a coefficient of variation (CV) --- across space (population) and time as our probes.
 As \cite{dagan2013clonal} and \cite{mckone2016fine} only reported the proportion of males, the proportion of sexual hosts is assumed to be twice the proportion of males.
 
@@ -315,8 +363,9 @@ All other parameters are fixed throughout simulations.
 We use the Population Monte Carlo approach \citep{turner2012tutorial}, which allows for efficient sampling while ensuring that final result still converges to a correct (approximate) Bayesian posterior.
 The Population Monte Carlo approach begins with a basic ABC.
 For each random parameter sample drawn from the prior distribution, the model is simulated and a sample of a subpopulation is drawn from the simulated system, equal to the number of sites collected in a study.
-Summary statistics are calculated based on the last 100 generations out of 1100 generations; the current parameter set is accepted if the distance between simulated and observed data is less than a specified tolerance value.
-Distance is measured by the sum of absolute differences in summary statistics between simulated and observed data. This process is repeated until 100 parameter sets are accepted.
+Summary statistics are calculated based on the last 100 generations out of 1100 generations; the current parameter set is accepted if the difference between a simulation and the observed data is less than a pre-specified tolerance value (i.e., acceptable amount of difference between the model and the data).
+We measure the difference between the model and the data by the sum of absolute differences in summary statistics. 
+This process is repeated until 100 parameter sets are accepted.
 
 After the first run ($t=1$), equal weights ($w_{i,1}=1/100$) are assigned to each accepted parameter set $\bm\theta_{i, 1}$ ($i = 1, 2, \dots, 100$).
 A weighted random sample ($\bm\theta^\ast$) is drawn from the accepted parameters of the previous run ($t-1$) with weights $w_{i,t-1}$.
@@ -365,12 +414,18 @@ Instead, we use a power analysis to better understand how a study design or the 
 
 \section{Results}
 
-First, we compare observed summary statistics with either fitted or predicted summary statistics (\fref{smcsumm}).
-\emph{Fitted} (filtered) summary statistics (\fref{smcsumm}) are values that have been accepted by the ABC procedure as being sufficiently close to observed summary statistics;
+\rev{I had difficulty interpreting the figures. I recommend the authors go into more detail in the results section and in figure legends.}
+\swp{I tried.}
+
+First, we compare observed summary statistics (calculated from the observed data) with either fitted or predicted summary statistics (\fref{smcsumm}).
+\emph{Fitted} summary statistics (\fref{smcsumm}) are values that have been accepted by the ABC procedure as being sufficiently close to observed summary statistics;
 these can be interpreted as model-based estimates of the summary statistics (and associated confidence intervals) of the study sites.
-\emph{Predicted} (unfiltered) summary statistics, in contrast (\fref{ivs}), use parameters from the posterior distribution sampled by ABC, but generate new simulations of the dynamics and calculate summary statistics from randomly selected subpopulations.
+\emph{Predicted} summary statistics, in contrast (\fref{ivs}), use parameters from the posterior distribution sampled by ABC, but generate new simulations of the dynamics and calculate summary statistics from randomly selected subpopulations.
 These values represent summary statistics sampled from the full distribution of coevolutionary dynamics that are consistent with the observed dynamics; they represent the expected range of dynamics from randomly sampled host-parasite metapopulations with a given distribution of parameters.
-Because they include an additional level of dynamical variability, the predicted summary statistics range much more widely than the fitted summary statistics.
+Because they include an additional level of dynamical and sampling variability, the predicted summary statistics range much more widely than the fitted summary statistics.
+The difference between the fitted and predicted summary statistics is analogous to 
+the difference between confidence intervals and prediction intervals from 
+linear regression.
 
 Our simple meta-population Red Queen model can capture observed variation in infection prevalence and frequency of sexual hosts reasonably well;
 both temporal and spatial variation (measured by CV across mean proportions) are well-matched by the model. 
@@ -384,9 +439,11 @@ Observed mean proportions of sexual hosts are 0.045 and 0.704, respectively, whe
 \begin{figure}[!ht]
 \includegraphics[width=\textwidth]{../fig/smc_summary.pdf}
 \caption{{\bf Summary statistics of the observed data vs. distribution of summary statistics of the simulated data from the posterior samples.}
-Dotted horizontal lines represent observed summary statistics.
-Violin plots show the weighted distribution of fitted summary statistics (i.e., summary statistics that were accepted during ABC). 
-Error bars show 95\% weighted quantiles of predicted summary statistics.
+Dotted horizontal lines represent observed summary statistics calculated from the data.
+Violin plots show the weighted distribution of fitted summary statistics (i.e., summary statistics that were accepted during ABC);
+they represent the uncertainty in the estimate of the true values.
+Error bars show 95\% weighted quantiles of predicted summary statistics;
+they are wider than the distribution of the fitted values because they account for the uncertainty in the full distribution of the Red Queen dynamics from the estimated parameter values.
 The weights correspond to the posterior distribution weights from ABC.
 For each posterior sample, 10 simulations are run and each simulated system is sampled at random 100 times so that each sample consists of the same number of populations as in the fitted data.
 All univariate summary statistics are matched reasonably well, except for the mean proportion of infected hosts in \cite{mckone2016fine} (indicated by an asterisk). 
@@ -395,6 +452,10 @@ All univariate summary statistics are matched reasonably well, except for the me
 \end{figure}
 
 To further diagnose the fit, we compare the predicted relationships between the mean proportion of infected hosts and the mean proportion of sexual hosts across subpopulations with the observed data (\fref{ivs}).
+This is done by simulating the metapopulation model multiple times from the estimated parameters and calculating the mean proportion of infected and sexual hosts for each subpopulation from each simulation;
+then the two dimensional distribution of these means are compared with the observed proportions.
+\swp{TODO: start from here}
+
 Despite its accuracy in reproducing summary statistics reported by \cite{dagan2013clonal}, 
 our model poorly captures the relationship between the mean proportion of infected hosts and the mean proportion of sexual hosts (\fref{ivs}; \cite{dagan2013clonal}).
 The model predicts sexual reproduction to be well maintained when infection prevalence is high ($> 40\%$) whereas
@@ -412,6 +473,7 @@ our model fails to maintain such high levels of sexual reproduction.
 \caption{{\bf Predicted relationship between mean infection prevalence and mean proportion of sexual hosts in each population.}
 For each posterior sample, 10 simulations are run.
 For each population within a simulation, mean infection prevalence and mean proportion of sexual hosts is calculated by averaging across last two generations. 
+\rev{why are the data averaged across 2 generations? Please clarify.}
 Each point, consisting of mean infection prevalence and meal proportion of sexual hosts, is assigned the weight of the parameter used to simulated the population.
 The density at each cell is calculated as the sum of weights of the points that lie within it.
 Cell densities are normalized by dividing by the maximum grid densities for each fit.
@@ -428,6 +490,7 @@ This trend is consistent with previous results of \cite{lively2001trematode} who
 The proportion of sexual hosts decreases when infection prevalence is extremely high (visible in the fits to \cite{vergara2014infection}).
 This pattern can be explained by the decrease in fitness of sexual hosts with the increase in infection prevalence, predicted by \cite{ashby2015diversity}. 
 The same pattern can be seen in earlier work by \cite{lively2010epidemiological} although it was not discussed.
+\rev{please go into more detail. How does this figure relate to the studies? I am very confused.}
 
 \fref{smcparam} presents parameter estimates.
 Keeping in mind that we do not obtain good fits to data from \cite{dagan2013clonal} and \cite{mckone2016fine}, we still find that high virulence and a low ratio of asexual to sexual genetic diversity are necessary to explain the observed dynamics.
@@ -475,14 +538,17 @@ Spearman's rank correlation was used to test for correlation between infection p
 
 \section{Discussion}
 
+\rev{remind the reader of the biologically meaningful parameters.}
 A simple metapopulation model for host-parasite coevolution is able to match the observed prevalence of sexual reproduction and trematode infection in snail populations (\fref{smcsumm}).
 A direct comparison between a model and a data set allows us to infer biologically meaningful parameters of a model (\fref{smcparam}) and estimate the power to observe a significant, positive correlation between the proportion of infected hosts and the proportion of sexual hosts (\fref{power}), as predicted by \cite{lively1992parthenogenesis}.
 However, discrepancies between the model predictions and observed data suggest that a simple host-parasite coevolution model may not be able to sufficiently explain the maintenance of sexual reproduction observed in snail populations (\fref{ivs}).
 
 A model that fits poorly can sometimes tell us more about a biological system than a model that fits well.
+\rev{a citation and more detail are required for such a bold statement.}
 Our model clearly failed to match the data presented by \cite{dagan2013clonal} (\fref{ivs}).
 The snail populations studied by \cite{dagan2013clonal} live in qualitatively different environments from the two other snail populations that we considered \citep{vergara2014infection, mckone2016fine}.
 For example, their habitats are subject to seasonal flash floods \citep{ben2007temporal}, which can affect reproductive strategies of snails and interfere with the host-parasite coevolution \citep{lytle2000biotic, ben2007temporal}.
+\rev{how do these environmental circumstances influence the potential for coevolution?}
 As a result, a positive correlation between infection prevalence and frequency of sexual reproduction could not be detected from the system even though our model (which does not incorporate disturbance) predicts high power.
 These results suggest that a significant correlation (or the lack of it) between infection prevalence and the frequency of sexual reproduction may not provide sufficient evidence for (or against) the role of parasites in maintaining sexual reproduction in the host population.
 
