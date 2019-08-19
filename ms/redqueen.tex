@@ -452,9 +452,11 @@ All univariate summary statistics are matched reasonably well, except for the me
 \end{figure}
 
 To further diagnose the fit, we compare the predicted relationships between the mean proportion of infected hosts and the mean proportion of sexual hosts across subpopulations with the observed data (\fref{ivs}).
-This is done by simulating the metapopulation model multiple times from the estimated parameters and calculating the mean proportion of infected and sexual hosts for each subpopulation from each simulation;
-then the two dimensional distribution of these means are compared with the observed proportions.
-\swp{TODO: start from here}
+This is done by simulating the metapopulation model multiple times from the estimated parameters and calculating the mean proportion of infected and sexual hosts for each subpopulation from each simulation.
+Then, a two dimensional distribution of these means is compared with the observed proportions.
+If our model is able to sufficiently capture the observed dynamics, we would expect the observed data points to fall within high density regions.
+Since we plot the \emph{predicted} densities, they are able to capture the full range of coevolutionary dynamics, which may not be fully represented in the observed data; 
+therefore, studying the shape of these densities can help us better understand how the Red Queen dynamics shape the relationship between the proportion of infected and sexual hosts.
 
 Despite its accuracy in reproducing summary statistics reported by \cite{dagan2013clonal}, 
 our model poorly captures the relationship between the mean proportion of infected hosts and the mean proportion of sexual hosts (\fref{ivs}; \cite{dagan2013clonal}).
@@ -463,8 +465,8 @@ the observed data \citep{dagan2013clonal} suggests that sexual reproduction can 
 \cite{mckone2016fine} also found sexually reproducing snails in sites with low infection prevalence ($< 20\%$).
 
 On the other hand, \citetapos{vergara2014infection} data set suggests that sexually reproducing populations are likely to have a relatively high prevalence of infection (approximately 20\% - 80\%).
-This observation is broadly consistent with our model prediction. 
-Most of the data points fall within the range of model predictions (\fref{ivs}; \cite{vergara2014infection}).
+This observation is broadly consistent with our model prediction --  
+most of the data points fall within the range of model predictions (\fref{ivs}; \cite{vergara2014infection}).
 However, there is one site in which more than 90\% of the snails were found to be sexual throughout the study period of 5 years \citep{vergara2014infection};
 our model fails to maintain such high levels of sexual reproduction.
 
@@ -472,13 +474,12 @@ our model fails to maintain such high levels of sexual reproduction.
 \includegraphics[width=\textwidth]{../fig/simulated_data2.pdf}
 \caption{{\bf Predicted relationship between mean infection prevalence and mean proportion of sexual hosts in each population.}
 For each posterior sample, 10 simulations are run.
-For each population within a simulation, mean infection prevalence and mean proportion of sexual hosts is calculated by averaging across last two generations. 
-\rev{why are the data averaged across 2 generations? Please clarify.}
-Each point, consisting of mean infection prevalence and meal proportion of sexual hosts, is assigned the weight of the parameter used to simulated the population.
+For each population within a simulation, mean infection prevalence and mean proportion of sexual hosts is calculated by averaging across last two generations (assuming that one year contains two snail generations \citep{neiman2005variation}). 
+Each point, consisting of mean infection prevalence and mean proportion of sexual hosts, is assigned the weight of the parameter used to simulated the population.
 The density at each cell is calculated as the sum of weights of the points that lie within it.
 Cell densities are normalized by dividing by the maximum grid densities for each fit.
-Dashed contours are calculated at $\log(\textrm{density}) = -4$.
-Open triangles represent observed data; proportion of sexual hosts is computed by doubling proportion of male hosts.
+Dashed contours are calculated at $\log(\textrm{normalized density}) = -4$ to distinguish low- and high-density regions.
+Open triangles represent the observed data; proportion of sexual hosts is computed by doubling proportion of male hosts.
 }
 \label{fig:ivs}
 \end{figure}
@@ -487,8 +488,8 @@ There is a high posterior density region in which the proportion of infected hos
 As transmission rate ($\beta$) increases, selection for sexual hosts increases but the increasing number of resistant offspring prevents further infection from occurring and can decrease overall infection prevalence.
 This trend is consistent with previous results of \cite{lively2001trematode} who noted that there is a region in which either sexual and asexual reproduction can be selected exclusively under the same infection prevalence.
 
-The proportion of sexual hosts decreases when infection prevalence is extremely high (visible in the fits to \cite{vergara2014infection}).
-This pattern can be explained by the decrease in fitness of sexual hosts with the increase in infection prevalence, predicted by \cite{ashby2015diversity}. 
+Our model fit to \cite{vergara2014infection} predicts that the proportion of sexual hosts will decrease as infection prevalence becomes extremely high (see the shape of the contour lines in \fref{ivs}: \cite{vergara2014infection}).
+This pattern can be explained by the decrease in fitness of sexual hosts with the increase in infection prevalence, predicted by \cite{ashby2015diversity}.
 The same pattern can be seen in earlier work by \cite{lively2010epidemiological} although it was not discussed.
 \rev{please go into more detail. How does this figure relate to the studies? I am very confused.}
 
