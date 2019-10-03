@@ -156,14 +156,17 @@ Our model is a discrete time susceptible-infected (SI) model with natural mortal
 Metapopulation structure is included to model unobserved dynamics among different habitats; equivalently, each subpopulation can be considered as a potential sampling site.
 A similar metapopulation model was developed by \cite{lively2018habitat} in order to study the local adaptation of parasites.
 
-We do not model the life history of snail-trematode interactions explicitly.
-Modeling interactions of multiple trematodes species, each of which goes 
-through a different life cycle, with a single snail species is extremely complicated;
-it is unclear how each stage of the life cycle will affect the coevolutionary dynamics.
-Instead, testing a basic model against data may help us identify factors
-that drive the difference between theoretical predictions and data more clearly.
+We do not model the life history of snail-trematode interactions explicitly for 
+two reasons.
+First, many theoretical studies for the RQH (see Introduction) rely on simple models 
+that do not incorporate realistic life cycles of natural systems; we want to test
+whether these simple models can sufficiently explain the observed patterns in the data.
+Second, testing a basic model against data can help us identify model assumptions
+that drive the difference between theoretical predictions and data more clearly (rather
+than trying to understand how each component of the complex life cycle of trematodes 
+affect the evolutionary outcome).
 
-All hosts are diploids with two biallelic loci controlling resistance; parasites are assumed to be haploids.
+All hosts are diploids with two biallelic loci controlling resistance; parasites are assumed to be haploids with two biallelic loci.
 Let $S_{ij}^k(t)$ and $A_{ij}^k(t)$ be the number of sexual and asexual hosts with genotype $ij$ from subpopulation $k$ at generation $t$, 
 where the subscripts, $i$ and $j$, represents host haplotypes: $i, j \in \{\mathrm{AB}, \mathrm{Ab}, \mathrm{aB}, \mathrm{ab}\}$.
 For simplicity, we drop the superscript representing the subpopulation and write $S_{ij}(t)$ and $A_{ij}(t)$;
@@ -172,17 +175,17 @@ Following \cite{lively2010epidemiological}, the expected genotypic contribution 
 \begin{equation}
 S_{ij}' = c_b (1-s) \bigg(W_U S_{ij,U} (t) + W_I S_{ij,I} (t)\bigg),
 \end{equation}
-where $s$ is the proportion of males produced by sexual hosts, and $S_{ij, U}$ and $S_{ij,I}$ are the number of uninfected and infected sexual hosts in a subpopulation.
+where $s$ is the proportion of males produced by sexual hosts (assumed to equal to 0.5), and $S_{ij, U}$ and $S_{ij,I}$ are the number of uninfected and infected sexual hosts in a subpopulation.
 $W_U$ and $W_I$ represent their corresponding fitnesses where virulence is defined as $V = 1-W_I/W_U$.
 We allow for the cost of sex to vary by multiplying the growth rate by a scale parameter, $c_b$, where $2/c_b$ corresponds to a two-fold cost of sex when $c_b = 1$ \citep{ashby2015diversity}.
 Recombination and outcrossing are modeled after incorporating genotypic contributions from other populations.
 
 We define
 $$
-W_U = \frac{b_U}{1 + a_U N(t)},\,  W_I = \frac{b_I}{1 + a_I N(t)}
+W_U = \frac{b_U}{1 + a N(t)},\,  W_I = \frac{b_I}{1 + a N(t)}
 $$
-where $b_U$ and $b_I$ are the maximum number of offspring produced by uninfected and infected hosts, respectively, and $a_U$ and $a_I$ determine their corresponding strengths of density dependence \citep{smith1973stability, lively2010epidemiological}.
-For simplicity, we assume that $a_U = a_I$ so that virulence can be defined strictly in terms of decrease in offspring production: $V = 1- b_I/b_U$.
+where $b_U$ and $b_I$ are the maximum number of offspring produced by uninfected and infected hosts, respectively, and $a$ is the strength of density dependence \citep{smith1973stability, lively2010epidemiological}.
+Following \cite{lively2010epidemiological}, virulence is defined in terms of decrease in offspring production: $V = 1- b_I/b_U$.
 While many trematode species (including \textit{Microphallus} sp.) sterilize upon 
 infection (which would correspond to $V = 1$), we allow virulence to vary
 in order to test whether high virulence is necessary to explain the data.
@@ -203,7 +206,7 @@ The expected number of offspring in the next generation (accounting for contribu
 \end{aligned}
 \end{equation}
 where $f_{\textrm{\tiny sex}}(x)$ is the function that models sexual reproduction, including recombination probability $r_{\textrm{\tiny host}}$ and outcrossing, and $n_{\textrm{\tiny pop}}$ is the number of subpopulations modeled.
-The total number of sexual and asexual hosts in the next generation is given by a Poisson random variables with means specified previously. We also allow for stochastic migration in order to avoid fixation:
+The total number of sexual and asexual hosts in the next generation is given by Poisson random variables with means specified previously. We also allow for stochastic migration (from outside of the metapopulation) in order to avoid fixation:
 \begin{equation}
 \begin{aligned}
 S_{ij}^k(t+1) &\sim \mathrm{Poisson}\left(\lambda=\mathrm{E}\left(S_{ij}^k(t+1)\right)\right) + \mathrm{Bernoulli}\left(p=p_{ij,\textrm{\tiny sex}}\right),\\
