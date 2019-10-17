@@ -177,7 +177,8 @@ S_{ij}' = c_b (1-s) \bigg(W_U S_{ij,U} (t) + W_I S_{ij,I} (t)\bigg),
 \end{equation}
 where $s$ is the proportion of males produced by sexual hosts (assumed to equal to 0.5), and $S_{ij, U}$ and $S_{ij,I}$ are the number of uninfected and infected sexual hosts in a subpopulation.
 $W_U$ and $W_I$ represent their corresponding fitnesses where virulence is defined as $V = 1-W_I/W_U$.
-We allow for the cost of sex to vary by multiplying the growth rate by a scale parameter, $c_b$, where $2/c_b$ corresponds to a two-fold cost of sex when $c_b = 1$ \citep{ashby2015diversity}.
+We allow for the cost of sex to vary by multiplying the growth rate by a scale parameter, $c_b$, where $2/c_b$ corresponds to a two-fold cost of sex when $c_b = 1$ \citep{ashby2015diversity}. 
+We discuss this parameter in detail in the Discussion.
 Recombination and outcrossing are modeled after incorporating genotypic contributions from other populations.
 
 We define
@@ -197,7 +198,7 @@ A_{ij}' = W_U A_{ij,U} (t) + W_I A_{ij,I} (t),
 \end{equation}
 where $A_{ij, U}$ and $A_{ij,I}$ are the number of uninfected and infected asexual hosts in a subpopulation.
 
-A proportion $\epsilon_{\textrm{\tiny mix}}$ of a subpopulation mixes with other subpopulations.
+We assume that a proportion $\epsilon_{\textrm{\tiny mix}}$ of hosts within a subpopulation can move to other subpopulations every generation. 
 The expected number of offspring in the next generation (accounting for contributions from all subpopulations) is given by
 \begin{equation}
 \begin{aligned}
@@ -206,6 +207,12 @@ The expected number of offspring in the next generation (accounting for contribu
 \end{aligned}
 \end{equation}
 where $f_{\textrm{\tiny sex}}(x)$ is the function that models sexual reproduction, including recombination probability $r_{\textrm{\tiny host}}$ and outcrossing, and $n_{\textrm{\tiny pop}}$ is the number of subpopulations modeled.
+Here, we assume that migration among subpopulations occur after reproduction and selection. 
+The ordering of such events could affect the evolutionary outcome of the model \citep{
+mani1989evolution, michalakis1996interaction, massol2015evolution
+};
+for simplicity, we do not explore these directions in this paper.
+
 The total number of sexual and asexual hosts in the next generation is given by Poisson random variables with means specified previously. We also allow for stochastic migration (from outside of the metapopulation) in order to avoid fixation:
 \begin{equation}
 \begin{aligned}
@@ -320,7 +327,7 @@ The simulation runs for 500 generations without the introduction of asexuals. At
 
 We use Approximate Bayesian Computation (ABC) to estimate parameters from data \citep{toni2009approximate}.
 ABC relies on comparing summary statistics of observed data with those of simulated data; it is particularly useful when the exact likelihood function is not available.
-Each summary statistic (also referred to as a \emph{probe}) represents an aspect of a system \citeo{kendall1999populations};
+Each summary statistic (also referred to as a \emph{probe}) represents an aspect of a system \citep{kendall1999populations};
 probe matching can be more powerful than classical likelihood-based approaches because it allows to evaluate model fits based on certain aspects of a biological system that we are interested in \citep{wood2010statistical}.
 We consider the mean proportion of infected and sexually reproducing snails in the system and variation in these proportions --- measured by a coefficient of variation (CV) --- across space (subpopulations) and time (generations) as our probes.
 As \cite{dagan2013clonal} and \cite{mckone2016fine} only reported the proportion of males, the proportion of sexual hosts is assumed to be twice the proportion of males.

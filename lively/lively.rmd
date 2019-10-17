@@ -32,7 +32,7 @@ vergara2013 %>%
 
 v <- vergara2013 %>%
     group_by(year, lake, sites, habitat) %>%
-    summarize(psex=mean(sex=="male"),
+    summarize(psex=2*mean(sex=="male"),
               pinf=mean(Microphallus))
 
 ggplot(v, aes(pinf, psex)) +
@@ -40,7 +40,11 @@ ggplot(v, aes(pinf, psex)) +
     ylim(c(0, 1)) +
     xlim(c(0, 1))
 
-vergara2013a %>% as.tbl %>% group_by(year, lake, sites, habitat) %>% summarize(psex=mean(sex=="male"), pinf=mean(as.numeric(as.character(Microphallus)), na.rm=TRUE)) -> vv
+vv <- vergara2013a %>% 
+    as.tbl %>% 
+    group_by(year, lake, sites, habitat) %>% 
+    summarize(psex=2*mean(sex=="male"), 
+              pinf=mean(as.numeric(as.character(Microphallus)), na.rm=TRUE))
 ```
 
 
@@ -89,3 +93,4 @@ matplot(g[2:14], type="l", ylim=c(0, 1))
 
 ccf(g[2:14], g[2:14])
 ```
+
