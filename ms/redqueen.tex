@@ -208,9 +208,7 @@ The expected number of offspring in the next generation (accounting for contribu
 \end{equation}
 where $f_{\textrm{\tiny sex}}(x)$ is the function that models sexual reproduction, including recombination probability $r_{\textrm{\tiny host}}$ and outcrossing, and $n_{\textrm{\tiny pop}}$ is the number of subpopulations modeled.
 Here, we assume that migration among subpopulations occur after reproduction and selection. 
-The ordering of such events could affect the evolutionary outcome of the model \citep{
-mani1989evolution, michalakis1996interaction, massol2015evolution
-};
+The ordering of such events could affect the evolutionary outcome of the model \citep{mani1989evolution, michalakis1996interaction, massol2015evolution};
 for simplicity, we do not explore these directions in this paper.
 
 The total number of sexual and asexual hosts in the next generation is given by Poisson random variables with means specified previously. We also allow for stochastic migration (from outside of the metapopulation) in order to avoid fixation:
@@ -222,7 +220,7 @@ A_{ij}^k(t+1) &\sim \mathrm{Poisson}\left(\lambda=\mathrm{E}\left(A_{ij}^k(t+1)\
 \end{equation}
 where $p_{ij,\textrm{\tiny sex}}$ and $p_{ij, \textrm{\tiny asex}}$ are the probabilities of a single sexual or asexual host with genotype $ij$ entering a subpopulation.
 
-Infection is modeled using the matching alleles model \citep{hamilton1980sex, frank1997recognition, otto1998evolution}.
+Infection is modeled using the matching alleles model \citep{hamilton1980sex,frank1997recognition,otto1998evolution}.
 We assume that snails are equally susceptible to parasites that match either haplotype.
 However, parasites must match the host haplotype at both loci in order to successfully infect a host.
 The expected number of infected hosts that are infected with parasite with genotype $i$ at generation $t$ is given by:
@@ -230,12 +228,23 @@ The expected number of infected hosts that are infected with parasite with genot
 I_{i}(t) = f_{\textrm{\tiny mutation}} \left( \sum_{j}  \bigg( S_{ij,i,I}(t) + A_{ij,i,I}(t)\bigg)\right).
 \end{equation}
 $S_{ij,i,I}(t)$ and $A_{ij,i,I}(t)$ represent the expected numbers of sexual and asexual hosts that have genotype $ij$ and are infected with parasites that have genotype $i$.
-The function $f_{\textrm{\tiny mutation}}$ models mutation at a single locus with probability $r_{\textrm{\tiny parasite}}$ \citep{ashby2015diversity}. 
+The function $f_{\textrm{\tiny mutation}}$ models mutation at a single locus with probability $r_{\textrm{\tiny parasite}}$ (notated by $\epsilon$ in \cite{ashby2015diversity});
+for example, a proportion $r_{\textrm{\tiny parasite}}$ of hosts infected with parasite with genotype $\mathrm{AB}$ is equally distributed into infected hosts carrying genoytpe $\mathrm{aB}$ and $\mathrm{Ab}$.
+Equivalently, we can express this as
+\begin{equation}
+\begin{aligned}
+J_{i}(t) &= \sum_{j}  \bigg( S_{ij,i,I}(t) + A_{ij,i,I}(t)\bigg),\\
+I_{i}(t) &= (1-r_{\textrm{\tiny parasite}}) J_i(t) + \frac{r_{\textrm{\tiny parasite}}}{2} \sum_{k} \eta_{ik} J_k(t),  \\
+\end{aligned}
+\end{equation}
+where $\eta_{ik}=1$ if haplotypes $i$ and $k$ differ by one locus (e.g., $\mathrm{AB}$ and $\mathrm{aB}$) and $\eta_{ik}=0$ otherwise (e.g., $\mathrm{AB}$ and $\mathrm{ab}$).
+\swp{Is this too redundant? I'm not sure what's the best way to write this... Reviewer complained about having a function of mutation without explaining.}
 We further account for stochastic migration with probability $p_{i, \textrm{\tiny parasite}}$ to avoid fixation:
 \begin{equation}
 I_{i}'(t) \sim I_i(t) + \mathrm{Bernoulli}\left(p=p_{ij, \textrm{\tiny parasite}}\right).
 \end{equation}
 
+\rev{164-167: it is unclear to me whether ‘mixing for infection’ is independent from ‘mixing for reproduction’; the issue needs to be explicitly clarified anyway, and if indeed the two mixings are independent this decision should be biologically motivated and its potential consequences explicitly addressed by e.g. examining the model outcomes if the two are independent or not. Further, it reads as if parasites can emigrate only under the form of infected hosts. At least in the Potamopyrgus system this is not true, they are carried around by their definitive hosts, birds (which perhaps also carry around hosts, but in any case, the parasite forms infectious to the snails need to come out of birds). This seems like a strong assumption, and potentially important discrepancy between the life cycle in the model and the life cycles providing the data to which the model predictions are to be compared. Perhaps the independence of ‘mixing for reproduction’ and ‘mixing for infection’ mimicks, or is supposed to represent, the definitive host migration, but if this is the case it needs to be clarified and it must be checked whether it works indeed.}
 The total expected number of infectious contacts made by infected hosts within a population is given by $\lambda_i^k = \beta^k {I_i'}^k(t)$, where $\beta^k$ is the transmission rate of each population. 
 We model mixing between subpopulations by allowing infected hosts to make contact with susceptible hosts in other populations;
 we assume that a proportion $\epsilon_{\textrm{\tiny mix}}$ of the infectious contacts are equally distributed among other subpopulations.
@@ -248,6 +257,7 @@ Then, the force of infection that a susceptible host with genotype $ij$ experien
 \mathrm{FOI}_{ij}^k = \frac{\lambda_{i, \textrm{\tiny total}}^k  + \lambda_{j, \textrm{\tiny total}}^k}{2 N^k(t+1)},
 \end{equation}
 where $N^k(t+1) = \sum_{i,j} S_{ij}^k(t+1) + A_{ij}^k(t+1)$ is the total number of hosts in generation $t+1$.
+\rev{169-171 and eq. 8: doesn’t this assume that infections by different genotypes are independent (i.e. being infected by parasite i does not affect the probability of being infected by parasite j and reverse)? This should be explicitly stated and its biological relevance and realism (is it the case in the empirical systems under study) discussed.}
 The probability that a susceptible host with genotype $ij$ in subpopulation $k$ becomes infected in the next generation is given by
 \begin{equation}
 P_{ij}^k(t+1) = 1 - \exp\left(\mathrm{FOI}_{ij}^k\right).
@@ -288,7 +298,7 @@ that can be present in the system (denoted by $G_{\textrm{\tiny asex}}$) is fixe
 throughout a simulation. 
 Since sexual hosts have limited genetic diversity in our model (diploid hosts 
 with two biallelic loci yields a total of only 10 genotypes), allowing for 
-unlimited migration of asexual hosts will cause the sexual hosts to be 
+unlimited diversity of asexual hosts will cause the sexual hosts to be 
 easily outcompeted by the asexual hosts. Limiting asexual genetic diversity 
 allows us to account for the intrinsic difference in sexual and asexual diversity,
 while allowing for some genetic diversity among asexual hosts.
@@ -343,7 +353,7 @@ Because ABC is a Bayesian method, we must specify prior distributions for all pa
 We use weakly informative priors for all estimated parameters except $c_b$, a scale parameter for the cost of sex (see Table~\ref{tb:param} for prior distributions used and parameters assumed).
 The prior distribution for the scale parameter is chosen so that 95\% prior quantile range of cost of sex (2/$c_b$) is approximately equal to the 95\% confidence interval reported by \cite{gibson2017two}.
 For brevity, all other parameters are assumed to be fixed.
-While it is a common practice to fix several parameters of a Red Queen model (e.g., \cite{lively2010epidemiological, ashby2015diversity, haafke2016eco, ashby2019understanding}), failing to explicitly account for uncertainty in all parameters of a model can lead to overly confident conclusions \citep{elderd2006uncertainty}.
+While it is a common practice to fix several parameters of a Red Queen model (e.g., \cite{lively2010epidemiological,ashby2015diversity,haafke2016eco,ashby2019understanding}), failing to explicitly account for uncertainty in all parameters of a model can lead to overly confident conclusions \citep{elderd2006uncertainty}.
 
 \afterpage{
 \clearpage
@@ -608,7 +618,7 @@ for example, lack of fit in dynamicsl systems (modeled by ordinary differential
 equations) can suggest misspecification of a model on various levels, including
 rate equations governing the dynamics of a system and their relevant state variables
 \citep{hooker2015goodness}.
-Our model clearly failed to match the data presented by \cite{dagan2013clonal} (\fref{ivs}).
+Our model clearly failed to match the relationship between prevalence of infection and frequency of sexual prevalence observed in \cite{dagan2013clonal} (\fref{ivs}) even thouh it was able to match each univariate statistic (\fref{smcsumm}).
 The snail-trematode system studied by \cite{dagan2013clonal} live in qualitatively different environments from the New Zealand system that we considered \citep{vergara2014infection, mckone2016fine}.
 For example, their habitats are subject to seasonal flash floods, which can act as 
 strong bottlenecks and promote asexual reproduction \citep{ben2007temporal}.
