@@ -243,11 +243,13 @@ We further account for stochastic migration with probability $p_{i, \textrm{\tin
 \begin{equation}
 I_{i}'(t) \sim I_i(t) + \mathrm{Bernoulli}\left(p=p_{ij, \textrm{\tiny parasite}}\right).
 \end{equation}
+Then, the total expected number of infectious contacts made by infected hosts within a population is given by $\lambda_i^k = \beta^k {I_i'}^k(t)$, where $\beta^k$ is the transmission rate of each population. 
 
-\rev{164-167: it is unclear to me whether ‘mixing for infection’ is independent from ‘mixing for reproduction’; the issue needs to be explicitly clarified anyway, and if indeed the two mixings are independent this decision should be biologically motivated and its potential consequences explicitly addressed by e.g. examining the model outcomes if the two are independent or not. Further, it reads as if parasites can emigrate only under the form of infected hosts. At least in the Potamopyrgus system this is not true, they are carried around by their definitive hosts, birds (which perhaps also carry around hosts, but in any case, the parasite forms infectious to the snails need to come out of birds). This seems like a strong assumption, and potentially important discrepancy between the life cycle in the model and the life cycles providing the data to which the model predictions are to be compared. Perhaps the independence of ‘mixing for reproduction’ and ‘mixing for infection’ mimicks, or is supposed to represent, the definitive host migration, but if this is the case it needs to be clarified and it must be checked whether it works indeed.}
-The total expected number of infectious contacts made by infected hosts within a population is given by $\lambda_i^k = \beta^k {I_i'}^k(t)$, where $\beta^k$ is the transmission rate of each population. 
-We model mixing between subpopulations by allowing infected hosts to make contact with susceptible hosts in other populations;
-we assume that a proportion $\epsilon_{\textrm{\tiny mix}}$ of the infectious contacts are equally distributed among other subpopulations.
+We further model mixing between subpopulations by allowing infected hosts to make contact with susceptible hosts in other populations.
+For brevity, we assume that migration of infected and susceptible hosts between subpopulations are independent of one another and occur at the same rate.
+In the snail-trematode system, we expect the migration of \emph{parasites} (implicitly modeled by the migration of infected hosts) to occur at a much faster rate because they are carried around by waterfowls, their definitive hosts; we expect snails to migrate over a much narrower range at a slower rate.
+\swp{CITE}
+We assume that a proportion $\epsilon_{\textrm{\tiny mix}}$ of the infectious contacts are equally distributed among other subpopulations.
 The total amount of infectious contact, coming from hosts that carry genotype $i$ parasite, that is received by susceptible hosts in subpopulation $k$ is given by
 \begin{equation}
 \lambda_{i, \textrm{\tiny total}}^k = (1 - \epsilon_{\textrm{\tiny mix}}) \lambda_i^k + \frac{\epsilon_{\textrm{\tiny mix}}}{n_\textrm{\tiny pop}-1} \sum_{l \neq k} \lambda_i^l
@@ -257,7 +259,6 @@ Then, the force of infection that a susceptible host with genotype $ij$ experien
 \mathrm{FOI}_{ij}^k = \frac{\lambda_{i, \textrm{\tiny total}}^k  + \lambda_{j, \textrm{\tiny total}}^k}{2 N^k(t+1)},
 \end{equation}
 where $N^k(t+1) = \sum_{i,j} S_{ij}^k(t+1) + A_{ij}^k(t+1)$ is the total number of hosts in generation $t+1$.
-\rev{169-171 and eq. 8: doesn’t this assume that infections by different genotypes are independent (i.e. being infected by parasite i does not affect the probability of being infected by parasite j and reverse)? This should be explicitly stated and its biological relevance and realism (is it the case in the empirical systems under study) discussed.}
 The probability that a susceptible host with genotype $ij$ in subpopulation $k$ becomes infected in the next generation is given by
 \begin{equation}
 P_{ij}^k(t+1) = 1 - \exp\left(\mathrm{FOI}_{ij}^k\right).
@@ -278,6 +279,7 @@ A_{ij,i,I}^k(t+1) &=  \frac{2^{\delta_{ij}} \lambda_{i, \textrm{\tiny total}}^k}
 \end{aligned}
 \end{equation}
 where a $\delta_{ij}$ is a Kronecker delta ($\delta_{ij}$ equals 1 when $i = j$ and 0 otherwise).
+Following \cite{ashby2015diversity}, we do not consider coinfection of hosts by multiple parasite genotypes (although there are two parasite genotypes which can infect a heterozygous host).
 
 \subsection{Simulation design and parameterization}
 
@@ -286,7 +288,7 @@ and multiple sexual genotypes or have assumed equal genetic diversity between
 asexual and sexual hosts (see \cite{ashby2015diversity} for a review of previous 
 Red Queen models) but neither of these assumptions is realistic;
 asexual hosts should be able to maintain some genetic diversity (e.g., \citep{king2011parasites})
-but are expected to be less diverse than their sexual counterparts.
+but are expected to be less diverse than their sexual counterparts (due to lack of recombination).
 In contrast, \cite{ashby2015diversity} adopted a more realistic approach by 
 incorporating stochastic external migration of an asexual genotype to a 
 population, which allows for asexual genetic diversity to vary over time.
@@ -299,12 +301,15 @@ throughout a simulation.
 Since sexual hosts have limited genetic diversity in our model (diploid hosts 
 with two biallelic loci yields a total of only 10 genotypes), allowing for 
 unlimited diversity of asexual hosts will cause the sexual hosts to be 
-easily outcompeted by the asexual hosts. Limiting asexual genetic diversity 
-allows us to account for the intrinsic difference in sexual and asexual diversity,
-while allowing for some genetic diversity among asexual hosts.
+easily outcompeted by the asexual hosts.
+
+Instead, we constrain the asexual genotypic space to model the difference in sexual 
+and asexual diversity while allowing for some genetic diversity among asexual hosts.
 At the beginning of each simulation, a pool of $G_{\textrm{\tiny asex}}$ asexual 
-genotypes are sampled at random from the entire genotypic space; these are the 
-genotypes that are available for external immigration into subpopulations.
+genotypes are sampled at random from the entire genotypic space ($1 \leq G_{\textrm{\tiny asex}} \leq 10$).
+This defines the asexual genotypic space for the entire system;
+whenever asexuals are introduced (from an external source) into each subpopulation, 
+they can have any of the $G_{\textrm{\tiny asex}}$ genotypes.
 Then, we use our model-based comparison with data to estimate $G_{\textrm{\tiny asex}}$
 to test whether the data are consistent with the dynamics of a model that allows 
 for more than a single asexual clone.
@@ -320,7 +325,7 @@ p_{ij, \textrm{\tiny asex}} &=
 \end{cases},
 \end{aligned}
 \end{equation}
-where $p_{\textrm{\tiny host}}$ is the probability that at least one sexual or asexual host enters a subpopulation in a generation. We scale the probability of an infected host carrying parasite genotype $i$ in a similar way for interpretability:
+where $p_{\textrm{\tiny host}}$ is the probability that at least one sexual or asexual host enters a subpopulation in a generation. We scale the probability of an infected host carrying parasite genotype $i$ in the same way:
 \begin{equation}
 p_{i, \textrm{\tiny parasite}} = 1 - (1-p_{\textrm{\tiny infected}})^{1/G_\textrm{\tiny parasite}},
 \end{equation}
@@ -339,7 +344,7 @@ We use Approximate Bayesian Computation (ABC) to estimate parameters from data \
 ABC relies on comparing summary statistics of observed data with those of simulated data; it is particularly useful when the exact likelihood function is not available.
 Each summary statistic (also referred to as a \emph{probe}) represents an aspect of a system \citep{kendall1999populations};
 probe matching can be more powerful than classical likelihood-based approaches because it allows to evaluate model fits based on certain aspects of a biological system that we are interested in \citep{wood2010statistical}.
-We consider the mean proportion of infected and sexually reproducing snails in the system and variation in these proportions --- measured by a coefficient of variation (CV) --- across space (subpopulations) and time (generations) as our probes.
+We consider the mean proportion of infected and sexually reproducing snails in the system and variation in these proportions --- measured by a coefficient of variation (CV) --- across space (subpopulations) and time (generations) as our probes (calculated based on the last 100 generations out of 1100 generations).
 As \cite{dagan2013clonal} and \cite{mckone2016fine} only reported the proportion of males, the proportion of sexual hosts is assumed to be twice the proportion of males.
 \lively{This may not be a safe assumption in Melaniodes.  
 There is a positive correlation between male frequency and the confirmed frequency of diploid sexual females, but there is quite a bit of scatter, probably because males are smaller than females.  They may also have shorter lifespans, but we don't have data on this.}
@@ -347,7 +352,7 @@ There is a positive correlation between male frequency and the confirmed frequen
 
 CV across space is calculated by first calculating mean proportions by averaging across time (generation) for each site (subpopulation) and then taking the the CV of these mean proportions.
 CV across time (generation) is calculated by first averaging proportions across space (subpopulation) at each generation and then taking the CV.
-For purely spatial data (\cite{dagan2013clonal} and \cite{mckone2016fine}), CV across space is calculated without averaging across time.
+For purely spat ial data (\cite{dagan2013clonal} and \cite{mckone2016fine}), CV across space is calculated without averaging across time.
 
 Because ABC is a Bayesian method, we must specify prior distributions for all parameters.
 We use weakly informative priors for all estimated parameters except $c_b$, a scale parameter for the cost of sex (see Table~\ref{tb:param} for prior distributions used and parameters assumed).
@@ -397,14 +402,16 @@ All other parameters are fixed throughout simulations.
 
 We use the Population Monte Carlo approach \citep{turner2012tutorial}, which allows for efficient sampling while ensuring that final result still converges to a correct (approximate) Bayesian posterior.
 The Population Monte Carlo approach begins with a basic ABC.
-For each random parameter sample drawn from the prior distribution, the model is simulated and a sample of a subpopulation is drawn from the simulated system, equal to the number of sites collected in a study.
-Summary statistics are calculated based on the last 100 generations out of 1100 generations; the current parameter set is accepted if the difference between a simulation and the observed data is less than a pre-specified tolerance value (i.e., acceptable amount of difference between the model and the data).
+For each random parameter set drawn from the prior distribution, the model is simulated and a sample of a subpopulation is drawn from the simulated system, equal to the number of sites collected in a study.
+The current parameter set is accepted if the sum of absoluate differences between a simulated summary statistic and 
+
+a simulation and the observed data is less than a pre-specified tolerance value (i.e., acceptable amount of difference between the model and the data).
 We measure the difference between the model and the data by the sum of absolute differences in summary statistics. 
 This process is repeated until 100 parameter sets are accepted.
 
 After the first run ($t=1$), equal weights ($w_{i,1}=1/100$) are assigned to each accepted parameter set $\bm\theta_{i, 1}$ ($i = 1, 2, \dots, 100$).
 A weighted random sample ($\bm\theta^\ast$) is drawn from the accepted parameters of the previous run ($t-1$) with weights $w_{i,t-1}$.
-For any run $t > 1$, a parameter sample ($\bm\theta_{i, t}$) is proposed from a multivariate normal distribution with a mean $\bm\theta^\ast$ and a variance covariance matrix that is equal to $\sigma_{t-1}^2=2 \mathrm{Var}(\bm\theta_{1:N, t-1})$, where $\mathrm{Var}(\bm\theta_{1:N, t-1})$ is the weighted variance covariance matrix of the accepted parameters from the previous run and $N$ is the total number of accepted parameters from the previous run.
+For any run $t > 1$, a parameter set ($\bm\theta_{i, t}$) is proposed from a multivariate normal distribution with a mean $\bm\theta^\ast$ and a variance covariance matrix that is equal to $\sigma_{t-1}^2=2 \mathrm{Var}(\bm\theta_{1:N, t-1})$, where $\mathrm{Var}(\bm\theta_{1:N, t-1})$ is the weighted variance covariance matrix of the accepted parameters from the previous run and $N$ is the total number of accepted parameters from the previous run.
 
 The parameter $G_{\textrm{\tiny asex}}$ is rounded to the nearest integer and the model is simulated.
 If a proposed parameter is accepted, the following weight is assigned:
@@ -436,7 +443,7 @@ I think for the NZ snail, it is probably about one generation per year in the fi
 }
 \swp{Tried to address this without redoing the analysis}
 Using estimated parameters for each data set, we calculate the power to detect a significant positive correlation between infection prevalence and frequency of sexual hosts.
-For each parameter sample from the final run of the ABC, 10 simulations are run.
+For each parameter set from the final run of the ABC, 10 simulations are run.
 For each simulation, we take the last two generations --- assuming that a year contains two snail generations (estimated generation time is 4-9 months \citep{neiman2005variation}) --- from the simulation and choose $n$ subpopulations at random from 40 simulated subpopulations.
 We might expect New Zealand freshwater snails to have a slightly longer generation 
 time (approximately one year) with overlapping generations (Lively, personal communication);
@@ -555,7 +562,7 @@ Under their interpretation, our estimate of $c_b$ corresponds to a slightly lowe
 \caption{{\bf Parameter estimates from Sequential Monte Carlo Approximate Bayesian Computation.}
 We estimate mean transmission rate ($\beta_{\textrm{\tiny mean}}$), CV in transmission rate ($\beta_{\textrm{\tiny CV}}$), virulence ($V$), mixing proportion ($\epsilon_{\textrm{\tiny mean}}$), number of asexual genotypes ($G_{\textrm{\tiny asex}}$), and a scale parameter for cost of sex ($c_b$).
 Violin plots represent weighted distribution of 100 posterior samples obtained from ABC.
-Violin plots for prior distribution is obtained by drawing 10000 random parameter samples from the prior distribution.
+Violin plots for prior distribution is obtained by drawing 10000 random parameter sets from the prior distribution.
 $G_{\tiny \textrm{asex}}$ is a discrete variable but is drawn on a continuous scale for convenience.
 See Table~\ref{tb:param} for full parameter descriptions and their prior distributions.
 }
