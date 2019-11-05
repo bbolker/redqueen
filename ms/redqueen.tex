@@ -50,7 +50,6 @@ The most commonly mentioned is the cost of producing males \citep{smith1978evolu
 as males cannot produce offspring, asexual lineages are expected to outgrow their sexual counterparts.
 This \emph{two-fold cost of sex} \citep{smith1978evolution} relies on the assumption that everything else is equal.
 Then, what drives the observed prevalence of sexual reproduction?
-
 One explanation for the persistence of sexual reproduction is the Red Queen Hypothesis (RQH) \citep{bell1982masterpiece}.
 The RQH predicts that sexually reproducing hosts overcome the cost of sex under strong parasitic pressure by producing genetically diverse offspring that can escape infection \citep{jbs1949disease, jaenike1978hypothesis, hamilton1980sex, hamilton1990sexual}.
 % Limited genetic diversity of asexually reproducing hosts allows for sexual reproduction to be maintained in the host population \citep{ashby2015diversity}.
@@ -79,7 +78,7 @@ experimental systems can be used to directly test the hypothesis \citep{morran20
 Even though the Red Queen Hypothesis has gained both theoretical and empirical support, there still remains a gap between theory and data.
 Many theoretical studies rely on simple models that are not applicable to natural populations and make indirect connections to empirical work.
 For example, none of the Red Queen models reviewed by \cite{ashby2015diversity} make statistical connections to empirical data.
-It is unclear how well these models capture coevolutionary dynamics in natural systems.
+It is unclear how well these models capture the coevolutionary dynamics observed in nature.
 
 Simple models can be still useful for making \emph{qualitative} predictions about 
 nature.
@@ -97,17 +96,16 @@ king2011coevolutionary, king2011parasites,
 vergara2013geographic, vergara2014infection, mckone2016fine, gibson2018periodic}.
 Surprisingly, the predicted correlation was not observed in anoter snail-trematode system in Israel \citep{heller1990sexual, ben2005spatial, ben2007temporal, ben2008sex, dagan2013clonal} even though it appears to demonstrate some key features of the RQH such as virulent parasites \citep{ben2005spatial} and parasite-driven genetic diversity \citep{dagan2013clonal}.
 
-\swp{Cite Dagan 2013 somewhere and mention that parasites reproduce parthenogenically but Microphallus is not...?}
-
-Here, we try to confront simple models with data.
+Here, we try to test whether a simple model can capture the 
+coevolutionary dynamics observed in real data.
 We extend the model used by \cite{lively2010epidemiological} to account for 
 demographic stochasticity and include a simple metapopulation structure.
 Then, we fit the extended model to data sets from three field studies 
 \citep{dagan2013clonal, mckone2016fine, vergara2014infection} 
 using Approximate Bayesian Computation (ABC) to estimate biologically realistic 
-parameters, which capture the observed behaviours of real empirical systems, and
-test whether a simple coevolutionary model can sufficiently explain the data.
-Using estimated parameters, we test for power (probability of observing a 
+parameters.
+Using estimated parameters, we compare model predictions with the observed
+data and test for power (probability of observing a 
 significant effect) to detect a positive correlation between frequency of
 sexual reproduction and prevalence of infection \cite{lively2001trematode}.
 We provide practical guidance for studying the RQH for modelers and empiricsts
@@ -124,14 +122,13 @@ among which \textit{Microphallus} sp. is most commonly found \citep{winterbourn1
 The Israeli snail populations \citep{dagan2013clonal} consist of \textit{Melanoides tuberculata}, which also serves as an intermediate host for trematodes, including \textit{Centrocestus} sp. \citep{ben2005spatial}, \textit{Philophthalmus} sp. \citep{ben2006first}, and \textit{Transversotrema patialense} \citep{ben2005differential}.
 Diploid sexual females and polyploid asexual females coexist in both the New Zealand \citep{phillips1989genetics, wallace1992parthenogenesis, dybdahl1995diverse} and the Israeli \citep{samadi1999microsatellite} snail populations.
 
-\swp{CITE}
-\textit{Microphallus} and \textit{Centrocestus} share roughly similar life cycles. 
+\textit{Microphallus} and \textit{Centrocestus} share similar life cycles. 
 These trematodes reproduce asexually within the snail and sterilize its host.
 Once infected snails are consumed by waterfowls, trematodes reproduce sexually
 inside the intestines of ducks and release their eggs through their host's 
 feces.
 These eggs can either hatch into miracidia that can penetrate snail tissue or
-be ingested by snails, thus completing their life cycles.
+be ingested by snails, thus completing their life cycles \citep{lively1991experimental, ben2005spatial}. 
 
 We choose to analyze snail-trematode systems because they have been extensively studied under the context of the Red Queen Hypothesis.
 The snail-trematode systems in New Zealand exhibit positive correlation between prevalence of infection and frequency of sexual hosts \citep{lively2002temporal, king2011parasites, vergara2013geographic, mckone2016fine, gibson2016within}; local adaptation \citep{lively1989adaptation, lively2004host, king2011coevolutionary}; negative frequency-dependent selection \citep{dybdahl1995host, dybdahl1998host,jokela2009maintenance, koskella2009evidence}; and periodic selection for sexual reproduction \citep{vergara2014infection, gibson2018periodic}. 
@@ -139,7 +136,8 @@ These results are consistent with the host-parasite coevolutionary theory behind
 Therefore, we expect a basic Red Queen model to be able to mimic the observed dynamics reasonably well.
 
 We included the Israeli population because there has been a consistent lack of positive correlation between the prevalence of infection and frequency of sexual hosts \citep{heller1990sexual, ben2005spatial, ben2007temporal, ben2008sex, dagan2013clonal}, which sharply contrasts the observations from the New Zealand population.
-We wanted to test whether a simple host-parasite coevolutionary model can explain the patterns observed in the data.
+We wanted to test whether a simple host-parasite coevolutionary model can explain the differences between 
+Israeli and New Zealand populations.
 
 The data sets include proportions of infected snails, proportions of sexual/asexual snails, and locations of sampling sites. 
 The data set from \cite{vergara2014infection} also includes sampling year (for 5 years).
