@@ -333,10 +333,16 @@ where $p_{\textrm{\tiny infected}}$ is the probability that at least one infecte
 The number of parasite genotypes $G_\textrm{\tiny parasite}$ is equal to 4 (because parasites are assumed to be haploids with two loci).
 
 Each simulation consists of 40 subpopulations. 
-Every subpopulation is initialized with 2000 sexual hosts, of which 80 are infected. 
-They are assumed to be in Hardy-Weinberg equilibrium where the allele frequency in each locus is equal to 0.5. 
-In order to account for variation in infection rates among subpopulations, the transmission rate, $\beta^k$, is randomly drawn for each subpopulation from a Gamma distribution with mean $\beta_{\textrm{\tiny mean}}$ and coefficient of variation $\beta_{\textrm{\tiny CV}}$. 
-The simulation runs for 500 generations without the introduction of asexuals. At generation 501, 10 asexual hosts of a single genotype are introduced to each subpopulation (the asexual genotype introduced can vary across subpopulations) and simulation runs for 600 more generations while allowing for stochastic migration of asexual hosts.
+Every subpopulation is initialized with 2000 sexual hosts, of which 80 are infected.
+Both susceptible and infected hosts are assumed to be in Hardy-Weinberg equilibrium where the allele frequency in each locus is equal to 0.5.
+All possible genotypes are initially present in each subpopulation.
+In order to account for variation in infection rates among subpopulations, the transmission rate, $\beta^k$, is randomly drawn for each subpopulation from a Gamma distribution with mean $\beta_{\textrm{\tiny mean}}$ and coefficient of variation $\beta_{\textrm{\tiny CV}}$.
+The variation in the transmission rates implicitly captures 
+variation in susceptibility \citep{krist2000spatial, gibson2016fine} as well as distribution of definitive hosts \citep{lively1996clinal, jokela2009maintenance, king2009geographic} in each subpopulation.
+The simulation runs for 500 generations without the introduction of asexuals.
+At generation 501, 10 asexual hosts of a single genotype are introduced to each subpopulation (the asexual genotype introduced can vary across subpopulations) and simulation runs for 600 more generations while allowing for stochastic migration of asexual hosts.
+The host-parasite coevolution of sexual individuals combined with heterogeneity in transmission rates among subpopulations causes the system to deviate sufficiently from the initial condition within the first 500 generations (results not shown); we do not expect the initial conditions to affect our 
+overall qualitative conclusions.
 
 \subsection{Approximate Bayesian Computation}
 
@@ -352,13 +358,14 @@ There is a positive correlation between male frequency and the confirmed frequen
 
 CV across space is calculated by first calculating mean proportions by averaging across time (generation) for each site (subpopulation) and then taking the the CV of these mean proportions.
 CV across time (generation) is calculated by first averaging proportions across space (subpopulation) at each generation and then taking the CV.
-For purely spat ial data (\cite{dagan2013clonal} and \cite{mckone2016fine}), CV across space is calculated without averaging across time.
+For data sets without temporal variation (\cite{dagan2013clonal} and \cite{mckone2016fine}), CV across space is calculated without averaging across time.
 
 Because ABC is a Bayesian method, we must specify prior distributions for all parameters.
 We use weakly informative priors for all estimated parameters except $c_b$, a scale parameter for the cost of sex (see Table~\ref{tb:param} for prior distributions used and parameters assumed).
 The prior distribution for the scale parameter is chosen so that 95\% prior quantile range of cost of sex (2/$c_b$) is approximately equal to the 95\% confidence interval reported by \cite{gibson2017two}.
 For brevity, all other parameters are assumed to be fixed.
-While it is a common practice to fix several parameters of a Red Queen model (e.g., \cite{lively2010epidemiological,ashby2015diversity,haafke2016eco,ashby2019understanding}), failing to explicitly account for uncertainty in all parameters of a model can lead to overly confident conclusions \citep{elderd2006uncertainty}.
+While it is a common practice to fix several parameters of a Red Queen model (e.g., \cite{lively2010epidemiological,ashby2015diversity,haafke2016eco,ashby2019understanding}), failing to explicitly account for uncertainty in all parameters of a model can lead to overly confident conclusions \citep{elderd2006uncertainty};
+future studies should carefully consider the sensitivity of their conclusion with respect to \emph{all} model parameters and define the range of biologically realistic parameters.
 
 \afterpage{
 \clearpage
@@ -402,34 +409,34 @@ All other parameters are fixed throughout simulations.
 
 We use the Population Monte Carlo approach \citep{turner2012tutorial}, which allows for efficient sampling while ensuring that final result still converges to a correct (approximate) Bayesian posterior.
 The Population Monte Carlo approach begins with a basic ABC.
-For each random parameter set drawn from the prior distribution, the model is simulated and a sample of a subpopulation is drawn from the simulated system, equal to the number of sites collected in a study.
-The current parameter set is accepted if the sum of absoluate differences between a simulated summary statistic and 
-
-a simulation and the observed data is less than a pre-specified tolerance value (i.e., acceptable amount of difference between the model and the data).
-We measure the difference between the model and the data by the sum of absolute differences in summary statistics. 
+For each random parameter set drawn from the prior distribution, the model is simulated once and
+we select a set of subpopulations (from 40 subpopulations), such that the number of selected subpopulations is
+equal to the number of sites collected in a study;
+simulated summary statistics are calculated from this set of subpopulations.
+The current parameter set is accepted if the sum of absoluate differences between the simulated summary statistics and the observed summary statistics is less than a pre-specified tolerance value (i.e., acceptable amount of difference between the model and the data).
 This process is repeated until 100 parameter sets are accepted.
+Each \emph{step} of the Population Monte Carlo follows this acceptance rule.
 
-After the first run ($t=1$), equal weights ($w_{i,1}=1/100$) are assigned to each accepted parameter set $\bm\theta_{i, 1}$ ($i = 1, 2, \dots, 100$).
-A weighted random sample ($\bm\theta^\ast$) is drawn from the accepted parameters of the previous run ($t-1$) with weights $w_{i,t-1}$.
-For any run $t > 1$, a parameter set ($\bm\theta_{i, t}$) is proposed from a multivariate normal distribution with a mean $\bm\theta^\ast$ and a variance covariance matrix that is equal to $\sigma_{t-1}^2=2 \mathrm{Var}(\bm\theta_{1:N, t-1})$, where $\mathrm{Var}(\bm\theta_{1:N, t-1})$ is the weighted variance covariance matrix of the accepted parameters from the previous run and $N$ is the total number of accepted parameters from the previous run.
-
+After the initial ABC step as described above ($t=1$), equal weights ($w_{i,1}=1/100$) are assigned to each accepted parameter set $\bm\theta_{i, 1}$ ($i = 1, 2, \dots, 100$).
+A weighted random sample ($\bm\theta^\ast$) is drawn from the accepted parameters of the previous step ($t-1$) with weights $w_{i,t-1}$.
+For any step $t > 1$, a parameter set ($\bm\theta_{i, t}$) is proposed from a multivariate normal distribution with a mean $\bm\theta^\ast$ and a variance covariance matrix that is equal to $\sigma_{t-1}^2=2 \mathrm{Var}(\bm\theta_{1:N, t-1})$, where $\mathrm{Var}(\bm\theta_{1:N, t-1})$ is the weighted variance covariance matrix of the accepted parameters from the previous step and $N$ is the total number of accepted parameters from the previous step.
 The parameter $G_{\textrm{\tiny asex}}$ is rounded to the nearest integer and the model is simulated.
-If a proposed parameter is accepted, the following weight is assigned:
+If a proposed parameter is accepted (i.e., the sum of absolaute difference between the simulated summary statistics and the observed summary statistics is less than a tolerance value), the following weight is assigned to the parameter set:
 $$
 w_{i,t} = \frac{\pi(\bm\theta_{i, t})}{\sum_{i=1}^{100} w_{j, t-1} q(\bm\theta_{j, t-1} | \bm\theta_{i,t}, \sigma_{t-1}^2)}
 $$
 where $\pi(\cdot)$ is a prior density and $q(\cdot | \bm\theta_{i,t}, \sigma_{t-1}^2)$ is a multivariate normal density with mean $\bm\theta_{i,t}$ and variance covariance matrix $\sigma_{t-1}^2$.
-For each run, 100 parameters are accepted and weights are normalized at the end to sum to 1.
+For each step, 100 parameters are accepted and weights are normalized at the end to sum to 1.
 
-For each observed data set, we perform 4 runs with decreasing tolerance.
+For each observed data set, we perform 4 steps of ABC with decreasing tolerance.
 First three tolerance values are chosen in a decreasing sequence to reach the final step quicker.
 The tolerance value of the final run is chosen so that a parameter set will be accepted if its each simulated summary statistic deviates from the corresponding observed summary statistic by 0.1 units on average.
-For spatial data \citep{dagan2013clonal, mckone2016fine}, four summary statistics are compared: the mean proportion of infected and sexually reproducing hosts and CV in these proportions across populations.
-Tolerance values of 1.6, 0.8, 0.6 and 0.4 are used for each run.
-For spatiotemporal data \citep{vergara2014infection}, we additionally compare the CV of proportions of infected and sexually reproducing hosts across generations.
-In this case, larger tolerance values (2.4, 1.2, 0.9 and 0.6) are used for each run to account for a higher number of summary statistics being compared.
+For \citep{dagan2013clonal, mckone2016fine}, only four summary statistics are compared because there is no temporal variation: the mean proportion of infected and sexually reproducing hosts and CV in these proportions across populations.
+Tolerance values of 1.6, 0.8, 0.6 and 0.4 are used for each step.
+For \citep{vergara2014infection}, we additionally compare the CV of proportions of infected and sexually reproducing hosts across generations.
+In this case, larger tolerance values (2.4, 1.2, 0.9 and 0.6) are used for each step to account for a higher number of summary statistics being compared.
 
-All statistical results are weighted by parameter weights of the final run; 
+All statistical results are weighted by parameter weights of the final step; 
 confidence intervals are obtained by taking weighted quantiles. 
 However, it is always not possible to obtain the exact 95\% confidence interval when the smallest (or the largest) value has a weight greater than 0.025. 
 In these cases, we take the lowest (or largest) possible quantile that is closest to the 2.5\% (or the 97.5\%) quantile.
@@ -445,7 +452,7 @@ I think for the NZ snail, it is probably about one generation per year in the fi
 Using estimated parameters for each data set, we calculate the power to detect a significant positive correlation between infection prevalence and frequency of sexual hosts.
 For each parameter set from the final run of the ABC, 10 simulations are run.
 For each simulation, we take the last two generations --- assuming that a year contains two snail generations (estimated generation time is 4-9 months \citep{neiman2005variation}) --- from the simulation and choose $n$ subpopulations at random from 40 simulated subpopulations.
-We might expect New Zealand freshwater snails to have a slightly longer generation 
+In nature, New Zealand freshwater snails can have a slightly longer generation 
 time (approximately one year) with overlapping generations (Lively, personal communication);
 these factors can reduce the cost of males per reproductive time step \citep{lively2010parasite}.
 Hoever, we expect these factors to have little effect on the overall estimates of the power
@@ -456,13 +463,13 @@ and the mean proportion of hosts in each category is calculated by averaging ove
 Independent multinomial samples of size $m$ are drawn from each selected population based on the proportions in every four categories. 
 Correlation between the proportion of infected hosts and the proportion of sexual hosts is tested using the Spearman's rank correlation at a 5\% significance level.
 
-While we do not explicitly try to match observed correlations, this procedure is equivalent to a retrospective power analysis.
+While we do not explicitly try to match observed correlations, this procedure is conceptually equivalent to a retrospective power analysis.
 The main purpose of a power analysis is to design an experiment and determine an appropriate sample size \citep{cohen1992statistical}.
 If instead, power is calculated based on an observed effect size after an experiment, the estimated power is likely to be correlated with the observed significance of the result;
 therefore, interpreting significance (or a lack of significance) of a statistical result based on a retrospective power analysis is inappropriate \citep{goodman1994use, senn2002power}.
 
 Here, we do not try to justify the significant correlation observed by \citep{mckone2016fine} or the nonsignificant correlation observed by \citep{dagan2013clonal} based on this power analysis. 
-Instead, we use a power analysis to better understand how a study design or the dynamics of the model might affect the correlation between the prevalence of infection and sexual reproduction while using biologically realistic parameters.
+Instead, we use a power analysis to better understand how a study design (i.e., the number of samples per site and the number of sites per study) or the dynamics of the model might affect the correlation between the prevalence of infection and sexual reproduction while using biologically realistic parameters.
 
 \section{Results}
 
@@ -511,7 +518,7 @@ Since we plot the \emph{predicted} densities, they are able to capture the full 
 
 Despite its accuracy in reproducing summary statistics reported by \cite{dagan2013clonal}, 
 our model poorly captures the relationship between the mean proportion of infected hosts and the mean proportion of sexual hosts (\fref{ivs}; \cite{dagan2013clonal}).
-The model predicts sexual reproduction to be well maintained when infection prevalence is high ($> 40\%$) whereas
+The model predicts sexual reproduction to be maintained when infection prevalence is high ($>20\%$) whereas
 the observed data \citep{dagan2013clonal} suggests that sexual reproduction can only be supported when infection prevalence is low ($< 20\%$).
 \cite{mckone2016fine} also found sexually reproducing snails in sites with low infection prevalence ($< 20\%$);
 we note that infection prevalence may underrepresent the strength of parasite-mediated selection as
@@ -527,8 +534,8 @@ our model fails to maintain such high levels of sexual reproduction.
 \begin{figure}[!ht]
 \includegraphics[width=\textwidth]{../fig/simulated_data2.pdf}
 \caption{{\bf Predicted relationship between mean infection prevalence and mean proportion of sexual hosts in each population.}
-For each posterior sample, 10 simulations are run.
-For each population within a simulation, mean infection prevalence and mean proportion of sexual hosts is calculated by averaging across last two generations (assuming that one year contains two snail generations \citep{neiman2005variation}).
+For each posterior sample, 10 simulations are run (for 1100 generations with 500 generations of burn-in period).
+For each subpopulation within a simulation, mean infection prevalence and mean proportion of sexual hosts is calculated by averaging across the last two generations (assuming that one year contains two snail generations \citep{neiman2005variation}).
 Each point, consisting of mean infection prevalence and mean proportion of sexual hosts, is assigned the weight of the parameter used to simulated the population.
 The density at each cell is calculated as the sum of weights of the points that lie within it.
 Cell densities are normalized by dividing by the maximum grid densities for each fit.
@@ -540,8 +547,9 @@ because we calculate the densities across 1000 simulations, we expect the distri
 \label{fig:ivs}
 \end{figure}
 
-There is a high posterior density region in which the proportion of infected hosts remains almost constant (around 0.5) among subpopulations while the proportion of sexual hosts can range from 0 to 0.3 (visible in the fits to \cite{mckone2016fine}).
-As transmission rate ($\beta$) increases, selection for sexual hosts increases but the increasing number of resistant offspring prevents further infection from occurring and can decrease overall infection prevalence.
+There is a high posterior density region in which the prevalence of infected hosts remains almost constant (around 50\%) among subpopulations while the proportion of sexual hosts can range from 0 to 0.3 (visible in the fits to \cite{mckone2016fine}).
+As transmission rate ($\beta$) increases, selection for sexual hosts increases but the increase in the number of resistant offspring prevents further infection from occurring and can decrease overall infection prevalence;
+as a result, infection prevalence stays roughly constant even though the proportion of sexual hosts varies.
 This trend is consistent with previous results of \cite{lively2001trematode} who noted that there is a region in which either sexual and asexual reproduction can be selected exclusively under the same infection prevalence.
 
 Our model fit to \cite{vergara2014infection} predicts that the proportion of sexual hosts will decrease as infection prevalence becomes extremely high (see the shape of the contour lines in \fref{ivs}: \cite{vergara2014infection}).
