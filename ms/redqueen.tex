@@ -32,6 +32,9 @@
 
 \section*{Abstract}
 
+\rev{Though I’m not a big fan of schematics in general, I think it would be good that the authors provide a complete schematic of the life cycle they model, including all stages, to make sure everything is explicitly stated. It would further be a good idea to draw in parallel the complete life cycles of the empirical host-parasite systems they compare the model predictions to; that way the aspects where model and real life cycles, and potentially real life cycles between them, differ will be obvious to everyone.}
+\swp{Not sure if this is necessary. I think I made the model clear enough now and a diagram might be too complicated...}
+
 Sexual reproduction persists in nature despite its large cost.
 The Red Queen Hypothesis postulates that parasite pressure maintains sexual reproduction in the host population by selecting for the ability to produce rare genotypes that are resistant to infection.
 Mathematical models have been used to lay theoretical foundations for the hypothesis; empirical studies have confirmed these predictions.
@@ -236,8 +239,7 @@ I_{i}(t) &= (1-r_{\textrm{\tiny parasite}}) J_i(t) + \frac{r_{\textrm{\tiny para
 \end{aligned}
 \end{equation}
 where $\eta_{ik}=1$ if haplotypes $i$ and $k$ differ by one locus (e.g., $\mathrm{AB}$ and $\mathrm{aB}$) and $\eta_{ik}=0$ otherwise (e.g., $\mathrm{AB}$ and $\mathrm{ab}$).
-\swp{Is this too redundant? I'm not sure what's the best way to write this... Reviewer complained about having a function of mutation without explaining.}
-We further account for stochastic migration with probability $p_{i, \textrm{\tiny parasite}}$ to avoid fixation:
+We further account for stochastic external migration with probability $p_{i, \textrm{\tiny parasite}}$ to avoid fixation:
 \begin{equation}
 I_{i}'(t) \sim I_i(t) + \mathrm{Bernoulli}\left(p=p_{ij, \textrm{\tiny parasite}}\right).
 \end{equation}
@@ -245,8 +247,7 @@ Then, the total expected number of infectious contacts made by infected hosts wi
 
 We further model mixing between subpopulations by allowing infected hosts to make contact with susceptible hosts in other populations.
 For brevity, we assume that migration of infected and susceptible hosts between subpopulations are independent of one another and occur at the same rate.
-In the snail-trematode system, we expect the migration of \emph{parasites} (implicitly modeled by the migration of infected hosts) to occur at a much faster rate because they are carried around by waterfowls, their definitive hosts; we expect snails to migrate over a much narrower range at a slower rate.
-\swp{CITE}
+In the snail-trematode system, we expect the migration of \emph{parasites} (implicitly modeled by the migration of infected hosts) to occur at a much faster rate because they are carried around by waterfowls, their definitive hosts \citep{lively1991experimental, ben2005spatial}; we expect snails to migrate over a much narrower range at a slower rate \citep{lively1999migration}.
 We assume that a proportion $\epsilon_{\textrm{\tiny mix}}$ of the infectious contacts are equally distributed among other subpopulations.
 The total amount of infectious contact, coming from hosts that carry genotype $i$ parasite, that is received by susceptible hosts in subpopulation $k$ is given by
 \begin{equation}
@@ -352,7 +353,12 @@ We consider the mean proportion of infected and sexually reproducing snails in t
 As \cite{dagan2013clonal} and \cite{mckone2016fine} only reported the proportion of males, the proportion of sexual hosts is assumed to be twice the proportion of males.
 \lively{This may not be a safe assumption in Melaniodes.  
 There is a positive correlation between male frequency and the confirmed frequency of diploid sexual females, but there is quite a bit of scatter, probably because males are smaller than females.  They may also have shorter lifespans, but we don't have data on this.}
-\swp{I'm not sure how I should address this point.}
+\rev{
+“Summary statistics are calculated based on the last 100 generations out of 1100 generations”: is there any indication that the model reaches a sort of ‘stationary’ behavior by then for all parameter combinations considered. If not, difference in the results may simply indicate difference in convergence times because of different parameter values, and how can this be interpreted?
+}
+\swp{
+This is a Red Queen model... we don't expect stationary behavior...
+}
 
 CV across space is calculated by first calculating mean proportions by averaging across time (generation) for each site (subpopulation) and then taking the the CV of these mean proportions.
 CV across time (generation) is calculated by first averaging proportions across space (subpopulation) at each generation and then taking the CV.
@@ -443,10 +449,6 @@ This rule leads to one instance where we use the 2.82\% quantile instead of the 
 
 \subsection{Power analysis}
 
-\lively{
-I think for the NZ snail, it is probably about one generation per year in the field.  It is shorted in the lab, as there are no winters.  Also, my guess is that there is some overlap of generations in the field, which can reduced the cost of males per reproductive bout.  see Lively, C. M.  2010.  Parasite virulence, host life history, and the costs and benefits of sex.  Ecology 91: 3-6.
-}
-\swp{Tried to address this without redoing the analysis}
 Using estimated parameters for each data set, we calculate the power to detect a significant positive correlation between infection prevalence and frequency of sexual hosts.
 For each parameter set from the final run of the ABC, 10 simulations are run.
 For each simulation, we take the last two generations --- assuming that a year contains two snail generations (estimated generation time is 4-9 months \citep{neiman2005variation}) --- from the simulation and choose $n$ subpopulations at random from 40 simulated subpopulations.
@@ -471,9 +473,10 @@ Instead, we use a power analysis to better understand how a study design (i.e., 
 
 \section{Results}
 
-\rev{I had difficulty interpreting the figures. I recommend the authors go into more detail in the results section and in figure legends.}
-\swp{I tried.}
-
+\rev{
+I think this paragraph should be placed in the M\&M and not the Results section ; I also think it should be developed further. For example, it is very difficult to understand what is meant by predicted summary statistics without reading the legend of figure 2 – a lot of the material there has its place in this paragraph.
+}
+\swp{The other reviewer wanted us to develop this in detail in the Results and figure caption. I did.}
 First, we compare observed summary statistics (calculated from the observed data) with either fitted or predicted summary statistics (\fref{smcsumm}).
 \emph{Fitted} summary statistics (\fref{smcsumm}) are values that have been accepted by the ABC procedure as being sufficiently close to observed summary statistics;
 these can be interpreted as model-based estimates of the summary statistics (and associated confidence intervals) of the study sites.
@@ -484,6 +487,9 @@ The difference between the fitted and predicted summary statistics is analogous 
 the difference between confidence intervals and prediction intervals from 
 linear regression.
 
+\rev{
+“Our simple meta-population Red Queen model can capture observed variation in infection prevalence and frequency of sexual hosts reasonably well”: given that these variables are used as summary statistics (‘probes’) and that the model is run until 100 parameter sets yield summary statistics that match the observed statistics sufficiently, is this surprising?
+}
 Our simple metapopulation Red Queen model can capture observed variation in infection prevalence and frequency of sexual hosts reasonably well;
 both temporal and spatial variation (measured by CV across mean proportions) are well-matched by the model. 
 However, as model fitting is performed by minimizing the sum of absolute distance between observed and simulated summary statistics, our method does not guarantee that all summary statistics are equally well-fitted.
@@ -494,7 +500,7 @@ The model underestimates the mean proportion of sexual hosts for \cite{dagan2013
 Observed mean proportions of sexual hosts are 0.045 and 0.704, respectively, whereas their ABC-based estimates are 0.026 (95\% CI: 0.007 - 0.048) and 0.596 (95\% CI: 0.441 - 0.679).
 
 \begin{figure}[!ht]
-\includegraphics[width=\textwidth]{../fig/smc_summary.pdf}
+\includegraphics[width=0.9\textwidth]{../fig/smc_summary.pdf}
 \caption{{\bf Summary statistics of the observed data vs. distribution of summary statistics of the simulated data from the posterior samples.}
 Dotted horizontal lines represent observed summary statistics calculated from the data.
 Violin plots show the weighted distribution of fitted summary statistics (i.e., summary statistics that were accepted during ABC);
@@ -514,6 +520,9 @@ Then, a two dimensional distribution of these means is compared with the observe
 If our model is able to sufficiently capture the observed dynamics, we would expect the observed data points to fall within high density regions.
 Since we plot the \emph{predicted} densities, they are able to capture the full range of coevolutionary dynamics, which may be only partially represented in the observed data.
 
+\rev{
+“The model predicts sexual reproduction to be well maintained when infection prevalence is high (> 40\%) whereas the observed data (Dagan et al. 2013a) suggests that sexual reproduction can only be supported when infection prevalence is low (< 20\%).”: the previous point is related to this; based on the leftmost panel of figure 2 I don’t see any parameter space where the model predicts sexual reproduction – all ‘high’ density squares lie along the horizontal axis. Perhaps I misunderstand what “well maintained” means. The fact that the correlation between the two variables is badly captured by the modeled is not surprising given that as previously stated by the authors the model underestimates % of sexuals and overestimates % infected.
+}
 Despite its accuracy in reproducing summary statistics reported by \cite{dagan2013clonal}, 
 our model poorly captures the relationship between the mean proportion of infected hosts and the mean proportion of sexual hosts (\fref{ivs}; \cite{dagan2013clonal}).
 The model predicts sexual reproduction to be maintained when infection prevalence is high ($>20\%$) whereas
@@ -601,8 +610,6 @@ Spearman's rank correlation was used to test for correlation between infection p
 
 \section{Discussion}
 
-\rev{remind the reader of the biologically meaningful parameters.}
-\swp{I tried to reword this paragraph}
 We compared summary statistics (mean and coefficient of variation in proportion of infected
 and sexual hosts) of model simulations and those of the observed 
 data using Approximate Bayesian Computation (ABC) to infer biologically realistic 
@@ -620,10 +627,6 @@ observed by \cite{dagan2013clonal}.
 These discrepancies between the model predictions and observed data suggest that a 
 simple host-parasite coevolutionary model may not be able to sufficiently explain 
 the maintenance of sexual reproduction observed in nature (\fref{ivs}).
-\lively{This is not clear to me.  The fit seems good for Vergara et al, but not
-for the Israeli snail.  So it is not clear if you are speaking about the 
-difference between studies, or some kind of average over all studies.}
-\swp{Tried to clarify this.}
 
 A model that fits poorly can still provide useful information about a biological
 system by challenging our model assumptions;
