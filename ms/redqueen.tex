@@ -97,7 +97,7 @@ provide key evidence for the Red Queen Hypothesis
 \citep{lively1987evidence, lively2001trematode, lively2002temporal, lively2004host, koskella2009evidence,
 king2011coevolutionary, king2011parasites,
 vergara2013geographic, vergara2014infection, mckone2016fine, gibson2018periodic}.
-Surprisingly, the predicted correlation was not observed in anoter snail-trematode system in Israel \citep{heller1990sexual, ben2005spatial, ben2007temporal, ben2008sex, dagan2013clonal} even though it appears to demonstrate some key features of the RQH such as virulent parasites \citep{ben2005spatial} and parasite-driven genetic diversity \citep{dagan2013clonal}.
+Surprisingly, the predicted correlation was not observed in another snail-trematode system in Israel \citep{heller1990sexual, ben2005spatial, ben2007temporal, ben2008sex, dagan2013clonal} even though it appears to demonstrate some key features of the RQH such as virulent parasites \citep{ben2005spatial} and parasite-driven genetic diversity \citep{dagan2013clonal}.
 
 Here, we try to test whether a simple model can capture the 
 coevolutionary dynamics observed in real data.
@@ -111,8 +111,8 @@ Using estimated parameters, we compare model predictions with the observed
 data and test for power (probability of observing a 
 significant effect) to detect a positive correlation between frequency of
 sexual reproduction and prevalence of infection \cite{lively2001trematode}.
-We provide practical guidance for studying the RQH for modelers and empiricsts
-by disucssing discrepancies between a model predictions and the observed data
+We provide practical guidance for studying the RQH for modelers and empiricists
+by discussing discrepancies between a model predictions and the observed data
 as well as underlying factors that drive the correlation.
 
 \section{Methods}
@@ -152,7 +152,7 @@ The data set collected by \cite{mckone2016fine} is extracted from their figure.
 
 \subsection{Model}
 
-We model obligately sexual hosts competing with obligately asexual hosts in a metapopulation by extending the model introduced by \cite{lively2010epidemiological}.
+We model obligate sexual hosts competing with obligate asexual hosts in a metapopulation by extending the model introduced by \cite{lively2010epidemiological}.
 Our model is a discrete time susceptible-infected (SI) model with natural mortality and virulence (defined as a reduction in offspring production among infected hosts).
 Metapopulation structure is included to model unobserved dynamics among different habitats; equivalently, each subpopulation can be considered as a potential sampling site.
 A similar metapopulation model was developed by \cite{lively2018habitat} in order to study the local adaptation of parasites.
@@ -177,7 +177,7 @@ Following \cite{lively2010epidemiological}, the expected genotypic contribution 
 S_{ij}' = c_b (1-s) \bigg(W_U S_{ij,U} (t) + W_I S_{ij,I} (t)\bigg),
 \end{equation}
 where $s$ is the proportion of males produced by sexual hosts (assumed to equal to 0.5), and $S_{ij, U}$ and $S_{ij,I}$ are the number of uninfected and infected sexual hosts in a subpopulation.
-$W_U$ and $W_I$ represent their corresponding fitnesses where virulence is defined as $V = 1-W_I/W_U$.
+$W_U$ and $W_I$ represent their corresponding fitness values where virulence is defined as $V = 1-W_I/W_U$.
 We allow for the cost of sex to vary by multiplying the growth rate by a scale parameter, $c_b$, where $2/c_b$ corresponds to a two-fold cost of sex when $c_b = 1$ \citep{ashby2015diversity}. 
 We discuss this parameter in detail in the Discussion.
 Recombination and outcrossing are modeled after incorporating genotypic contributions from other populations.
@@ -417,7 +417,7 @@ For each random parameter set drawn from the prior distribution, the model is si
 we select a set of subpopulations (from 40 subpopulations), such that the number of selected subpopulations is
 equal to the number of sites collected in a study;
 simulated summary statistics are calculated from this set of subpopulations.
-The current parameter set is accepted if the sum of absoluate differences between the simulated summary statistics and the observed summary statistics is less than a pre-specified tolerance value (i.e., acceptable amount of difference between the model and the data).
+The current parameter set is accepted if the sum of absolute differences between the simulated summary statistics and the observed summary statistics is less than a pre-specified tolerance value (i.e., acceptable amount of difference between the model and the data).
 This process is repeated until 100 parameter sets are accepted.
 Each \emph{step} of the Population Monte Carlo follows this acceptance rule.
 
@@ -425,7 +425,7 @@ After the initial ABC step as described above ($t=1$), equal weights ($w_{i,1}=1
 A weighted random sample ($\bm\theta^\ast$) is drawn from the accepted parameters of the previous step ($t-1$) with weights $w_{i,t-1}$.
 For any step $t > 1$, a parameter set ($\bm\theta_{i, t}$) is proposed from a multivariate normal distribution with a mean $\bm\theta^\ast$ and a variance covariance matrix that is equal to $\sigma_{t-1}^2=2 \mathrm{Var}(\bm\theta_{1:N, t-1})$, where $\mathrm{Var}(\bm\theta_{1:N, t-1})$ is the weighted variance covariance matrix of the accepted parameters from the previous step and $N$ is the total number of accepted parameters from the previous step.
 The parameter $G_{\textrm{\tiny asex}}$ is rounded to the nearest integer and the model is simulated.
-If a proposed parameter is accepted (i.e., the sum of absolaute difference between the simulated summary statistics and the observed summary statistics is less than a tolerance value), the following weight is assigned to the parameter set:
+If a proposed parameter is accepted (i.e., the sum of absolute difference between the simulated summary statistics and the observed summary statistics is less than a tolerance value), the following weight is assigned to the parameter set:
 $$
 w_{i,t} = \frac{\pi(\bm\theta_{i, t})}{\sum_{i=1}^{100} w_{j, t-1} q(\bm\theta_{j, t-1} | \bm\theta_{i,t}, \sigma_{t-1}^2)}
 $$
@@ -455,7 +455,7 @@ For each simulation, we take the last two generations --- assuming that a year c
 In nature, New Zealand freshwater snails can have a slightly longer generation 
 time (approximately one year) with overlapping generations (Lively, personal communication);
 these factors can reduce the cost of males per reproductive time step \citep{lively2010parasite}.
-Hoever, we expect these factors to have little effect on the overall estimates of the power
+However, we expect these factors to have little effect on the overall estimates of the power
 as well as our qualitative conclusions of the analysis.
 
 For each selected subpopulation, hosts are divided into four categories based on their infection status (infected/uninfected) and reproductive mode (asexual/sexual),
@@ -630,16 +630,16 @@ the maintenance of sexual reproduction observed in nature (\fref{ivs}).
 
 A model that fits poorly can still provide useful information about a biological
 system by challenging our model assumptions;
-for example, lack of fit in dynamicsl systems (modeled by ordinary differential 
+for example, lack of fit in dynamical systems (modeled by ordinary differential 
 equations) can suggest misspecification of a model on various levels, including
 rate equations governing the dynamics of a system and their relevant state variables
 \citep{hooker2015goodness}.
-Our model clearly failed to match the relationship between prevalence of infection and frequency of sexual prevalence observed in \cite{dagan2013clonal} (\fref{ivs}) even thouh it was able to match each univariate statistic (\fref{smcsumm}).
+Our model clearly failed to match the relationship between prevalence of infection and frequency of sexual prevalence observed in \cite{dagan2013clonal} (\fref{ivs}) even though it was able to match each univariate statistic (\fref{smcsumm}).
 The snail-trematode system studied by \cite{dagan2013clonal} live in qualitatively different environments from the New Zealand system that we considered \citep{vergara2014infection, mckone2016fine}.
 For example, their habitats are subject to seasonal flash floods, which can act as 
 strong bottlenecks and promote asexual reproduction \citep{ben2007temporal}.
 Because our model did not account for these details, it failed to match the observed 
-relationship betweens infection prevalence and frequency of sexual reproduction;
+relationship between infection prevalence and frequency of sexual reproduction;
 nonetheless, lack of fit of a simple Red Queen model to this data does not exclude the 
 possibility that sexual reproduction is maintained by parasite selection in this 
 system.
