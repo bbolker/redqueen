@@ -338,19 +338,13 @@ Every subpopulation is initialized with 2000 sexual hosts, of which 80 are infec
 Both susceptible and infected hosts are assumed to be in Hardy-Weinberg equilibrium where the allele frequency in each locus is equal to 0.5.
 All possible genotypes are initially present in each subpopulation.
 In order to account for variation in infection rates among subpopulations, the transmission rate, $\beta^k$, is randomly drawn for each subpopulation from a Gamma distribution with mean $\beta_{\textrm{\tiny mean}}$ and coefficient of variation $\beta_{\textrm{\tiny CV}}$. 
-The simulation runs for 500 generations without the introduction of asexuals. At generation 501, 10 asexual hosts of a single genotype are introduced to each population (the asexual genotype introduced can vary across subpopulations) and simulation runs for a further 600 generations while allowing for stochastic migration of asexuals.
-
-
-
-
-In order to account for variation in infection rates among subpopulations, the transmission rate, $\beta^k$, is randomly drawn for each subpopulation from a Gamma distribution with mean $\beta_{\textrm{\tiny mean}}$ and coefficient of variation $\beta_{\textrm{\tiny CV}}$.
 The variation in the transmission rates implicitly captures 
 variation in susceptibility \citep{krist2000spatial, gibson2016fine} as well as distribution of definitive hosts \citep{lively1996clinal, jokela2009maintenance, king2009geographic} in each subpopulation.
+
 The simulation runs for 500 generations without the introduction of asexuals.
 At generation 501, 10 asexual hosts of a single genotype are introduced to each subpopulation (the asexual genotype introduced can vary across subpopulations) and simulation runs for 600 more generations while allowing for stochastic migration of asexual hosts.
 The host-parasite coevolution of sexual individuals combined with heterogeneity in transmission rates among subpopulations causes the system to deviate sufficiently from the initial condition within the first 500 generations (results not shown); we do not expect the initial conditions to affect our 
 overall qualitative conclusions.
->>>>>>> b4f3a17453e47fecf2ef3535766976cfbd27cfac
 
 \subsection{Approximate Bayesian Computation}
 
