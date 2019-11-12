@@ -9,6 +9,10 @@ source("../R/ABC_funs.R")
 scale_colour_discrete <- function(...,palette="Dark2") scale_colour_brewer(...,palette=palette)
 scale_fill_discrete <- function(...,palette="Dark2") scale_fill_brewer(...,palette=palette)
 
+if (.Platform$OS.type=="windows") {
+    windowsFonts(Times=windowsFont("Times"))
+} 
+
 save <- FALSE
 
 param_list <- vector('list', 3)
@@ -29,7 +33,12 @@ data_name <- c(expression(Dagan~italic(et~al.)~"(2013) "),
                "Prior")
 
 oldname <- c("beta.mean", "beta.cv", "c_b", "epsilon.site", "V", "n.genotype")
-newname <- c("beta[mean]", "beta[CV]", "c[b]", "epsilon[site]", "V", "G[asex]")
+newname <- c("Mean~transmission~rate~(beta[mean])", 
+             "CV~transmission~rate~(beta[CV])", 
+             "Cost~of~sex~scale~(c[b])", 
+             "Mixing~proportion~(epsilon[site])", 
+             "Virulence~(V)", 
+             "Number~of~asexual~genotypes~(G[asex])")
 
 paramdf <- param_list %>%
     bind_rows(.id="fit") %>%
@@ -51,7 +60,7 @@ combdf <- rbind(paramdf, prior)
 ggpost <- ggplot(combdf) +
     geom_violin(aes(fit, value, weight=weight, fill=fit), alpha=0.7) +
     coord_flip() +
-    facet_wrap(~key, scale="free_x", labeller=label_parsed) +
+    facet_wrap(~key, scale="free_x", labeller=label_parsed, nrow=2) +
     scale_fill_discrete(label=c(data_name, "Prior")) +
     theme(
         strip.background = element_blank(),
@@ -64,7 +73,7 @@ ggpost <- ggplot(combdf) +
         legend.title = element_blank()
     )
 
-if (save) ggsave("posterior.pdf", ggpost, width=6, height=4)
+if (save) ggsave("posterior.pdf", ggpost, width=8, height=4)
 
 2/wquant(param_list$mckone$c_b, param_list$mckone$weight, c(0.025, 0.975)) 
 
